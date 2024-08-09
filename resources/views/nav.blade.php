@@ -6,7 +6,7 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
-            Selamat Hadirin
+            Selamat Hadirin yang Terhormat
         </div>
     </div>
 @endsection
