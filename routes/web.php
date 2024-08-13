@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/coba',[CobaController::class, 'index']);
 
 Route::get('/', [LoginController::class, 'index']);
+Route::get('/login', [LoginController::class, 'authenticate']);

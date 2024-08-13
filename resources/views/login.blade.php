@@ -23,11 +23,13 @@
                                 <h3>Sign In</h3>
                                 <p>Sign In untuk Mengakses Website Fluks Aqua</p>
                             </div>
-                            <form action="#">
+                            <form action="/login" method="POST">
+                                @csrf
                                 <div class="form-group position-relative has-icon-left">
                                     <label for="username">Username</label>
                                     <div class="position-relative">
-                                        <input type="text" class="form-control" id="username" name="username">
+                                        <input type="text" class="form-control" id="username" name="username"
+                                            value="{{ old('username') }}" autofocus required>
                                         <div class="form-control-icon">
                                             <i data-feather="user"></i>
                                         </div>
@@ -36,12 +38,13 @@
                                 <div class="form-group position-relative has-icon-left">
                                     <div class="clearfix">
                                         <label for="password">Password</label>
-                                        <a href="auth-forgot-password.html" class='float-right'>
+                                        <a href="#" class='float-right'>
                                             <small>Forgot password?</small>
                                         </a>
                                     </div>
                                     <div class="position-relative">
-                                        <input type="text" class="form-control" id="password" name="password">
+                                        <input type="text" class="form-control" id="password" name="password"
+                                            required>
                                         <div class="form-control-icon">
                                             <i data-feather="lock"></i>
                                         </div>
