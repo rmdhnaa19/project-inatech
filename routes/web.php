@@ -19,3 +19,7 @@ Route::get('/coba',[CobaController::class, 'index']);
 
 Route::get('/', [LoginController::class, 'index']);
 Route::get('/login', [LoginController::class, 'authenticate']);
+
+// Route::group(['prefix' => 'manajemenUser'], function(){
+//     Route::get('/' []);
+// });

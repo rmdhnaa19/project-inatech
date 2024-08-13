@@ -4,14 +4,15 @@
 <div class="sidebar-menu">
     <ul class="menu">
         <li class="sidebar-item  ">
-            <a href="#" class='sidebar-link'>
+            <a href="{{ url('/dashboard') }}" class='sidebar-link {{ $activeMenu == 'dashboard' ? 'active' : '' }}'>
                 <i data-feather="home" width="20"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li class='sidebar-title'>MANAJEMEN</li>
         <li class="sidebar-item">
-            <a href="#" class='sidebar-link'>
+            <a href="{{ url('/manajemenUser') }}"
+                class='sidebar-link {{ $activeMenu == 'manajemenUser' ? 'active' : '' }}'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Manajemen User</span>
             </a>
@@ -23,10 +24,10 @@
             </a>
             <ul class="submenu ">
                 <li>
-                    <a href="component-alert.html">Gudang</a>
+                    <a href="{{ url('/manajemenGudang') }}">Gudang</a>
                 </li>
                 <li>
-                    <a href="component-badge.html">Penanggung Jawab Gudang</a>
+                    <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Gudang</a>
                 </li>
             </ul>
         </li>
