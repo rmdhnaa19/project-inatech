@@ -9,13 +9,28 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class='sidebar-title'>MANAJEMEN INVENTORY</li>
+        <li class='sidebar-title'>MANAJEMEN</li>
         <li class="sidebar-item">
+            <a href="#" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Manajemen User</span>
+            </a>
+        </li>
+        <li class="sidebar-item  has-sub">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Manajemen Gudang</span>
             </a>
+            <ul class="submenu ">
+                <li>
+                    <a href="component-alert.html">Gudang</a>
+                </li>
+                <li>
+                    <a href="component-badge.html">Penanggung Jawab Gudang</a>
+                </li>
+            </ul>
         </li>
+        <li class='sidebar-title'>MANAJEMEN INVENTORY</li>
         <li class="sidebar-item  has-sub">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
@@ -48,14 +63,26 @@
                 <li>
                     <a href="component-extra-avatar.html">Transaksi Alat</a>
                 </li>
-
             </ul>
-
         </li>
-
-
-
         <li class="sidebar-item  has-sub">
+            <a href="#" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Manajemen Obat</span>
+            </a>
+            <ul class="submenu ">
+                <li>
+                    <a href="component-alert.html">Obat</a>
+                </li>
+                <li>
+                    <a href="component-badge.html">Obat ke Gudang</a>
+                </li>
+                <li>
+                    <a href="component-breadcrumb.html">Transaksi Obat</a>
+                </li>
+            </ul>
+        </li>
+        {{-- <li class="sidebar-item  has-sub">
             <a href="#" class='sidebar-link'>
                 <i data-feather="file-text" width="20"></i>
                 <span>Form Elements</span>
@@ -245,11 +272,7 @@
 
             </ul>
 
-        </li>
-
-
-
-
+        </li> --}}
     </ul>
 </div>
 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>

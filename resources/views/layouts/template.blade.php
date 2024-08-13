@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/app.css') }}">
-    <link rel="shortcut icon" href="{{ asset('voler-master/dist/assets/images/favicon.svg') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon">
 </head>
 
 <body>
