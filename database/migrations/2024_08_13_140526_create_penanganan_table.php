@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penanganan', function (Blueprint $table) {
             $table->id('id_penanganan');
-            $table->string('kd_penanganan ',50)->unique();
+            $table->string('kd_penanganan',50)->unique();
             $table->date('tanggal_cek');
             $table->time('waktu_cek');
             $table->integer('pemberian_mineral');

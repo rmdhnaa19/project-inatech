@@ -30,7 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_fase_tambak')->index();
             $table->timestamps();
     
-            $table->foreign('id_fase_tambak')->references('id_fase_tambakt')->on('fase_tambak');
+            $table->foreign('id_fase_tambak')->references('id_fase_tambak')->on('fase_tambak');
 
         });
     }
