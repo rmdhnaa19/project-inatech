@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[CobaController::class, 'index']);
+Route::get('/coba',[CobaController::class, 'index']);
+
+Route::get('/', [LoginController::class, 'index']);
