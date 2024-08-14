@@ -14,7 +14,7 @@
             <a href="{{ url('/manajemenUser') }}"
                 class='sidebar-link {{ $activeMenu == 'manajemenUser' ? 'active' : '' }}'>
                 <i data-feather="triangle" width="20"></i>
-                <span>Manajemen User</span>
+                <span>Manajemen Pengguna</span>
             </a>
         </li>
         <li class="sidebar-item  has-sub">
