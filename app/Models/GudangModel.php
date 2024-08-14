@@ -11,5 +11,5 @@ class GudangModel extends Model
 
     protected $table = 'gudang';
     protected $primaryKey = 'id_gudang';
-    protected $fillable = ['gambar', '', 'password', 'jabatan','password'];
+    protected $fillable = ['gambar', 'nama', 'panjang', 'lebar','luas', 'alamat', 'created_at', 'updated_at'];
 }
