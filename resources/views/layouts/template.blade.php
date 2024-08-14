@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'Starter Code') }}</title>
+    <title>Fluks Aqua | @yield('title')</title>
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">

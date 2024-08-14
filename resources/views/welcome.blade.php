@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Contoh')
 @section('content')
     <div class="card">
         <div class="card-header">
