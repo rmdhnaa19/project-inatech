@@ -8,6 +8,7 @@
     <title>Fluks Aqua | @yield('title')</title>
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/simple-datatables/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.css" />
     <link rel="stylesheet"
         href="{{ asset('voler-master/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/app.css') }}">
@@ -95,6 +96,7 @@
     <script src="{{ asset('voler-master/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('voler-master/src/assets/js/app.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
+    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
     <script src="{{ asset('voler-master/dist/assets/js/vendors.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/js/main.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/chartjs/Chart.min.js') }}"></script>
