@@ -26,6 +26,58 @@
     <script>
         $(document).ready(function() {
             var dataKelolaPengguna = $('#table_kelolaPengguna').DataTable({
+                serverSide: true,
+                ajax: {
+                    "url": "{{ url('kelolaPengguna/list') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "error": function(xhr, error, thrown) {
+                        console.error('Error fetching data: ', thrown);
+                    }
+                },
+                columns: [{
+                        data: "DT_RowIndex",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: "nama",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "no_hp",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "posisi",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        data: "role.nama",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: "aksi",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+        });
+    </script>
+    {{-- <script>
+        $(document).ready(function() {
+            var dataKelolaPengguna = $('#table_kelolaPengguna').DataTable({
                 serverSide: true, // serverSide: true, jika ingin menggunakan server side processing
                 ajax: {
                     "url": "{{ url('kelolaPengguna/list') }}",
@@ -65,5 +117,5 @@
                 }]
             });
         });
-    </script>
+    </script> --}}
 @endpush
