@@ -3,24 +3,23 @@
 </div>
 <div class="sidebar-menu">
     <ul class="menu">
-        <li class="sidebar-item  ">
-            <a href="{{ url('/dashboard') }}" class='sidebar-link {{ $activeMenu == 'dashboard' ? 'active' : '' }}'>
+        <li class="sidebar-item  {{ $activeMenu == 'dashboard' ? 'active' : '' }}">
+            <a href="{{ url('/dashboard') }}" class='sidebar-link'>
                 <i data-feather="home" width="20"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li class='sidebar-title'>MANAJEMEN</li>
-        <li class="sidebar-item">
-            <a href="{{ url('/manajemenUser') }}"
-                class='sidebar-link {{ $activeMenu == 'manajemenUser' ? 'active' : '' }}'>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
-                <span>Manajemen Pengguna</span>
+                <span>Kelola Pengguna</span>
             </a>
         </li>
         <li class="sidebar-item  has-sub">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
-                <span>Manajemen Gudang</span>
+                <span>Kelola Gudang</span>
             </a>
             <ul class="submenu ">
                 <li>

@@ -21,7 +21,7 @@ Route::get('/coba',[CobaController::class, 'index']);
 Route::get('/', [LoginController::class, 'index']);
 Route::get('/login', [LoginController::class, 'authenticate']);
 
-Route::group(['prefix' => 'manajemenUser'], function(){
+Route::group(['prefix' => 'kelolaPengguna'], function(){
     Route::get('/', [UserController::class, 'index']);
     Route::post('/list', [UserController::class, 'list']);
     Route::get('/create', [UserController::class, 'create']);
