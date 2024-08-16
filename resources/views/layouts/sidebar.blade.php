@@ -9,7 +9,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class='sidebar-title'>MANAJEMEN</li>
+        <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
         <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
             <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
@@ -27,6 +27,26 @@
                 </li>
                 <li>
                     <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Gudang</a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar-item  has-sub">
+            <a href="#" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Kelola Tambak</span>
+            </a>
+            <ul class="submenu ">
+                <li>
+                    <a href="{{ url('/manajemenGudang') }}">Tambak</a>
+                </li>
+                <li>
+                    <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Tambak</a>
+                </li>
+                <li>
+                    <a href="{{ url('/manajemenPJGudang') }}">Kolam</a>
+                </li>
+                <li>
+                    <a href="{{ url('/manajemenPJGudang') }}">Fase Kolam</a>
                 </li>
             </ul>
         </li>
@@ -81,6 +101,43 @@
                     <a href="component-breadcrumb.html">Transaksi Obat</a>
                 </li>
             </ul>
+        </li>
+        <li class='sidebar-title'>MANAJEMEN BUDIDAYA</li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Anco</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Kualitas Air</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Penanganan</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Sampling</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Pakan Harian</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
+            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Kematian Udang</span>
+            </a>
         </li>
         {{-- <li class="sidebar-item  has-sub">
             <a href="#" class='sidebar-link'>

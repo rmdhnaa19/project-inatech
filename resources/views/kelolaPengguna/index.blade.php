@@ -6,18 +6,14 @@
             <table class="table" id="table_kelolaPengguna">
                 <thead>
                     <tr class="text-center">
-                        <th>ID</th>
                         <th>NAMA</th>
                         <th>NO HP</th>
                         <th>POSISI</th>
                         <th>ROLE</th>
-                        <th>AKSI</th>
                     </tr>
                 </thead>
             </table>
         </div>
-    </div>
-    </div>
     </div>
 @endsection
 @push('css')
@@ -36,12 +32,6 @@
                     }
                 },
                 columns: [{
-                        data: "DT_RowIndex",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
                         data: "nama",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
@@ -57,65 +47,31 @@
                         data: "posisi",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
-                        searchable: false
+                        searchable: true
                     },
                     {
                         data: "role.nama",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: false
+                        orderable: true,
+                        searchable: true
                     },
-                    {
-                        data: "aksi",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    }
-                ]
+                ],
+                pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
+                dom: 'frtip', // Mengatur layout DataTables
+                language: {
+                    search: "" // Menghilangkan teks "Search"
+                }
             });
+            // Tambahkan tombol "Tambah" setelah kolom pencarian
+            $("#table_kelolaPengguna_filter").append(
+                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
+            // Tambahkan event listener untuk tombol
+            $("#btn-tambah").on('click', function() {
+                window.location.href =
+                    "{{ url('kelolaPengguna/create') }}"; // Arahkan ke halaman tambah pengguna
+            });
+            // Menambahkan placeholder pada kolom search
+            $('input[type="search"]').attr('placeholder', 'Cari data Pengguna...');
         });
     </script>
-    {{-- <script>
-        $(document).ready(function() {
-            var dataKelolaPengguna = $('#table_kelolaPengguna').DataTable({
-                serverSide: true, // serverSide: true, jika ingin menggunakan server side processing
-                ajax: {
-                    "url": "{{ url('kelolaPengguna/list') }}",
-                    "dataType": "json",
-                    "type": "POST"
-                },
-                columns: [{
-                    data: "DT_RowIndex", // nomor urut dari laravel datatable addIndexColumn() 
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: "nama",
-                    className: "",
-                    orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
-                    searchable: true // searchable: true, jika ingin kolom ini bisa dicari
-                }, {
-                    data: "no_hp",
-                    className: "",
-                    orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
-                    searchable: true // searchable: true, jika ingin kolom ini bisa dicari
-                }, {
-                    data: "posisi",
-                    className: "",
-                    orderable: true, // orderable: true, jika ingin kolom ini bisa diurutkan
-                    searchable: false // searchable: true, jika ingin kolom ini bisa dicari
-                }, {
-                    data: "role.nama",
-                    className: "",
-                    orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
-                    searchable: false // searchable: true, jika ingin kolom ini bisa dicari
-                }, {
-                    data: "aksi",
-                    className: "text-center",
-                    orderable: false, // orderable: true, jika ingin kolom ini bisa diurutkan
-                    searchable: false // searchable: true, jika ingin kolom ini bisa dicari 
-                }]
-            });
-        });
-    </script> --}}
 @endpush
