@@ -64,6 +64,12 @@
             });
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kelolaPengguna_filter").append(
+                '<select class="form-control" name="id_role" id="id_role" required style="margin-left: 30px; width: 150px;">' +
+                '<option value="">- SEMUA -</option>' +
+                '@foreach ($role as $item)' +
+                '<option value="{{ $item->id_role }}">{{ $item->nama }}</option>' +
+                '@endforeach' +
+                '</select>' +
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
