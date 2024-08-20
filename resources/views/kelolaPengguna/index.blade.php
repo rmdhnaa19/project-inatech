@@ -2,6 +2,7 @@
 @section('title', 'Kelola Pengguna')
 @section('content')
     <div class="card">
+        <div class="card-header">Data Pengguna</div>
         <div class="card-body">
             <table class="table" id="table_kelolaPengguna">
                 <thead>
