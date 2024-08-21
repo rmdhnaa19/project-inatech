@@ -60,6 +60,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Load DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
     <script>
         $.ajaxSetup({
             headers: {
