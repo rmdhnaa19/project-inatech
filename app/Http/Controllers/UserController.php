@@ -44,4 +44,41 @@ class UserController extends Controller
         $role = RoleModel::all();
         return view('kelolaPengguna.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|min:5|unique:user,username',
+            'password' => 'required|string|min:8',
+            'nama' => 'required|string|min:5|unique:user,nama',
+            'no_hp' => 'required|string|max:12',
+            'alamat' => 'required|string',
+            'gaji_pokok' => 'required|integer',
+            'komisi' => 'required|integer',
+            'tunjangan' => 'required|integer',
+            'potongan_gaji' => 'required|integer',
+            'posisi' => 'required|string',
+            'foto' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if($request->file('foto')){
+            $upFoto['foto'] = $request->file('foto')->store('foto_user');
+        }
+
+        UserModel::create([
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'nama' => $request->nama,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'gaji_pokok' => $request->gaji_pokok,
+            'komisi' => $request->komisi,
+            'tunjangan' => $request->tunjangan,
+            'potongan_gaji' => $request->potongan_gaji,
+            'posisi' => $request->posisi,
+            'foto' => $upFoto['foto'],
+        ]);
+        // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
+        return redirect('/kelolaPengguna');
+    }
 }

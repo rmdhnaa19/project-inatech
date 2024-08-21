@@ -31,6 +31,23 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="posisi" class="form-label">Role</label>
+                            <div class="form-group">
+                                <select class="choices form-select" name="id_role" id="id_role">
+                                    <option value="{{ old('id_role') }}">- Pilih Role -</option>
+                                    @foreach ($role as $item)
+                                        <option value="{{ $item->id_role }}">{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('id_role')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Role yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="nama" class="form-label">Nama</label>
                             <input type="text" class="form-control" id="nama" name="nama"
                                 placeholder="Masukkan Nama" value="{{ old('nama') }}" required>
@@ -110,6 +127,7 @@
                             <label for="posisi" class="form-label">Posisi</label>
                             <div class="form-group">
                                 <select class="choices form-select" name="posisi" id="posisi">
+                                    <option value="{{ old('posisi') }}">- Pilih Posisi -</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Teknisi">Teknisi</option>
                                     <option value="Analis Tambak">Analis Tambak</option>
@@ -121,6 +139,7 @@
                     <div class="col-md-6 d-flex justify-content-center align-items-center">
                         <div class="form-group">
                             <div class="col">
+                                <img class="img-preview img-fluid mb-2 col-sm-2">
                                 <div class="row mb-1">
                                     <div class="drop-zone">
                                         <div class="col">
@@ -134,7 +153,7 @@
                                             </div>
                                         </div>
                                         <input type="file" name="image" class="drop-zone__input" id="foto"
-                                            name="foto" required>
+                                            name="foto" onchange="previewImage()" required>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -142,7 +161,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-file">
-                                        <input type="file" class="form-file-input" id="foto" name="foto">
+                                        <input type="file" class="form-file-input" id="foto" name="foto"
+                                            onchange="previewImage()" required>
                                         <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
@@ -167,69 +187,15 @@
     @endpush
     @push('js')
         <script>
-            document.querySelectorAll('.drop-zone__input').forEach((inputElement) => {
-                const dropZoneElement = inputElement.closest('.drop-zone');
+            function previewImage() {
+                const foto = document.querySelector('#foto');
+                const imgPreview = document.querySelector('.img-preview');
+                imgPreview.style.display = 'block';
+                const oFReader = new FileReader();
+                oFReader.readAsDataURL(foto.files[0]);
 
-                dropZoneElement.addEventListener('click', (e) => {
-                    inputElement.click();
-                });
-
-                inputElement.addEventListener('change', (e) => {
-                    if (inputElement.files.length) {
-                        updateThumbnail(dropZoneElement, inputElement.files[0]);
-                    }
-                });
-
-                dropZoneElement.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    dropZoneElement.classList.add('drop-zone--over');
-                });
-
-                ['dragleave', 'dragend'].forEach((type) => {
-                    dropZoneElement.addEventListener(type, (e) => {
-                        dropZoneElement.classList.remove('drop-zone--over');
-                    });
-                });
-
-                dropZoneElement.addEventListener('drop', (e) => {
-                    e.preventDefault();
-
-                    if (e.dataTransfer.files.length) {
-                        inputElement.files = e.dataTransfer.files;
-                        updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
-                    }
-
-                    dropZoneElement.classList.remove('drop-zone--over');
-                });
-            });
-
-            function updateThumbnail(dropZoneElement, file) {
-                let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
-
-                // Remove the prompt
-                if (dropZoneElement.querySelector('.drop-zone__prompt')) {
-                    dropZoneElement.querySelector('.drop-zone__prompt').remove();
-                }
-
-                // First time - there is no thumbnail element, so let's create it
-                if (!thumbnailElement) {
-                    thumbnailElement = document.createElement('div');
-                    thumbnailElement.classList.add('drop-zone__thumb');
-                    dropZoneElement.appendChild(thumbnailElement);
-                }
-
-                thumbnailElement.dataset.label = file.name;
-
-                // Show thumbnail for image files
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-
-                    reader.readAsDataURL(file);
-                    reader.onload = () => {
-                        thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
-                    };
-                } else {
-                    thumbnailElement.style.backgroundImage = null;
+                oFReader.onload = function(oFREvent) {
+                    imgPreview.src = oFREvent.target.result;
                 }
             }
         </script>
