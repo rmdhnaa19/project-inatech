@@ -133,7 +133,8 @@
                                                     sini</span>
                                             </div>
                                         </div>
-                                        <input type="file" name="image" class="drop-zone__input" required>
+                                        <input type="file" name="image" class="drop-zone__input" id="foto"
+                                            name="foto" required>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -141,8 +142,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-file">
-                                        <input type="file" class="form-file-input" id="customFile">
-                                        <label class="form-file-label" for="customFile">
+                                        <input type="file" class="form-file-input" id="foto" name="foto">
+                                        <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                         </label>
@@ -152,8 +153,13 @@
                         </div>
                     </div>
                 </div>
-                <a class="btn btn-sm btn-default ml-1" href="{{ url('administrasi') }}">Kembali</a>
-                <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('kelolaPengguna') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545">Kembali</button>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF">Simpan</button>
+                </div>
             </form>
         </div>
     @endsection
