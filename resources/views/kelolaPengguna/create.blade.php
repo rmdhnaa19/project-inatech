@@ -3,58 +3,63 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="basicInput">Basic Input</label>
-                        <input type="text" class="form-control" id="basicInput" placeholder="Enter email">
-                    </div>
+            <form method="POST" action="{{ url('kelolaPengguna') }}" class="form-horizontal" enctype="multipart/form-data"
+                id="tambahPengguna">
+                @csrf
+                <div class=" form-group row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="basicInput">Nama</label>
+                            <input type="text" class="form-control" id="nama" name="nama"
+                                placeholder="Masukkan Nama" value="{{ old('nama') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="helpInputTop">Input text with help</label>
+                            <small class="text-muted">eg.<i>someone@example.com</i></small>
+                            <input type="text" class="form-control" id="helpInputTop">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="helpInputTop">Input text with help</label>
-                        <small class="text-muted">eg.<i>someone@example.com</i></small>
-                        <input type="text" class="form-control" id="helpInputTop">
+                        <div class="form-group">
+                            <label for="helperText">With Helper Text</label>
+                            <input type="text" id="helperText" class="form-control" placeholder="Name">
+                            <p><small class="text-muted">Find helper text here for given textbox.</small></p>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="helperText">With Helper Text</label>
-                        <input type="text" id="helperText" class="form-control" placeholder="Name">
-                        <p><small class="text-muted">Find helper text here for given textbox.</small></p>
-                    </div>
-                </div>
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-1">
-                                <div class="drop-zone">
-                                    <div class="col">
-                                        <div class="text-center row">
-                                            <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
+                        <div class="form-group">
+                            <div class="col">
+                                <div class="row mb-1">
+                                    <div class="drop-zone">
+                                        <div class="col">
+                                            <div class="text-center row">
+                                                <i class="fa-solid fa-cloud-arrow-up"
+                                                    style="height: 50px; font-size: 50px"></i>
+                                            </div>
+                                            <div class="row">
+                                                <span class="drop-zone__prompt text-center">Seret lalu letakkan file di
+                                                    sini</span>
+                                            </div>
                                         </div>
-                                        <div class="row">
-                                            <span class="drop-zone__prompt text-center">Seret lalu letakkan file di
-                                                sini</span>
-                                        </div>
+                                        <input type="file" name="image" class="drop-zone__input" required>
                                     </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
                                 </div>
-                            </div>
-                            <div class="row mb-1">
-                                <span class="text-center">Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Choose file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
+                                <div class="row mb-1">
+                                    <span class="text-center">Atau</span>
+                                </div>
+                                <div class="row">
+                                    <div class="form-file">
+                                        <input type="file" class="form-file-input" id="customFile">
+                                        <label class="form-file-label" for="customFile">
+                                            <span class="form-file-text">Choose file...</span>
+                                            <span class="form-file-button">Browse</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     @endsection
     @push('css')
