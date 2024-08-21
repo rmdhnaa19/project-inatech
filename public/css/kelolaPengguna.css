@@ -78,6 +78,27 @@ thead.thead-light th {
     border-bottom-right-radius: 5px !important;
 }
 
+.drop-zone {
+    max-width: 400px;
+    height: 200px;
+    padding: 20px;
+    border: 2px dashed #cccccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #cccccc;
+}
+
+.drop-zone--over {
+    border-color: #007bff;
+}
+
+.drop-zone__input {
+    display: none;
+}
+
 
 /* SETIAP BUAT VIEW BARU HARAP COPAS CSS DIBAWAH INI KE BAWAHNYA DAN SESUAIKAN DENGAN ID TABLE */
 /* Mengatur lebar kolom pencarian */

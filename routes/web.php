@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TambakController;
@@ -24,34 +25,14 @@ Route::get('/', [LoginController::class, 'index']);
 Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::group(['prefix' => 'kelolaPengguna'], function(){
-    Route::get('/', [UserController::class, 'index']);
+    Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index');
     Route::post('/list', [UserController::class, 'list']);
-    Route::get('/create', [UserController::class, 'create']);
+    Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create');
     Route::post('/', [UserController::class, 'store']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::get('/{id}/edit', [UserController::class, 'edit']);
+    Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit');
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
 
-Route::group(['prefix' => 'manajemenTambak'], function(){
-    Route::get('/', [TambakController::class, 'index']);
-    Route::post('/list', [TambakController::class, 'list']);
-    Route::get('/create', [TambakController::class, 'create']);
-    Route::post('/', [TambakController::class, 'store']);
-    Route::get('/{id}', [TambakController::class, 'show']);
-    Route::get('/{id}/edit', [TambakController::class, 'edit']);
-    Route::put('/{id}', [TambakController::class, 'update']);
-    Route::delete('/{id}', [TambakController::class, 'destroy']);
-});
-
-Route::group(['prefix' => 'manajemenKolam'], function(){
-    Route::get('/', [KolamController::class, 'index']);
-    Route::post('/list', [KolamController::class, 'list']);
-    Route::get('/create', [KolamController::class, 'create']);
-    Route::post('/', [KolamController::class, 'store']);
-    Route::get('/{id}', [KolamController::class, 'show']);
-    Route::get('/{id}/edit', [KolamController::class, 'edit']);
-    Route::put('/{id}', [KolamController::class, 'update']);
-    Route::delete('/{id}', [KolamController::class, 'destroy']);
-});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');

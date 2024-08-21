@@ -41,8 +41,8 @@
                     {
                         data: "no_hp",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: "posisi",
@@ -53,7 +53,7 @@
                     {
                         data: "role.nama",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
+                        orderable: false,
                         searchable: true
                     },
                 ],

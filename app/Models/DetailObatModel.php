@@ -18,7 +18,7 @@ class DetailObatModel extends Model
     public function gudang():BelongsTo{
         return $this->belongsTo(GudangModel::class, 'id_gudang', 'id_gudang');
     }
-    public function alat():BelongsTo{
-        return $this->belongsTo(AlatModel::class, 'id_alat', 'id_alat');
+    public function obat():BelongsTo{
+        return $this->belongsTo(ObatModel::class, 'id_obat', 'id_obat');
     }
 }
