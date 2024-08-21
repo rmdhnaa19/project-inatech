@@ -15,6 +15,8 @@
     <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon">
     <!-- Load DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Include Choices CSS -->
+    <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
     @stack('css')
 </head>
@@ -61,6 +63,7 @@
     <!-- Load DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
     <script>
         $.ajaxSetup({
             headers: {

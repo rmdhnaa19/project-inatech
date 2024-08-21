@@ -9,20 +9,113 @@
                 <div class=" form-group row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="basicInput">Nama</label>
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="Masukkan Username" value="{{ old('username') }}" required autofocus>
+                            @error('username')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Username yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Masukkan Password" required>
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Password yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="nama" class="form-label">Nama</label>
                             <input type="text" class="form-control" id="nama" name="nama"
-                                placeholder="Masukkan Nama" value="{{ old('nama') }}">
+                                placeholder="Masukkan Nama" value="{{ old('nama') }}" required>
+                            @error('nama')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Nama yang anda masukkan tidak valid
+                                </div>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="helpInputTop">Input text with help</label>
-                            <small class="text-muted">eg.<i>someone@example.com</i></small>
-                            <input type="text" class="form-control" id="helpInputTop">
+                            <label for="no_hp" class="form-label">Nomor Handphone</label>
+                            <input type="text" class="form-control" id="no_hp" name="no_hp"
+                                placeholder="Masukkan No Hp" value="{{ old('no_hp') }}" required>
+                            @error('no_hp')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    No Hp yang anda masukkan tidak valid
+                                </div>
+                            @enderror
                         </div>
-
                         <div class="form-group">
-                            <label for="helperText">With Helper Text</label>
-                            <input type="text" id="helperText" class="form-control" placeholder="Name">
-                            <p><small class="text-muted">Find helper text here for given textbox.</small></p>
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat"></textarea>
+                            @error('no_hp')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Alamat yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="gaji_pokok" class="form-label">Gaji Pokok</label>
+                            <input type="number" class="form-control" id="gaji_pokok" name="gaji_pokok"
+                                placeholder="Masukkan Gaji Pokok" value="{{ old('gaji_pokok') }}" required>
+                            @error('gaji_pokok')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Gaji Pokok yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="komisi" class="form-label">Komisi</label>
+                            <input type="number" class="form-control" id="komisi" name="komisi"
+                                placeholder="Masukkan Komisi" value="{{ old('komisi') }}" required>
+                            @error('komisi')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Komisi yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="tunjangan" class="form-label">Tunjangan</label>
+                            <input type="number" class="form-control" id="tunjangan" name="tunjangan"
+                                placeholder="Masukkan Tunjangan" value="{{ old('tunjangan') }}" required>
+                            @error('tunjangan')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Tunjangan yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="potongan_gaji" class="form-label">Potongan Gaji</label>
+                            <input type="number" class="form-control" id="potongan_gaji" name="potongan_gaji"
+                                placeholder="Masukkan Potongan Gaji" value="{{ old('potongan_gaji') }}" required>
+                            @error('potongan_gaji')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    Potongan gaji yang anda masukkan tidak valid
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="posisi" class="form-label">Posisi</label>
+                            <div class="form-group">
+                                <select class="choices form-select" name="posisi" id="posisi">
+                                    <option value="Manager">Manager</option>
+                                    <option value="Teknisi">Teknisi</option>
+                                    <option value="Analis Tambak">Analis Tambak</option>
+                                    <option value="Pemilik Tambak">Pemilik Tambak</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -59,6 +152,8 @@
                         </div>
                     </div>
                 </div>
+                <a class="btn btn-sm btn-default ml-1" href="{{ url('administrasi') }}">Kembali</a>
+                <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
             </form>
         </div>
     @endsection

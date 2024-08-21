@@ -13,7 +13,10 @@ class UserController extends Controller
         $breadcrumb = (object) [
             'title' => 'Kelola Data Pengguna',
             'paragraph' => 'Berikut ini merupakan data pengguna yang terinput ke dalam sistem',
-            'list' => ['Home', 'Kelola Pengguna']
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pengguna'],
+            ]
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
@@ -31,7 +34,11 @@ class UserController extends Controller
         $breadcrumb = (object) [
             'title' => 'Tambah Data Pengguna',
             'paragraph' => 'Berikut ini merupakan form tambah data pengguna yang terinput ke dalam sistem',
-            'list' => ['Home', 'Kelola Pengguna', 'Tambah']
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pengguna', 'url' => route('kelolaPengguna.index')],
+                ['label' => 'Tambah'],
+            ]
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
