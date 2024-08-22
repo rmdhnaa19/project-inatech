@@ -23,6 +23,22 @@
     transition: all 0.3s ease-in-out; /* Smooth transition */
 }
 
+#btn-simpan:hover {
+    background-color: #0056b3; /* Darker blue */
+    color: #fff; /* White text */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    transform: scale(1.05); /* Slightly increase the size */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
+#btn-kembali:hover {
+    background-color: #0056b3; /* Darker blue */
+    color: #fff; /* White text */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    transform: scale(1.05); /* Slightly increase the size */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
 .dataTables_wrapper .dataTables_length,
 .dataTables_wrapper .dataTables_filter {
     margin-bottom: 20px;

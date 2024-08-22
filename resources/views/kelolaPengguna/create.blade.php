@@ -176,9 +176,9 @@
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-sm btn-danger"
                         onclick="window.location.href='{{ url('kelolaPengguna') }}'"
-                        style="background-color: #DC3545; border-color: #DC3545">Kembali</button>
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                     <button type="submit" class="btn btn-primary btn-sm"
-                        style="background-color: #007BFF; border-color: #007BFF">Simpan</button>
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
                 </div>
             </form>
         </div>
