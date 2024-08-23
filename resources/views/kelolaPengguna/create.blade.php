@@ -3,6 +3,15 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form method="POST" action="{{ url('kelolaPengguna') }}" class="form-horizontal" enctype="multipart/form-data"
                 id="tambahPengguna">
                 @csrf
@@ -10,123 +19,100 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                placeholder="Masukkan Username" value="{{ old('username') }}" required autofocus>
-                            @error('username')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Username yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                id="username" name="username" placeholder="Masukkan Username" value="{{ old('username') }}"
+                                required autofocus>
+                            @if ($errors->has('username'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password"
-                                placeholder="Masukkan Password" required>
-                            @error('password')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Password yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                id="password" name="password" placeholder="Masukkan Password" required>
+                            @if ($errors->has('password'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="posisi" class="form-label">Role</label>
                             <div class="form-group">
-                                <select class="choices form-select" name="id_role" id="id_role">
+                                <select class="choices form-select @error('id_role') is-invalid @enderror" name="id_role"
+                                    id="id_role">
                                     <option value="{{ old('id_role') }}">- Pilih Role -</option>
                                     @foreach ($role as $item)
                                         <option value="{{ $item->id_role }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            @error('id_role')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Role yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            @if ($errors->has('id_role'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="nama" class="form-label">Nama</label>
-                            <input type="text" class="form-control" id="nama" name="nama"
-                                placeholder="Masukkan Nama" value="{{ old('nama') }}" required>
-                            @error('nama')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Nama yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
+                                name="nama" placeholder="Masukkan Nama" value="{{ old('nama') }}" required>
+                            @if ($errors->has('nama'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="no_hp" class="form-label">Nomor Handphone</label>
-                            <input type="text" class="form-control" id="no_hp" name="no_hp"
-                                placeholder="Masukkan No Hp" value="{{ old('no_hp') }}" required>
-                            @error('no_hp')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    No Hp yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
+                                name="no_hp" placeholder="Masukkan No Hp" value="{{ old('no_hp') }}" required>
+                            @if ($errors->has('no_hp'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="alamat" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat"></textarea>
-                            @error('no_hp')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Alamat yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
+                                placeholder="Masukkan Alamat"></textarea>
+                            @if ($errors->has('alamat'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="gaji_pokok" class="form-label">Gaji Pokok</label>
-                            <input type="number" class="form-control" id="gaji_pokok" name="gaji_pokok"
-                                placeholder="Masukkan Gaji Pokok" value="{{ old('gaji_pokok') }}" required>
-                            @error('gaji_pokok')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Gaji Pokok yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="number" class="form-control @error('gaji_pokok') is-invalid @enderror"
+                                id="gaji_pokok" name="gaji_pokok" placeholder="Masukkan Gaji Pokok"
+                                value="{{ old('gaji_pokok') }}" required>
+                            @if ($errors->has('gaji_pokok'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="komisi" class="form-label">Komisi</label>
-                            <input type="number" class="form-control" id="komisi" name="komisi"
-                                placeholder="Masukkan Komisi" value="{{ old('komisi') }}" required>
-                            @error('komisi')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Komisi yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="number" class="form-control @error('komisi') is-invalid @enderror" id="komisi"
+                                name="komisi" placeholder="Masukkan Komisi" value="{{ old('komisi') }}">
+                            @if ($errors->has('komisi'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="tunjangan" class="form-label">Tunjangan</label>
-                            <input type="number" class="form-control" id="tunjangan" name="tunjangan"
-                                placeholder="Masukkan Tunjangan" value="{{ old('tunjangan') }}" required>
-                            @error('tunjangan')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Tunjangan yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="number" class="form-control @error('tunjangan') is-invalid @enderror"
+                                id="tunjangan" name="tunjangan" placeholder="Masukkan Tunjangan"
+                                value="{{ old('tunjangan') }}">
+                            @if ($errors->has('tunjangan'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="potongan_gaji" class="form-label">Potongan Gaji</label>
-                            <input type="number" class="form-control" id="potongan_gaji" name="potongan_gaji"
-                                placeholder="Masukkan Potongan Gaji" value="{{ old('potongan_gaji') }}" required>
-                            @error('potongan_gaji')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    Potongan gaji yang anda masukkan tidak valid
-                                </div>
-                            @enderror
+                            <input type="number" class="form-control @error('potongan_gaji') is-invalid @enderror"
+                                id="potongan_gaji" name="potongan_gaji" placeholder="Masukkan Potongan Gaji"
+                                value="{{ old('potongan_gaji') }}">
+                            @if ($errors->has('potongan_gaji'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="posisi" class="form-label">Posisi</label>
                             <div class="form-group">
-                                <select class="choices form-select" name="posisi" id="posisi">
+                                <select class="choices form-select @error('posisi') is-invalid @enderror" name="posisi"
+                                    id="posisi">
                                     <option value="{{ old('posisi') }}">- Pilih Posisi -</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Teknisi">Teknisi</option>
@@ -134,6 +120,9 @@
                                     <option value="Pemilik Tambak">Pemilik Tambak</option>
                                 </select>
                             </div>
+                            @if ($errors->has('posisi'))
+                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -146,7 +135,8 @@
                                                 style="height: 50px; font-size: 50px"></i>
                                             <p>Seret lalu letakkan file di sini</p>
                                         </div>
-                                        <input type="file" name="image" class="drop-zone__input" id="foto">
+                                        <input type="file" name="image" class="drop-zone__input" id="foto"
+                                            name="foto">
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -179,12 +169,6 @@
 @push('css')
 @endpush
 @push('js')
-    {{-- <script>
-        document.querySelector('#foto').addEventListener('change', function() {
-            const fileName = this.files.length > 0 ? this.files[0].name : 'Choose file...';
-            document.querySelector('.form-file-text').textContent = fileName;
-        });
-    </script> --}}
     <script>
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');

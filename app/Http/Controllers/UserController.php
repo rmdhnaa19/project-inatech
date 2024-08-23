@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RoleModel;
 use App\Models\UserModel;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -47,20 +48,22 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $request->validate([
             'username' => 'required|string|min:5|unique:user,username',
             'password' => 'required|string|min:8',
+            'id_role' => 'required|integer',
             'nama' => 'required|string|min:5|unique:user,nama',
             'no_hp' => 'required|string|max:12',
             'alamat' => 'required|string',
             'gaji_pokok' => 'required|integer',
-            'komisi' => 'required|integer',
-            'tunjangan' => 'required|integer',
-            'potongan_gaji' => 'required|integer',
+            'komisi' => 'nullable|integer',
+            'tunjangan' => 'nullable|integer',
+            'potongan_gaji' => 'nullable|integer',
             'posisi' => 'required|string',
             'foto' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+        dd($request->validate());
 
         if($request->file('foto')){
             $upFoto['foto'] = $request->file('foto')->store('foto_user');
@@ -69,6 +72,7 @@ class UserController extends Controller
         UserModel::create([
             'username' => $request->username,
             'password' => bcrypt($request->password),
+            'id_role' => $request->id_role,
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
@@ -80,6 +84,6 @@ class UserController extends Controller
             'foto' => $upFoto['foto'],
         ]);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
-        return redirect('/kelolaPengguna');
+        return redirect(route('kelolaPengguna.index'));
     }
 }
