@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header">Data Pengguna</div>
         <div class="card-body">
-            <table class="table" id="table_kelolaPengguna">
+            <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
                     <tr class="text-center">
                         <th>NAMA</th>

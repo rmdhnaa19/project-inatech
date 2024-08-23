@@ -48,25 +48,28 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // Inisialisasi variabel $upGambar dengan nilai default
+        $upGambar = ['foto' => null];
+        
         // dd($request->all());
         $request->validate([
-            'username' => 'required|string|min:5|unique:user,username',
+            'username' => 'required|string|unique:user,username',
             'password' => 'required|string|min:8',
             'id_role' => 'required|integer',
-            'nama' => 'required|string|min:5|unique:user,nama',
-            'no_hp' => 'required|string|max:12',
+            'nama' => 'required|string|unique:user,nama',
+            'no_hp' => 'required|string|min:11|max:12',
             'alamat' => 'required|string',
             'gaji_pokok' => 'required|integer',
             'komisi' => 'nullable|integer',
             'tunjangan' => 'nullable|integer',
             'potongan_gaji' => 'nullable|integer',
             'posisi' => 'required|string',
-            'foto' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        dd($request->validate());
+        // dd($request->validate());
 
         if($request->file('foto')){
-            $upFoto['foto'] = $request->file('foto')->store('foto_user');
+            $upGambar['foto'] = $request->file('foto')->store('foto_user');
         }
 
         UserModel::create([
@@ -81,7 +84,7 @@ class UserController extends Controller
             'tunjangan' => $request->tunjangan,
             'potongan_gaji' => $request->potongan_gaji,
             'posisi' => $request->posisi,
-            'foto' => $upFoto['foto'],
+            'foto' => $upGambar['foto'],
         ]);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
         return redirect(route('kelolaPengguna.index'));

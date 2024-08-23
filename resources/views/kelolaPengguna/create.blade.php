@@ -23,15 +23,23 @@
                                 id="username" name="username" placeholder="Masukkan Username" value="{{ old('username') }}"
                                 required autofocus>
                             @if ($errors->has('username'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('username') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="password" name="password" placeholder="Masukkan Password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" placeholder="Masukkan Password" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="toggle-password"
+                                        style="cursor: pointer; padding: 0.7rem 0.6rem;">
+                                        <i class="fa fa-eye" id="eye-icon"></i>
+                                    </span>
+                                </div>
+                            </div>
                             @if ($errors->has('password'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('password') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -46,7 +54,7 @@
                                 </select>
                             </div>
                             @if ($errors->has('id_role'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('id_role') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -62,7 +70,7 @@
                             <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
                                 name="no_hp" placeholder="Masukkan No Hp" value="{{ old('no_hp') }}" required>
                             @if ($errors->has('no_hp'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('no_hp') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -70,7 +78,7 @@
                             <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
                                 placeholder="Masukkan Alamat"></textarea>
                             @if ($errors->has('alamat'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -79,7 +87,7 @@
                                 id="gaji_pokok" name="gaji_pokok" placeholder="Masukkan Gaji Pokok"
                                 value="{{ old('gaji_pokok') }}" required>
                             @if ($errors->has('gaji_pokok'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('gaji_pokok') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -87,7 +95,7 @@
                             <input type="number" class="form-control @error('komisi') is-invalid @enderror" id="komisi"
                                 name="komisi" placeholder="Masukkan Komisi" value="{{ old('komisi') }}">
                             @if ($errors->has('komisi'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('komisi') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -96,7 +104,7 @@
                                 id="tunjangan" name="tunjangan" placeholder="Masukkan Tunjangan"
                                 value="{{ old('tunjangan') }}">
                             @if ($errors->has('tunjangan'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('tunjangan') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -105,7 +113,7 @@
                                 id="potongan_gaji" name="potongan_gaji" placeholder="Masukkan Potongan Gaji"
                                 value="{{ old('potongan_gaji') }}">
                             @if ($errors->has('potongan_gaji'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('potongan_gaji') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -121,7 +129,7 @@
                                 </select>
                             </div>
                             @if ($errors->has('posisi'))
-                                <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                <span class="text-danger">{{ $errors->first('posisi') }}</span>
                             @endif
                         </div>
                     </div>
@@ -144,7 +152,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-file">
-                                        <input type="file" class="form-file-input" id="browse" name="browse">
+                                        <input type="file" class="form-file-input" id="foto" name="foto">
                                         <label class="form-file-label" for="browse">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
@@ -172,7 +180,7 @@
     <script>
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');
-        const browseInput = document.querySelector('#browse');
+        const browseInput = document.querySelector('#foto');
         const fileNameLabel = document.querySelector('.form-file-text');
 
         // Handle the file drop
@@ -214,5 +222,21 @@
         function updateFileName(name) {
             fileNameLabel.textContent = name;
         }
+    </script>
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function(e) {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
     </script>
 @endpush
