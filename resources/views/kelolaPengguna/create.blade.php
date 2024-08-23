@@ -139,21 +139,14 @@
                     <div class="col-md-6 d-flex justify-content-center align-items-center">
                         <div class="form-group">
                             <div class="col">
-                                <img class="img-preview img-fluid mb-2 col-sm-2">
                                 <div class="row mb-1">
                                     <div class="drop-zone">
-                                        <div class="col">
-                                            <div class="text-center row">
-                                                <i class="fa-solid fa-cloud-arrow-up"
-                                                    style="height: 50px; font-size: 50px"></i>
-                                            </div>
-                                            <div class="row">
-                                                <span class="drop-zone__prompt text-center">Seret lalu letakkan file di
-                                                    sini</span>
-                                            </div>
+                                        <div class="text-center">
+                                            <i class="fa-solid fa-cloud-arrow-up"
+                                                style="height: 50px; font-size: 50px"></i>
+                                            <p>Seret lalu letakkan file di sini</p>
                                         </div>
-                                        <input type="file" name="image" class="drop-zone__input" id="foto"
-                                            name="foto" onchange="previewImage()" required>
+                                        <input type="file" name="image" class="drop-zone__input" id="foto">
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -161,9 +154,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-file">
-                                        <input type="file" class="form-file-input" id="foto" name="foto"
-                                            onchange="previewImage()" required>
-                                        <label class="form-file-label" for="foto">
+                                        <input type="file" class="form-file-input" id="browse" name="browse">
+                                        <label class="form-file-label" for="browse">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                         </label>
@@ -182,21 +174,61 @@
                 </div>
             </form>
         </div>
-    @endsection
-    @push('css')
-    @endpush
-    @push('js')
-        <script>
-            function previewImage() {
-                const foto = document.querySelector('#foto');
-                const imgPreview = document.querySelector('.img-preview');
-                imgPreview.style.display = 'block';
-                const oFReader = new FileReader();
-                oFReader.readAsDataURL(foto.files[0]);
+    </div>
+@endsection
+@push('css')
+@endpush
+@push('js')
+    {{-- <script>
+        document.querySelector('#foto').addEventListener('change', function() {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'Choose file...';
+            document.querySelector('.form-file-text').textContent = fileName;
+        });
+    </script> --}}
+    <script>
+        const dropZone = document.querySelector('.drop-zone');
+        const dropZoneInput = document.querySelector('.drop-zone__input');
+        const browseInput = document.querySelector('#browse');
+        const fileNameLabel = document.querySelector('.form-file-text');
 
-                oFReader.onload = function(oFREvent) {
-                    imgPreview.src = oFREvent.target.result;
-                }
+        // Handle the file drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone--over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone--over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone--over');
+            const files = e.dataTransfer.files;
+            dropZoneInput.files = files;
+            updateFileName(files[0].name);
+        });
+
+        // Make drop zone clickable
+        dropZone.addEventListener('click', () => {
+            dropZoneInput.click();
+        });
+
+        // Handle the file browse
+        browseInput.addEventListener('change', function() {
+            dropZoneInput.files = browseInput.files; // Sync files with drop zone
+            updateFileName(this.files[0].name);
+        });
+
+        // Update the filename in the label
+        dropZoneInput.addEventListener('change', function() {
+            if (dropZoneInput.files.length > 0) {
+                updateFileName(dropZoneInput.files[0].name);
             }
-        </script>
-    @endpush
+        });
+
+        function updateFileName(name) {
+            fileNameLabel.textContent = name;
+        }
+    </script>
+@endpush

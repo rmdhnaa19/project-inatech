@@ -47,6 +47,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $request->validate([
             'username' => 'required|string|min:5|unique:user,username',
             'password' => 'required|string|min:8',
