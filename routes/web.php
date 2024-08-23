@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TambakController;
+use App\Http\Controllers\KolamController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,12 +25,14 @@ Route::get('/', [LoginController::class, 'index']);
 Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::group(['prefix' => 'kelolaPengguna'], function(){
-    Route::get('/', [UserController::class, 'index']);
+    Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index');
     Route::post('/list', [UserController::class, 'list']);
-    Route::get('/create', [UserController::class, 'create']);
+    Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create');
     Route::post('/', [UserController::class, 'store']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::get('/{id}/edit', [UserController::class, 'edit']);
+    Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit');
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');

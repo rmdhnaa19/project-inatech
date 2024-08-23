@@ -37,13 +37,13 @@
             </a>
             <ul class="submenu ">
                 <li>
-                    <a href="{{ url('/manajemenGudang') }}">Tambak</a>
+                    <a href="{{ url('/manajemenTambak') }}">Tambak</a>
                 </li>
                 <li>
                     <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Tambak</a>
                 </li>
                 <li>
-                    <a href="{{ url('/manajemenPJGudang') }}">Kolam</a>
+                    <a href="{{ url('/manajemenKolam') }}">Kolam</a>
                 </li>
                 <li>
                     <a href="{{ url('/manajemenPJGudang') }}">Fase Kolam</a>
