@@ -69,7 +69,8 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $validatedData['foto'] = $request->file('foto')->store('foto_user', 'public');
+            $path = $request->file('foto')->store('foto_user', 'public');
+            dd($path);
         }
 
         $validatedData['password'] = bcrypt($validatedData['password']);
