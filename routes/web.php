@@ -39,7 +39,6 @@ Route::group(['prefix' => 'kelolaPengguna'], function(){
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('kelolaPengguna.destroy');
 });
 
-<<<<<<< HEAD
 Route::group(['prefix' => 'kelolaGudang'], function(){
     Route::get('/', [GudangController::class, 'index'])->name('kelolaGudang.index');
     Route::post('/list', [GudangController::class, 'list']);
@@ -52,12 +51,7 @@ Route::group(['prefix' => 'kelolaGudang'], function(){
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-=======
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-
-
-// Route manajemen tambak
 Route::group(['prefix' => 'manajemenTambak'], function(){
     Route::get('/', [TambakController::class, 'index'])->name('tambak.index');
     Route::post('/list', [TambakController::class, 'list']);
@@ -104,4 +98,3 @@ Route::group(['prefix' => 'pjTambak'], function(){
     Route::put('/{id}', [PjTambakController::class, 'update']);
     Route::delete('/{id}', [PjTambakController::class, 'destroy']);
 });
->>>>>>> 920342426ce430b60f5467da0a3c6c1e7ba6ecbf
