@@ -18,6 +18,10 @@
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pjTambak.css') }}">
     @stack('css')
 </head>
 

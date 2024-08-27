@@ -1,16 +1,15 @@
 @extends('layouts.template')
-@section('title', 'Tambak')
+@section('title', 'PjTambak')
 @section('content')
     <div class="card">
-        <div class="card-header">Manajemen Tambak</div>
+        <div class="card-header">Penanggung Jawab Tambak</div>
         <div class="card-body">
-            <table class="table" id="table_manajemenTambak">
+            <table class="table" id="table_pjTambak">
                 <thead>
                     <tr class="text-center">
-                        <th>NAMA TAMBAK</th>
-                        <th>LUAS LAHAN</th>
-                        <th>LUAS TAMBAK</th>
-                        <th>LOKASI</th>
+                        <th>KODE USER TAMBAK</th>
+                        <th>ID USER</th>
+                        <th>ID TAMBAK</th>
                     </tr>
                 </thead>
             </table>
@@ -22,10 +21,10 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
+            var dataPjTambak = $('#table_pjTambak').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenTambak/list') }}",
+                    "url": "{{ url('pjTambak/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -33,25 +32,19 @@
                     }
                 },
                 columns: [{
-                        data: "nama_tambak",
+                        data: "kd_user_tambak",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_lahan",
+                        data: "id_user",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_tambak",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "lokasi_tambak",
+                        data: "id_tambak",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -65,17 +58,17 @@
             });
             
             // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_manajemenTambak_filter").append(
+            $("#table_pjTambak_filter").append(
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
 
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('pjTambak/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
+            $('input[type="search"]').attr('placeholder', 'Cari data Penanggung Jawab Tambak...');
         });
     </script>
 @endpush
