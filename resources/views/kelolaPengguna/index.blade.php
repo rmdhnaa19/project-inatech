@@ -37,10 +37,10 @@
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true,
-                        render: function(data, type, row) {
-                            // Menggunakan route yang lebih umum dengan hanya ID
-                            return '<a href="{{ url('/') }}/' + id_user + '">' + data + '</a>';
-                        }
+                        // render: function(data, type, row) {
+                        //     // Menggunakan route yang lebih umum dengan hanya ID
+                        //     return '<a href="{{ url('/') }}/' + id_user + '">' + data + '</a>';
+                        // }
                     },
                     {
                         data: "no_hp",

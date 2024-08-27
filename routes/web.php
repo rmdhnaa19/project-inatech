@@ -26,13 +26,13 @@ Route::get('/login', [LoginController::class, 'authenticate']);
 
 Route::group(['prefix' => 'kelolaPengguna'], function(){
     Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index');
-    Route::post('/list', [UserController::class, 'list']);
+    Route::post('/list', [UserController::class, 'list'])->name('kelolaPengguna.list');
     Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create');
-    Route::post('/', [UserController::class, 'store']);
+    Route::post('/', [UserController::class, 'store'])->name('kelolaPengguna.store');
     Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show');
     Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit');
-    Route::put('/{id}', [UserController::class, 'update']);
-    Route::delete('/{id}', [UserController::class, 'destroy']);
+    Route::put('/{id}', [UserController::class, 'update'])->name('kelolaPengguna.update');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('kelolaPengguna.destroy');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
