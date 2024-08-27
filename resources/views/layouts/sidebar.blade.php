@@ -40,13 +40,13 @@
                     <a href="{{ url('/manajemenTambak') }}">Tambak</a>
                 </li>
                 <li>
-                    <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Tambak</a>
+                    <a href="{{ url('/pjTambak') }}">Penanggung Jawab Tambak</a>
                 </li>
                 <li>
                     <a href="{{ url('/manajemenKolam') }}">Kolam</a>
                 </li>
                 <li>
-                    <a href="{{ url('/manajemenPJGudang') }}">Fase Kolam</a>
+                    <a href="{{ url('/faseKolam') }}">Fase Kolam</a>
                 </li>
             </ul>
         </li>

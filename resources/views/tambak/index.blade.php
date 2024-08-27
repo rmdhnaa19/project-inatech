@@ -71,7 +71,7 @@
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('kelolaPengguna/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
