@@ -23,10 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/coba',[CobaController::class, 'index']);
-
 Route::get('/', [LoginController::class, 'index']);
 Route::get('/login', [LoginController::class, 'authenticate']);
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 Route::group(['prefix' => 'kelolaPengguna'], function(){
     Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index');
@@ -49,8 +49,6 @@ Route::group(['prefix' => 'kelolaGudang'], function(){
     Route::put('/{id}', [GudangController::class, 'update']);
     Route::delete('/{id}', [GudangController::class, 'destroy']);
 });
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 Route::group(['prefix' => 'manajemenTambak'], function(){
     Route::get('/', [TambakController::class, 'index'])->name('tambak.index');
