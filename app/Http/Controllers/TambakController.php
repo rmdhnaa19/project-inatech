@@ -16,7 +16,10 @@ class TambakController extends Controller
         $breadcrumb = (object) [
             'title' => 'Kelola Data Tambak',
             'paragraph' => 'Berikut ini merupakan data tambak yang terinput ke dalam sistem',
-            'list' => ['Home', 'Kelola Tambak', 'Tambak']
+            'list' => [
+                ['label' => 'Home', 'url' => route('tambak.index')],
+                ['label' => 'Manajemen Tambak'],
+            ]
         ];
         $activeMenu = 'manajemenTambak';
         return view('tambak.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
@@ -28,13 +31,18 @@ class TambakController extends Controller
         return DataTables::of($tambaks)
         ->make(true);
     }
+public function create(){
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Tambak',
+        'paragraph' => 'Berikut ini merupakan form tambah data tambak yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kelola Pengguna', 'url' => route('tambak.index')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'manajemenTambak';
+        $tambak = TambakModel::all();
+        return view('tambak.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
 }
-// public function create(){
-    //     $breadcrumb = (object) [
-    //         'title' => 'Tambah Data Tambak',
-    //         'paragraph' => 'Berikut ini merupakan form tambah data tambak yang terinput ke dalam sistem',
-    //         'list' => ['Home', 'Kelola Pengguna', 'Tambah']
-    //     ];
-    //     $activeMenu = 'kelolaPengguna';
-    //     $role = RoleModel::all();
-    //     return view('kelolaPengguna.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);    
+}
