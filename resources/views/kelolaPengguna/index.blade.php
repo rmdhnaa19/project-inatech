@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header">Data Pengguna</div>
         <div class="card-body">
-            <table class="table" id="table_kelolaPengguna">
+            <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
                     <tr class="text-center">
                         <th>NAMA</th>
@@ -36,7 +36,11 @@
                         data: "nama",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
-                        searchable: true
+                        searchable: true,
+                        render: function(data, type, row) {
+                            // Menggunakan route yang lebih umum dengan hanya ID
+                            return '<a href="{{ url('/') }}/' + id_user + '">' + data + '</a>';
+                        }
                     },
                     {
                         data: "no_hp",
