@@ -18,6 +18,7 @@
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaGudang.css') }}">
     @stack('css')
 </head>
 

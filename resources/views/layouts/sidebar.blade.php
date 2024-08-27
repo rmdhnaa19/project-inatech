@@ -16,14 +16,14 @@
                 <span>Kelola Pengguna</span>
             </a>
         </li>
-        <li class="sidebar-item  has-sub">
+        <li class="sidebar-item  {{ $activeMenu == 'kelolaGudang' ? 'active' : '' }} has-sub ">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Kelola Gudang</span>
             </a>
             <ul class="submenu ">
                 <li>
-                    <a href="{{ url('/manajemenGudang') }}">Gudang</a>
+                    <a href="{{ url('/kelolaGudang') }}">Gudang</a>
                 </li>
                 <li>
                     <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Gudang</a>
