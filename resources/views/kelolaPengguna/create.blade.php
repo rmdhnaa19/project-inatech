@@ -143,8 +143,7 @@
                                                 style="height: 50px; font-size: 50px"></i>
                                             <p>Seret lalu letakkan file di sini</p>
                                         </div>
-                                        <input type="file" name="image" class="drop-zone__input" id="foto"
-                                            name="foto">
+                                        <input type="file" class="drop-zone__input" id="foto" name="foto">
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -152,8 +151,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-file">
-                                        <input type="file" class="form-file-input" id="foto" name="foto">
-                                        <label class="form-file-label" for="browse">
+                                        <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
+                                        <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                         </label>
