@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -11,7 +11,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
             <form method="POST" action="{{ url('kelolaPengguna') }}" class="form-horizontal" enctype="multipart/form-data"
                 id="tambahPengguna">
                 @csrf
@@ -201,11 +201,6 @@
             uploadFile(files[0]);
         });
 
-        // Make drop zone clickable
-        dropZone.addEventListener('click', () => {
-            dropZoneInput.click();
-        });
-
         // Handle the file browse
         browseInput.addEventListener('change', function() {
             dropZoneInput.files = browseInput.files; // Sync files with drop zone
@@ -225,4 +220,50 @@
             fileNameLabel.textContent = name;
         }
     </script>
+
+    {{-- <script>
+        const dropZone = document.querySelector('.drop-zone');
+        const dropZoneInput = document.querySelector('.drop-zone__input');
+        const browseInput = document.querySelector('#foto');
+        const fileNameLabel = document.querySelector('.form-file-text');
+
+        // Handle the file drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone--over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone--over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone--over');
+            const files = e.dataTransfer.files;
+            handleFileSelection(files[0]);
+        });
+
+        // Handle the file browse
+        browseInput.addEventListener('change', function() {
+            handleFileSelection(this.files[0]);
+        });
+
+        function handleFileSelection(file) {
+            if (file && file.type.startsWith('image/')) {
+                dropZoneInput.files = new DataTransfer().files; // Clear any existing files
+                dropZoneInput.files = file;
+                updateFileName(file.name);
+                uploadFile(file); // Uncomment this line to handle the file upload
+            } else {
+                alert('Please select a valid image file.');
+                dropZoneInput.value = ''; // Clear the input if the file is invalid
+                fileNameLabel.textContent = 'Choose file...';
+            }
+        }
+
+        function updateFileName(name) {
+            fileNameLabel.textContent = name;
+        }
+    </script> --}}
 @endpush
