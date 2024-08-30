@@ -137,7 +137,7 @@
                         <div class="form-group">
                             <div class="col">
                                 <div class="row mb-1">
-                                    <div class="drop-zone">
+                                    <div class="drop-zone px-5">
                                         <div class="text-center">
                                             <i class="fa-solid fa-cloud-arrow-up"
                                                 style="height: 50px; font-size: 50px"></i>
