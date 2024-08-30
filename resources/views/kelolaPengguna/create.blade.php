@@ -199,6 +199,7 @@
             const files = e.dataTransfer.files;
             dropZoneInput.files = files;
             updateFileName(files[0].name);
+            uploadFile(files[0]);
         });
 
         // Make drop zone clickable
@@ -210,12 +211,14 @@
         browseInput.addEventListener('change', function() {
             dropZoneInput.files = browseInput.files; // Sync files with drop zone
             updateFileName(this.files[0].name);
+            uploadFile(this.files[0]);
         });
 
         // Update the filename in the label
         dropZoneInput.addEventListener('change', function() {
             if (dropZoneInput.files.length > 0) {
                 updateFileName(dropZoneInput.files[0].name);
+                uploadFile(dropZoneInput.files[0]); // Upload file to server
             }
         });
 

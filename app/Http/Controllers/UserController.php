@@ -69,12 +69,17 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_user', 'public');
+            $request->file('foto')->store('foto_user', 'public');
         }
 
         $validatedData['password'] = bcrypt($validatedData['password']);
         UserModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
         return redirect()->route('kelolaPengguna.index');
+    }
+
+    public function show(string $id){
+        $user = UserModel::with('role')->find($id);
+        return view('kelolaPengguna.show', ['user' => $user]);
     }
 }
