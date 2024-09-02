@@ -103,38 +103,38 @@
             </ul>
         </li>
         <li class='sidebar-title'>MANAJEMEN BUDIDAYA</li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'anco' ? 'active' : '' }}">
+            <a href="{{ url('/anco') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Anco</span>
             </a>
         </li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'kualitasAir' ? 'active' : '' }}">
+            <a href="{{ url('/kualitasair') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Kualitas Air</span>
             </a>
         </li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'penanganan' ? 'active' : '' }}">
+            <a href="{{ url('/penanganan') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Penanganan</span>
             </a>
         </li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'sampling' ? 'active' : '' }}">
+            <a href="{{ url('/sampling') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Sampling</span>
             </a>
         </li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'pakanHarian' ? 'active' : '' }}">
+            <a href="{{ url('/pakanHarian') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Pakan Harian</span>
             </a>
         </li>
-        <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
-            <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
+        <li class="sidebar-item {{ $activeMenu == 'kematianUdang' ? 'active' : '' }}">
+            <a href="{{ url('/kematianUdang') }}" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Kematian Udang</span>
             </a>
