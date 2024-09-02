@@ -104,7 +104,6 @@ Route::group(['prefix' => 'pjTambak'], function(){
     Route::delete('/{id}', [PjTambakController::class, 'destroy']);
 });
 
-
 // Route anco
 Route::group(['prefix' => 'anco'], function(){
     Route::get('/', [AncoController::class, 'index'])->name('anco.index');
@@ -175,5 +174,27 @@ Route::group(['prefix' => 'kematianUdang'], function(){
     Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit');
     Route::put('/{id}', [KematianUdangController::class, 'update']);
     Route::delete('/{id}', [KematianUdangController::class, 'destroy']);
+// manajemen tambak
+Route::group(['prefix' => 'manajemenTambak'], function(){
+    Route::get('/', [TambakController::class, 'index'])->name('tambak.index');
+    Route::post('/list', [TambakController::class, 'list']);
+    Route::get('/create', [TambakController::class, 'create'])->name('tambak.create');
+    Route::post('/', [TambakController::class, 'store']);
+    Route::get('/{id}', [TambakController::class, 'show'])->name('tambak.show');
+    Route::get('/{id}/edit', [TambakController::class, 'edit'])->name('tambak.edit');
+    Route::put('/{id}', [TambakController::class, 'update']);
+    Route::delete('/{id}', [TambakController::class, 'destroy']);
+});
+
+// Route manajemen kolam
+Route::group(['prefix' => 'manajemenKolam'], function(){
+    Route::get('/', [KolamController::class, 'index'])->name('kolam.index');
+    Route::post('/list', [KolamController::class, 'list']);
+    Route::get('/create', [KolamController::class, 'create'])->name('kolam.create');
+    Route::post('/', [KolamController::class, 'store']);
+    Route::get('/{id}', [KolamController::class, 'show'])->name('kolam.show');
+    Route::get('/{id}/edit', [KolamController::class, 'edit'])->name('kolam.edit');
+    Route::put('/{id}', [KolamController::class, 'update']);
+    Route::delete('/{id}', [KolamController::class, 'destroy']);
 });
 
