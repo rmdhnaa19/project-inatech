@@ -43,16 +43,17 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
-        return view('kelolaPengguna.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
+        return view('kelolaPengguna.create', [
+            'breadcrumb' => $breadcrumb, 
+            'activeMenu' => $activeMenu, 
+            'role' => $role
+        ]);
     }
-
+    
     public function store(Request $request)
     {
-        // Inisialisasi variabel $upGambar dengan nilai default
-        $upGambar = ['foto' => null];
-        
-        // dd($request->all());
-        $request->validate([
+        // Validasi input
+        $validatedData = $request->validate([
             'username' => 'required|string|unique:user,username',
             'password' => 'required|string|min:8',
             'id_role' => 'required|integer',
@@ -66,27 +67,19 @@ class UserController extends Controller
             'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        // dd($request->validate());
 
-        if($request->file('foto')){
-            $upGambar['foto'] = $request->file('foto')->store('foto_user');
+        if ($request->hasFile('foto')) {
+            $request->file('foto')->store('foto_user', 'public');
         }
 
-        UserModel::create([
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-            'id_role' => $request->id_role,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
-            'gaji_pokok' => $request->gaji_pokok,
-            'komisi' => $request->komisi,
-            'tunjangan' => $request->tunjangan,
-            'potongan_gaji' => $request->potongan_gaji,
-            'posisi' => $request->posisi,
-            'foto' => $upGambar['foto'],
-        ]);
+        $validatedData['password'] = bcrypt($validatedData['password']);
+        UserModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
-        return redirect(route('kelolaPengguna.index'));
+        return redirect()->route('kelolaPengguna.index');
+    }
+
+    public function show(string $id){
+        $user = UserModel::with('role')->find($id);
+        return view('kelolaPengguna.show', ['user' => $user]);
     }
 }
