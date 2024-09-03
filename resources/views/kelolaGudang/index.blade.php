@@ -1,16 +1,15 @@
 @extends('layouts.template')
-@section('title', 'Tambak')
+@section('title', 'Kelola Gudang')
 @section('content')
     <div class="card">
-        <div class="card-header">Manajemen Tambak</div>
+        <div class="card-header">Data Gudang</div>
         <div class="card-body">
-            <table class="table" id="table_manajemenTambak">
+            <table class="table mb-3" id="table_kelolaGudang">
                 <thead>
                     <tr class="text-center">
-                        <th>NAMA TAMBAK</th>
-                        <th>LUAS LAHAN</th>
-                        <th>LUAS TAMBAK</th>
-                        <th>LOKASI</th>
+                        <th>NAMA</th>
+                        <th>ALAMAT</th>
+                        <th>LUAS</th>
                     </tr>
                 </thead>
             </table>
@@ -22,10 +21,10 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
+            var dataKelolGudang = $('#table_kelolaGudang').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenTambak/list') }}",
+                    "url": "{{ url('kelolaGudang/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -33,28 +32,26 @@
                     }
                 },
                 columns: [{
-                        data: "nama_tambak",
+                        data: "nama",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
+                        searchable: true,
+                        // render: function(data, type, row) {
+                        //     // Menggunakan route yang lebih umum dengan hanya ID
+                        //     return '<a href="{{ url('/') }}/' + id_user + '">' + data + '</a>';
+                        // }
+                    },
+                    {
+                        data: "alamat",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
                         searchable: true
                     },
                     {
-                        data: "luas_lahan",
+                        data: "luas",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "luas_tambak",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "lokasi_tambak",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
+                        searchable: false
                     },
                 ],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
@@ -63,19 +60,16 @@
                     search: "" // Menghilangkan teks "Search"
                 }
             });
-            
             // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_manajemenTambak_filter").append(
+            $("#table_kelolaGudang_filter").append(
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
-
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('kelolaGudang/create') }}"; // Arahkan ke halaman tambah gudang
             });
-
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
+            $('input[type="search"]').attr('placeholder', 'Cari data Gudang...');
         });
     </script>
 @endpush

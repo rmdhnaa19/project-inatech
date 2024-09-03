@@ -1,16 +1,17 @@
 @extends('layouts.template')
-@section('title', 'Tambak')
+@section('title', 'Anco')
 @section('content')
     <div class="card">
-        <div class="card-header">Manajemen Tambak</div>
+        <div class="card-header">Kelola Anco</div>
         <div class="card-body">
-            <table class="table" id="table_manajemenTambak">
+            <table class="table" id="table_anco">
                 <thead>
                     <tr class="text-center">
-                        <th>NAMA TAMBAK</th>
-                        <th>LUAS LAHAN</th>
-                        <th>LUAS TAMBAK</th>
-                        <th>LOKASI</th>
+                        <th>KODE ANCO</th>
+                        <th>TANGGAL CEK</th>
+                        <th>JAM PEMBERIAN PAKAN </th>
+                        <th>KONDISI PAKAN</th>
+                        <th>KONDISI UDANG</th>
                     </tr>
                 </thead>
             </table>
@@ -22,10 +23,10 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
+            var dataAnco = $('#table_anco').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenTambak/list') }}",
+                    "url": "{{ url('anco/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -33,25 +34,31 @@
                     }
                 },
                 columns: [{
-                        data: "nama_tambak",
+                        data: "kd_anco",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_lahan",
+                        data: "tanggal_cek",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_tambak",
+                        data: "jamPemberian_pakan",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "lokasi_tambak",
+                        data: "kondisi_pakan",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "kondisi_udang",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -63,19 +70,26 @@
                     search: "" // Menghilangkan teks "Search"
                 }
             });
-            
+
             // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_manajemenTambak_filter").append(
+            $("#table_anco_filter").append(
+                '<select class="form-control" name="id_fase_tambak" id="id_fase_tambak" required style="margin-left: 30px; width: 150px;">' +
+                '<option value="">- SEMUA -</option>' +
+                '@foreach ($fase_kolam as $item)' +
+                '<option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>' +
+                '@endforeach' +
+                '</select>' +
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
 
-            // Tambahkan event listener untuk tombol
+            // Tambahkan event listener untuk tombol tambah 
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
+                // "{{ route('kolam.create') }}"
+                    "{{ url('anco/create') }}"; // Arahkan ke halaman tambah pengguna
             });
-
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
+            $('input[type="search"]').attr('placeholder', 'Cari data anco...');
+        
         });
     </script>
 @endpush

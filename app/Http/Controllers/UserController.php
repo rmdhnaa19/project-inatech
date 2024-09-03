@@ -43,47 +43,43 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
-        return view('kelolaPengguna.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
+        return view('kelolaPengguna.create', [
+            'breadcrumb' => $breadcrumb, 
+            'activeMenu' => $activeMenu, 
+            'role' => $role
+        ]);
     }
-
+    
     public function store(Request $request)
     {
-        // dd($request->all());
-        $request->validate([
-            'username' => 'required|string|min:5|unique:user,username',
+        // Validasi input
+        $validatedData = $request->validate([
+            'username' => 'required|string|unique:user,username',
             'password' => 'required|string|min:8',
             'id_role' => 'required|integer',
-            'nama' => 'required|string|min:5|unique:user,nama',
-            'no_hp' => 'required|string|max:12',
+            'nama' => 'required|string|unique:user,nama',
+            'no_hp' => 'required|string|min:11|max:12',
             'alamat' => 'required|string',
             'gaji_pokok' => 'required|integer',
             'komisi' => 'nullable|integer',
             'tunjangan' => 'nullable|integer',
             'potongan_gaji' => 'nullable|integer',
             'posisi' => 'required|string',
-            'foto' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        dd($request->validate());
 
-        if($request->file('foto')){
-            $upFoto['foto'] = $request->file('foto')->store('foto_user');
+        if ($request->hasFile('foto')) {
+            $request->file('foto')->store('foto_user', 'public');
         }
 
-        UserModel::create([
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-            'id_role' => $request->id_role,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
-            'gaji_pokok' => $request->gaji_pokok,
-            'komisi' => $request->komisi,
-            'tunjangan' => $request->tunjangan,
-            'potongan_gaji' => $request->potongan_gaji,
-            'posisi' => $request->posisi,
-            'foto' => $upFoto['foto'],
-        ]);
+        $validatedData['password'] = bcrypt($validatedData['password']);
+        UserModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
-        return redirect(route('kelolaPengguna.index'));
+        return redirect()->route('kelolaPengguna.index');
+    }
+
+    public function show(string $id){
+        $user = UserModel::with('role')->find($id);
+        return view('kelolaPengguna.show', ['user' => $user]);
     }
 }

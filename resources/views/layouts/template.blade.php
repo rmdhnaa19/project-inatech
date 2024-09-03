@@ -18,6 +18,17 @@
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pjTambak.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/anco.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kualitasAir.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/penanganan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
+
     @stack('css')
 </head>
 
@@ -68,6 +79,22 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function(e) {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
             }
         });
     </script>

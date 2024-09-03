@@ -1,16 +1,16 @@
 @extends('layouts.template')
-@section('title', 'Tambak')
+@section('title', 'Kematian Udang')
 @section('content')
     <div class="card">
-        <div class="card-header">Manajemen Tambak</div>
+        <div class="card-header">Kematian Udang</div>
         <div class="card-body">
-            <table class="table" id="table_manajemenTambak">
+            <table class="table" id="table_kematianudang">
                 <thead>
                     <tr class="text-center">
-                        <th>NAMA TAMBAK</th>
-                        <th>LUAS LAHAN</th>
-                        <th>LUAS TAMBAK</th>
-                        <th>LOKASI</th>
+                        <th>KODE KEMATIAN UDANG</th>
+                        <th>SIZE UDANG</th>
+                        <th>BERAT UDANG</th>
+                        <th>CATATAN</th>
                     </tr>
                 </thead>
             </table>
@@ -22,10 +22,10 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
+            var datakematianUdang = $('#table_kematianudang').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenTambak/list') }}",
+                    "url": "{{ url('kematianudang/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -33,25 +33,25 @@
                     }
                 },
                 columns: [{
-                        data: "nama_tambak",
+                        data: "kd_kematian_udang",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_lahan",
+                        data: "size_udang",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "luas_tambak",
+                        data: "berat_udang",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "lokasi_tambak",
+                        data: "catatan",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -63,19 +63,25 @@
                     search: "" // Menghilangkan teks "Search"
                 }
             });
-            
-            // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_manajemenTambak_filter").append(
+
+             // Tambahkan tombol "Tambah" setelah kolom pencarian
+             $("#table_kematianudang_filter").append(
+                '<select class="form-control" name="id_fase_tambak" id="id_fase_tambak" required style="margin-left: 30px; width: 150px;">' +
+                '<option value="">- SEMUA -</option>' +
+                '@foreach ($fase_kolam as $item)' +
+                '<option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>' +
+                '@endforeach' +
+                '</select>' +
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
 
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('kematianudang/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
+            $('input[type="search"]').attr('placeholder', 'Cari data Kematian Udang...');
         });
     </script>
 @endpush

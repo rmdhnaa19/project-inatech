@@ -17,4 +17,7 @@ class PjTambakModel extends Model
 public function tambak():BelongsTo{
         return $this->belongsTo(TambakModel::class, 'id_tambak', 'id_tambak');
 }
+public function user():BelongsTo{
+    return $this->belongsTo(UserModel::class, 'id_user', 'id_user');
+}
 }
