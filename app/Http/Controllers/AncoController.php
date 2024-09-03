@@ -30,7 +30,7 @@ class AncoController extends Controller
     // menampilkan data table    
     public function list(Request $request)
     {
-        $ancos = AncoModel::select('id_anco','kd_anco', 'tanggal_cek', 'waktu_cek', 'pemberian_pakan','jamPemberian_pakan','kondisi_pakan', 'kondisi_udang', 'catatan', 'id_fase_tambak', 'created_at', 'updated_at')->with('fase_tambak'); 
+        $ancos = AncoModel::select('id_anco','kd_anco', 'tanggal_cek', 'waktu_cek', 'pemberian_pakan','jamPemberian_pakan','kondisi_pakan', 'kondisi_udang', 'catatan', 'id_fase_tambak', 'created_at', 'updated_at')->with('faseKolam'); 
         return DataTables::of($ancos)
         ->make(true);
     }
@@ -49,6 +49,40 @@ class AncoController extends Controller
     $activeMenu = 'anco';
     $fase_kolam = FaseKolamModel::all();
     return view('anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'kd_anco' => 'required|string|max:255|unique:anco,kd_anco',
+        'tanggal_cek' => 'required|date',
+        'jamPemberian_pakan' => 'required',
+        'kondisi_pakan' => 'required|string',
+        'kondisi_udang' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    // Simpan data ke dalam database
+    $anco = new AncoModel();
+    $anco->kd_anco = $request->kd_anco;
+    $anco->tanggal_cek = $request->tanggal_cek;
+    $anco->jamPemberian_pakan = $request->jamPemberian_pakan;
+    $anco->kondisi_pakan = $request->kondisi_pakan;
+    $anco->kondisi_udang = $request->kondisi_udang;
+
+    // Simpan file image jika ada
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/anco'), $filename);
+        $anco->image = $filename;
+    }
+
+    $anco->save();
+
+    // Redirect ke halaman index dengan pesan sukses
+    return redirect()->route('anco.index')->with('success', 'Data anco berhasil ditambahkan');
 }
 }
 
