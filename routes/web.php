@@ -47,13 +47,13 @@ Route::group(['prefix' => 'kelolaPengguna'], function(){
 
 Route::group(['prefix' => 'kelolaGudang'], function(){
     Route::get('/', [GudangController::class, 'index'])->name('kelolaGudang.index');
-    Route::post('/list', [GudangController::class, 'list']);
+    Route::post('/list', [GudangController::class, 'list'])->name('kelolaGudang.list');
     Route::get('/create', [GudangController::class, 'create'])->name('kelolaGudang.create');
-    Route::post('/', [GudangController::class, 'store']);
+    Route::post('/', [GudangController::class, 'store'])->name('kelolaGudang.store');
     Route::get('/{id}', [GudangController::class, 'show'])->name('kelolaGudang.show');
     Route::get('/{id}/edit', [GudangController::class, 'edit'])->name('kelolaGudang.edit');
-    Route::put('/{id}', [GudangController::class, 'update']);
-    Route::delete('/{id}', [GudangController::class, 'destroy']);
+    Route::put('/{id}', [GudangController::class, 'update'])->name('kelolaGudang.update');
+    Route::delete('/{id}', [GudangController::class, 'destroy'])->name('kelolaGudang.destroy');
 });
 
 // manajemen tambak

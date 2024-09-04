@@ -79,7 +79,10 @@ class UserController extends Controller
     }
 
     public function show(string $id){
-        $user = UserModel::with('role')->find($id);
-        return view('kelolaPengguna.show', ['user' => $user]);
+        $user = UserModel::find($id); // Pastikan $id diisi dengan nilai yang valid
+        if (!$user) {
+            return redirect()->route('kelolaPengguna.index')->with('error', 'Pengguna tidak ditemukan.');
+        }
+        return view('kelolaPengguna.show', compact('user'));
     }
 }

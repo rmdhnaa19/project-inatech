@@ -19,8 +19,7 @@
     </div>
 
     <!--primary theme Modal -->
-    <!--primary theme Modal -->
-    <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -103,15 +102,22 @@
             // Event listener untuk menampilkan detail pengguna
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-
+                console.log(url); // Check the URL being used for the request
                 $.ajax({
                     url: url,
                     type: 'GET',
-                    success: function(data) {
-                        $('#userDetailModal .modal-body').html(data);
-                        $('#userDetailModal').modal('show');
+                    success: function(response) {
+                        console.log(response); // Log the response to see what is being returned
+
+                        if (response.html) {
+                            $('#userDetailModal .modal-body').html(response.html);
+                            $('#userDetailModal').modal('show');
+                        } else {
+                            alert('Gagal memuat detail pengguna');
+                        }
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText); // Log the error response
                         alert('Gagal memuat detail pengguna');
                     }
                 });
