@@ -109,7 +109,7 @@ Route::group(['prefix' => 'anco'], function(){
     Route::get('/', [AncoController::class, 'index'])->name('anco.index');
     Route::post('/list', [AncoController::class, 'list']);
     Route::get('/create', [AncoController::class, 'create'])->name('anco.create');
-    Route::post('/', [AncoController::class, 'store']);
+    Route::post('/', [AncoController::class, 'store'])->name('anco.store');
     Route::get('/{id}', [AncoController::class, 'show'])->name('anco.show');
     Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('anco.edit');
     Route::put('/{id}', [AncoController::class, 'update']);

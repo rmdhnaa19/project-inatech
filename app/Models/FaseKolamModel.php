@@ -17,4 +17,9 @@ class FaseKolamModel extends Model
 public function kolam():BelongsTo{
         return $this->belongsTo(KolamModel::class, 'id_kolam', 'id_kolam');
 }
+
+public function ancos()
+    {
+        return $this->hasMany(AncoModel::class, 'id_fase_tambak');
+    }
 }

@@ -46,11 +46,11 @@
                         <label for="kondisi_pakan" class="form-label">Kondisi Pakan</label>
                         <div class="form-group">
                             <select class="choices form-select @error('kondisi_pakan') is-invalid @enderror" name="kondisi_pakan"
-                                id="posisi">
-                                <option value="{{ old('posisi') }}">- Pilih Kondisi Pakan -</option>
-                                <option value="Manager">Sisa sedikit</option>
-                                <option value="Teknisi">Sisa setengah</option>
-                                <option value="Analis Tambak">Sisa banyak</option>
+                                id="kondisi_pakan">
+                                <option value="{{ old('kondisi_pakan') }}">- Pilih Kondisi Pakan -</option>
+                                <option value="Sisa sedikit">Sisa sedikit</option>
+                                <option value="Sisa setengah">Sisa setengah</option>
+                                <option value="Sisa banyak">Sisa banyak</option>
                             </select>
                         </div>
                         @if ($errors->has('kondisi_pakan'))
@@ -62,11 +62,11 @@
                         <label for="kondisi_udang" class="form-label">Kondisi Udang</label>
                         <div class="form-group">
                             <select class="choices form-select @error('kondisi_udang') is-invalid @enderror" name="kondisi_udang"
-                                id="posisi">
-                                <option value="{{ old('posisi') }}">- Pilih Kondisi Udang -</option>
-                                <option value="Manager">Udang sakit</option>
-                                <option value="Teknisi">Udang sehat</option>
-                                <option value="Analis Tambak">Udang mati</option>
+                                id="kondisi_udang">
+                                <option value="{{ old('kondisi_udang') }}">- Pilih Kondisi Udang -</option>
+                                <option value="Udang sakit">Udang sakit</option>
+                                <option value="Udang sehat">Udang sehat</option>
+                                <option value="Udang mati">Udang mati</option>
                             </select>
                         </div>
                         @if ($errors->has('kondisi_udang'))
@@ -82,7 +82,7 @@
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-3">
@@ -108,7 +108,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>
