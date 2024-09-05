@@ -7,14 +7,13 @@
             <table class="table" id="table_pakanHarian">
                 <thead>
                     <tr class="text-center">
-                        <th>KODE SAMPLING</th>
+                        <th>KODE PAKAN HARIAN</th>
                         <th>TANGGAL CEK</th>
+                        <th>WAKTU CEK</th>
                         <th>DOC</th>
                         <th>BERAT UDANG</th>
-                        <th>SIZE UDANG</th>
-                        <th>HARGA UDANG</th>
-                        <th>BIOMASSA</th>
-                        <th>POPULASI EKOR</th>
+                        <th>TOTAL PAKAN</th>
+                        <th>CATATAN</th>
                     </tr>
                 </thead>
             </table>
@@ -29,7 +28,7 @@
             var datapakanHarian = $('#table_pakanHarian').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('sampling/list') }}",
+                    "url": "{{ url('pakan_harian/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -37,13 +36,19 @@
                     }
                 },
                 columns: [{
-                        data: "kd_sampling",
+                        data: "kd_pakan_harian",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
                         data: "tanggal_cek",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "waktu_cek",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -61,25 +66,13 @@
                         searchable: true
                     },
                     {
-                        data: "size_udang",
+                        data: "total_pakan",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "harga_udang",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "biomassa",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "populasi_ekor",
+                        data: "catatan",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -106,7 +99,7 @@
             $("#btn-tambah").on('click', function() {
                 window.location.href =
                 // "{{ route('kolam.create') }}"
-                    "{{ url('pakanharian/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('pakanHarian/create') }}"; // Arahkan ke halaman tambah pengguna
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Pakan Harian...');
