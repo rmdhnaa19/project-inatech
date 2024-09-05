@@ -42,50 +42,26 @@ class GudangController extends Controller
             ]
         ];
         $activeMenu = 'kelolaGudang';
-        return view('kelolaGudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
+        return view('kelolaGudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
     }
 
     public function store(Request $request)
     {
-        // Inisialisasi variabel $upGambar dengan nilai default
-        $upGambar = ['foto' => null];
-        
-        // dd($request->all());
-        $request->validate([
-            'username' => 'required|string|unique:user,username',
-            'password' => 'required|string|min:8',
-            'id_role' => 'required|integer',
-            'nama' => 'required|string|unique:user,nama',
-            'no_hp' => 'required|string|min:11|max:12',
+        // Validasi input
+        $validatedData = $request->validate([
+            'nama' => 'required|string|unique:gudang,nama',
+            'panjang' => 'required|numeric',
+            'lebar' => 'required|numeric',
+            'luas' => 'required|numeric',
             'alamat' => 'required|string',
-            'gaji_pokok' => 'required|integer',
-            'komisi' => 'nullable|integer',
-            'tunjangan' => 'nullable|integer',
-            'potongan_gaji' => 'nullable|integer',
-            'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        // dd($request->validate());
 
-        if($request->file('foto')){
-            $upGambar['foto'] = $request->file('foto')->store('foto_user');
+        if ($request->hasFile('foto')) {
+            $request->file('foto')->store('foto_gudang', 'public');
         }
-
-        UserModel::create([
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-            'id_role' => $request->id_role,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
-            'gaji_pokok' => $request->gaji_pokok,
-            'komisi' => $request->komisi,
-            'tunjangan' => $request->tunjangan,
-            'potongan_gaji' => $request->potongan_gaji,
-            'posisi' => $request->posisi,
-            'foto' => $upGambar['foto'],
-        ]);
+        GudangModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
-        return redirect(route('kelolaPengguna.index'));
+        return redirect()->route('kelolaGudang.index');
     }
 }
