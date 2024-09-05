@@ -41,9 +41,8 @@ class GudangController extends Controller
                 ['label' => 'Tambah'],
             ]
         ];
-        $activeMenu = 'kelolaPengguna';
-        $role = RoleModel::all();
-        return view('kelolaPengguna.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
+        $activeMenu = 'kelolaGudang';
+        return view('kelolaGudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role]);
     }
 
     public function store(Request $request)

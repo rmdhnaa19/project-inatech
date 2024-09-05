@@ -26,7 +26,7 @@
                     <a href="{{ url('/kelolaGudang') }}">Gudang</a>
                 </li>
                 <li>
-                    <a href="{{ url('/manajemenPJGudang') }}">Penanggung Jawab Gudang</a>
+                    <a href="{{ url('/kelolaPJGudang') }}">Penanggung Jawab Gudang</a>
                 </li>
             </ul>
         </li>
