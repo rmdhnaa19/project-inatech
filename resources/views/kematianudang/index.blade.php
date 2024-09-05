@@ -65,7 +65,7 @@
             });
 
              // Tambahkan tombol "Tambah" setelah kolom pencarian
-             $("#table_kematianudang_filter").append(
+            $("#table_kematianudang_filter").append(
                 '<select class="form-control" name="id_fase_tambak" id="id_fase_tambak" required style="margin-left: 30px; width: 150px;">' +
                 '<option value="">- SEMUA -</option>' +
                 '@foreach ($fase_kolam as $item)' +
@@ -77,7 +77,7 @@
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('kematianudang/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('kematianUdang/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
