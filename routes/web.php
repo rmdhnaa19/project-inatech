@@ -121,7 +121,7 @@ Route::group(['prefix' => 'kualitasair'], function(){
     Route::get('/', [KualitasAirController::class, 'index'])->name('kualitasair.index');
     Route::post('/list', [KualitasAirController::class, 'list']);
     Route::get('/create', [KualitasAirController::class, 'create'])->name('kualitasair.create');
-    Route::post('/', [KualitasAirController::class, 'store']);
+    Route::post('/', [KualitasAirController::class, 'store'])->name('kualitasair.store');
     Route::get('/{id}', [KualitasAirController::class, 'show'])->name('kualitasair.show');
     Route::get('/{id}/edit', [KualitasAirController::class, 'edit'])->name('kualitasair.edit');
     Route::put('/{id}', [KualitasAirController::class, 'update']);

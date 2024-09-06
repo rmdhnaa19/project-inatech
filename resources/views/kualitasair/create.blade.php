@@ -3,14 +3,23 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="{{ url('kualitasAir') }}" class="form-horizontal" enctype="multipart/form-data"
+  @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif 
+        <form method="POST" action="{{ url('kualitasair') }}" class="form-horizontal" enctype="multipart/form-data"
             id="tambahkualitasair">
             @csrf
             <div class="form-group row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="kd_kulitas_air" class="form-label">Kode Kualitas Air</label>
-                        <input type="text" class="form-control" id="kd_anco" name="kd_kualitas_air"
+                        <input type="text" class="form-control" id="kd_kualitas_air" name="kd_kualitas_air"
                             placeholder="Masukkan kode kualitas air" value="{{ old('kd_kualitas_air') }}" required autofocus>
                         @error('kd_kualitas_air')
                         <div class="invalid-feedback">
@@ -49,7 +58,7 @@
                                 id="kejernihan_air">
                                 <option value="{{ old('warna_air') }}">- Pilih Kejernihan Air-</option>
                                 <option value="Jernih">Jernih</option>
-                                <option value="Jernih">Keruh</option>
+                                <option value="Keruh">Keruh</option>
                             </select>
                         </div>
                         @if ($errors->has('kejernihan_air'))
@@ -76,12 +85,10 @@
 
                     {{-- Tombol kembali dan simpan --}}
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                        <a class="btn btn-sm btn-default" href="{{ url('kualitasair') }}">Kembali</a>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
-                    </div>
-                </div>
-
-                {{-- Tambahkan foto di sini --}}
+                 
+                <!-- {{-- Tambahkan foto di sini --}}
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
@@ -104,7 +111,9 @@
                                         <span class="form-file-text">Pilih file...</span>
                                         <span class="form-file-button">Browse</span>
                                     </label>
-                                </div>
+                                </div>   </div>
+                </div> -->
+
                             </div>
                         </div>
                     </div>

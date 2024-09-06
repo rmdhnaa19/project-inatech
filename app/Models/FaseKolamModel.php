@@ -22,4 +22,10 @@ public function ancos()
     {
         return $this->hasMany(AncoModel::class, 'id_fase_tambak');
     }
+
+public function kualitasairs() 
+    {
+        return $this->hasMany(KualitasAirModel::class, 'id_fase_tambak');
+    }
+    
 }
