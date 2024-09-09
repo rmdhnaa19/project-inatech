@@ -7,7 +7,9 @@
             <table class="table" id="table_manajemenKolam">
                 <thead>
                     <tr class="text-center">
+                        <th>NAMA TAMBAK</th>
                         <th>TIPE KOLAM</th>
+                        <th>KODE KOLAM</th>
                         <th>PANJANG KOLAM </th>
                         <th>LEBAR KOLAM</th>
                         <th>LUAS KOLAM</th>
@@ -26,15 +28,28 @@
             var dataManajemenKolam = $('#table_manajemenKolam').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenKolam/list') }}",
+                    "url": "{{ url('kolam/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
                 },
-                columns: [{
+                columns: [
+                    {
+                        data: "tambak.nama_tambak",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
+                        searchable: true
+                    },
+                    {
                         data: "tipe_kolam",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "kd_kolam",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -85,7 +100,7 @@
             $("#btn-tambah").on('click', function() {
                 window.location.href =
                 // "{{ route('kolam.create') }}"
-                    "{{ url('manajemenKolam/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('kolam/create') }}"; // Arahkan ke halaman tambah pengguna
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Kolam...');

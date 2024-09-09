@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('tambak', function (Blueprint $table) {
             $table->id('id_tambak');
-            $table->string('gambar', 100); 
+            $table->string('foto', 255); 
             $table->string('nama_tambak', 50)->unique(); 
+            $table->string('id_gudang');
             $table->integer('luas_lahan'); 
             $table->integer('luas_tambak');
             $table->text('lokasi_tambak'); 

@@ -22,7 +22,7 @@ class FaseKolamController extends Controller
                 ['label' => 'Manajemen Fase Kolam'],
             ]
         ];
-        $activeMenu = 'faseKolam';
+        $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
         return view('fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
     }
@@ -43,8 +43,41 @@ class FaseKolamController extends Controller
                 ['label' => 'Tambah'],
             ]
         ];
-        $activeMenu = 'faseKolam';
+        $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
         return view('fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+}
+
+    public function store(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'kd_fase_tambak' => 'required|string|unique:fase_tambak,kd_fase_tambak',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_panen' => 'required|date',
+            'jumlah_tebar' => 'required|integer',
+            'densitas' => 'required|string',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+            'id_kolam' => 'required|string',                 
+        ]);
+
+        // Mengelola upload foto jika ada
+    if ($request->hasFile('foto')) {
+        $path = $request->file('foto')->store('foto_fase_kolam', 'public'); // Simpan ke storage
+        $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+    }
+
+    // Simpan data ke database
+    FaseKolamModel::create($validatedData);
+
+    return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    }
+
+    public function show(string $id){
+        $fasekolam = FaseKolamModel::find($id); // Pastikan $id diisi dengan nilai yang valid
+        if (!$fasekolam) {
+            return redirect()->route('fasekolam.index')->with('error', 'Fase kolam tidak ditemukan.');
+        }
+        return view('fasekolam.show', compact('fasekolam'));
 }
 }

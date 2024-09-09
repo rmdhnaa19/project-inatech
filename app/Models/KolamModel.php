@@ -12,7 +12,7 @@ class KolamModel extends Model
 
     protected $table = 'kolam';
     protected $primaryKey = 'id_kolam';
-    protected $fillable = ['kd_kolam', 'tipe_kolam', 'panjang_kolam', 'lebar_kolam','luas_kolam','kedalaman', 'id_tambak','created_at', 'updated_at'];
+    protected $fillable = ['kd_kolam', 'foto', 'tipe_kolam', 'panjang_kolam', 'lebar_kolam','luas_kolam','kedalaman', 'id_tambak','created_at', 'updated_at'];
 
 public function tambak():BelongsTo{
         return $this->belongsTo(TambakModel::class, 'id_tambak', 'id_tambak');

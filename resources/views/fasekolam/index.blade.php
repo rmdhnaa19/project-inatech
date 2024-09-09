@@ -7,6 +7,7 @@
             <table class="table" id="table_faseKolam">
                 <thead>
                     <tr class="text-center">
+                        <th>KODE FASE KOLAM</th>
                         <th>KODE KOLAM</th>
                         <th>TANGGAL MULAI</th>
                         <th>TANGGAL PANEN</th>
@@ -26,7 +27,7 @@
             var datafaseKolam = $('#table_faseKolam').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('faseKolam/list') }}",
+                    "url": "{{ url('fasekolam/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -40,6 +41,12 @@
                         searchable: true
                     },
                     {
+                        data: "kolam.kd_kolam",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
+                        searchable: true
+                    },
+                    {
                         data: "tanggal_mulai",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: false,
@@ -48,8 +55,8 @@
                     {
                         data: "tanggal_panen",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: "densitas",
@@ -84,7 +91,7 @@
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('faseKolam/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('fasekolam/create') }}"; // Arahkan ke halaman tambah pengguna
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');
