@@ -8,9 +8,10 @@
                 <thead>
                     <tr class="text-center">
                         <th>NAMA TAMBAK</th>
+                        <th>NAMA GUDANG</th>
                         <th>LUAS LAHAN</th>
                         <th>LUAS TAMBAK</th>
-                        <th>LOKASI</th>
+                        <th>LOKASI TAMBAK</th>
                     </tr>
                 </thead>
             </table>
@@ -25,7 +26,7 @@
             var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('manajemenTambak/list') }}",
+                    "url": "{{ url('tambak/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -36,6 +37,12 @@
                         data: "nama_tambak",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "gudang.nama",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
                         searchable: true
                     },
                     {
@@ -71,7 +78,7 @@
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('manajemenTambak/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('tambak/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search

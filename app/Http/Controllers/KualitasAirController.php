@@ -50,6 +50,7 @@ class KualitasAirController extends Controller
     $fase_kolam = FaseKolamModel::all();
     return view('kualitasair.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
+
 }
 
 

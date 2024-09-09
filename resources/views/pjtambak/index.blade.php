@@ -7,9 +7,9 @@
             <table class="table" id="table_pjTambak">
                 <thead>
                     <tr class="text-center">
-                        <th>KODE USER TAMBAK</th>
-                        <th>ID USER</th>
-                        <th>ID TAMBAK</th>
+                        <th>KODE PJ TAMBAK</th>
+                        <th>NAMA PJ TAMBAK</th>
+                        <th>NAMA TAMBAK</th>
                     </tr>
                 </thead>
             </table>
@@ -38,15 +38,15 @@
                         searchable: true
                     },
                     {
-                        data: "id_user",
+                        data: "user_nama",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
+                        orderable: false,
                         searchable: true
                     },
                     {
-                        data: "id_tambak",
+                        data: "tambak_nama",
                         className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
+                        orderable: false,
                         searchable: true
                     },
                 ],

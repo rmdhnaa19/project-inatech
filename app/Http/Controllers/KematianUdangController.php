@@ -30,8 +30,8 @@ class KematianUdangController extends Controller
     // menampilkan data table    
     public function list(Request $request)
     {
-        $kematianudangs = KematianUdangModel::select('id_kematian_udang', 'kd_kematian_udang', 'size_udang', 'berat_udang', 'catatan','gambar', 'id_fase_tambak', 'created_at', 'updated_at')->with('fase_tambak'); 
-        return DataTables::of($kematianudangs)
+        $kematian_udangs = KematianUdangModel::select('id_kematian_udang', 'kd_kematian_udang', 'size_udang', 'berat_udang', 'catatan','gambar', 'id_fase_tambak', 'created_at', 'updated_at')->with('fase_tambak'); 
+        return DataTables::of($kematian_udangs)
         ->make(true);
     }
 
