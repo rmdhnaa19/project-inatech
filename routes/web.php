@@ -133,7 +133,7 @@ Route::group(['prefix' => 'penanganan'], function(){
     Route::get('/', [PenangananController::class, 'index'])->name('penanganan.index');
     Route::post('/list', [PenangananController::class, 'list']);
     Route::get('/create', [PenangananController::class, 'create'])->name('penanganan.create');
-    Route::post('/', [PenangananController::class, 'store']);
+    Route::post('/', [PenangananController::class, 'store'])->name('penanganan.store');
     Route::get('/{id}', [PenangananController::class, 'show'])->name('penanganan.show');
     Route::get('/{id}/edit', [PenangananController::class, 'edit'])->name('penanganan.edit');
     Route::put('/{id}', [PenangananController::class, 'update']);
@@ -145,7 +145,7 @@ Route::group(['prefix' => 'sampling'], function(){
     Route::get('/', [SamplingController::class, 'index'])->name('sampling.index');
     Route::post('/list', [SamplingController::class, 'list']);
     Route::get('/create', [SamplingController::class, 'create'])->name('sampling.create');
-    Route::post('/', [SamplingController::class, 'store']);
+    Route::post('/', [SamplingController::class, 'store'])->name('sampling.store');
     Route::get('/{id}', [SamplingController::class, 'show'])->name('sampling.show');
     Route::get('/{id}/edit', [SamplingController::class, 'edit'])->name('sampling.edit');
     Route::put('/{id}', [SamplingController::class, 'update']);
@@ -157,7 +157,7 @@ Route::group(['prefix' => 'pakanHarian'], function(){
     Route::get('/', [PakanHarianController::class, 'index'])->name('pakanharian.index');
     Route::post('/list', [PakanHarianController::class, 'list']);
     Route::get('/create', [PakanHarianController::class, 'create'])->name('pakanharian.create');
-    Route::post('/', [PakanHarianController::class, 'store']);
+    Route::post('/', [PakanHarianController::class, 'store'])->name('pakanharian.store');
     Route::get('/{id}', [PakanHarianController::class, 'show'])->name('pakanharian.show');
     Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('pakanharian.edit');
     Route::put('/{id}', [PakanHarianController::class, 'update']);
@@ -169,7 +169,7 @@ Route::group(['prefix' => 'kematianUdang'], function(){
     Route::get('/', [KematianUdangController::class, 'index'])->name('kematianudang.index');
     Route::post('/list', [KematianUdangController::class, 'list']);
     Route::get('/create', [KematianUdangController::class, 'create'])->name('kematianudang.create');
-    Route::post('/', [KematianUdangController::class, 'store']);
+    Route::post('/', [KematianUdangController::class, 'store'])->name('kematianudang.store');
     Route::get('/{id}', [KematianUdangController::class, 'show'])->name('kematianudang.show');
     Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit');
     Route::put('/{id}', [KematianUdangController::class, 'update']);

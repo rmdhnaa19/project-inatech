@@ -27,5 +27,25 @@ public function kualitasairs()
     {
         return $this->hasMany(KualitasAirModel::class, 'id_fase_tambak');
     }
+
+public function penanganans() 
+    {
+        return $this->hasMany(PenangananModel::class, 'id_fase_tambak');
+    }
+
+public function samplings() 
+    {
+        return $this->hasMany(SamplingModel::class, 'id_fase_tambak');
+    }
+
+public function pakan_harians() 
+    {
+        return $this->hasMany(PakanHarianModel::class,'id_fase_tambak');
+    }
+
+public function kematianudangs() 
+    {
+        return $this->hasMany(KematianUdangModel::class,'id_fase_tambak');
+    }   
     
 }

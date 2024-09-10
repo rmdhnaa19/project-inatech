@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="DOC" class="form-label">DOC</label>
+                        <label for="DOC" class="form-label">DOC (hari)</label>
                         <input type="text" class="form-control" id="DOC" name="DOC"
                             placeholder="Masukkan DOC" value="{{ old('DOC') }}" required>
                         @error('DOC')
@@ -44,7 +44,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="berat_udang" class="form-label">Berat Udang</label>
+                        <label for="berat_udang" class="form-label">Berat Udang / Ekor (gram)</label>
                         <input type="text" class="form-control" id="berat_udang" name="berat_udang"
                             placeholder="Masukkan berat udang" value="{{ old('berat_udang') }}" required>
                         @error('berat_udang')
@@ -55,7 +55,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="size_udang" class="form-label">Size Udang</label>
+                        <label for="size_udang" class="form-label">Size Udang (cm)</label>
                         <input type="text" class="form-control" id="size_udang" name="size_udang"
                             placeholder="Masukkan size udang" value="{{ old('size_udang') }}" required>
                         @error('size_udang')
@@ -66,7 +66,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="harga_udang" class="form-label">Harga Udang</label>
+                        <label for="harga_udang" class="form-label">Harga Udang (Rp)</label>
                         <input type="text" class="form-control" id="harga_udang" name="harga_udang"
                             placeholder="Masukkan harga udang" value="{{ old('harga_udang') }}" required>
                         @error('harga_udang')
@@ -77,7 +77,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="biomassa" class="form-label">Biomassa</label>
+                        <label for="biomassa" class="form-label">Biomassa (kg)</label>
                         <input type="text" class="form-control" id="biomassa" name="biomassa"
                             placeholder="Masukkan biomassa" value="{{ old('biomassa') }}" required>
                         @error('biomassa')
@@ -106,7 +106,7 @@
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-3">
@@ -132,7 +132,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>

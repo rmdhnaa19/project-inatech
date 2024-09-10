@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="{{ url('kematian_udang') }}" class="form-horizontal" enctype="multipart/form-data" id="tambahkematianudang">
+        <form method="POST" action="{{ url('kematianUdang') }}" class="form-horizontal" enctype="multipart/form-data" id="tambahkematianudang">
             @csrf
             <div class="row">
                 <!-- Left Side Form Fields -->
@@ -60,7 +60,7 @@
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-3">
@@ -86,7 +86,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>
