@@ -48,5 +48,3 @@ public function kematianudangs()
     }   
     
 }
-   
-}
