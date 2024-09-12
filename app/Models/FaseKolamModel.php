@@ -12,13 +12,12 @@ class FaseKolamModel extends Model
 
     protected $table = 'fase_tambak';
     protected $primaryKey = 'id_fase_tambak';
-    protected $fillable = ['kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar','densitas','id_kolam', 'created_at', 'updated_at'];
+    protected $fillable = ['kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar','densitas', 'foto','id_kolam', 'created_at', 'updated_at'];
 
 public function kolam():BelongsTo{
         return $this->belongsTo(KolamModel::class, 'id_kolam', 'id_kolam');
 }
-
-public function ancos()
+    public function ancos()
     {
         return $this->hasMany(AncoModel::class, 'id_fase_tambak');
     }
@@ -48,4 +47,6 @@ public function kematianudangs()
         return $this->hasMany(KematianUdangModel::class,'id_fase_tambak');
     }   
     
+}
+   
 }

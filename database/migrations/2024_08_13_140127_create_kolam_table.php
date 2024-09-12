@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kolam', function (Blueprint $table) {
             $table->id('id_kolam');
             $table->string('kd_kolam',50)->unique();
+            $table->string('foto')->nullable();
             $table->enum('tipe_kolam', ['kotak', 'bundar']);
             $table->integer('panjang_kolam');
             $table->integer('lebar_kolam');

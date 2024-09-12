@@ -57,23 +57,23 @@ Route::group(['prefix' => 'kelolaGudang'], function(){
 });
 
 // manajemen tambak
-Route::group(['prefix' => 'manajemenTambak'], function(){
+Route::group(['prefix' => 'tambak'], function(){
     Route::get('/', [TambakController::class, 'index'])->name('tambak.index');
-    Route::post('/list', [TambakController::class, 'list']);
+    Route::post('/list', [TambakController::class, 'list'])->name('tambak.list');
     Route::get('/create', [TambakController::class, 'create'])->name('tambak.create');
-    Route::post('/', [TambakController::class, 'store']);
+    Route::post('/', [TambakController::class, 'store'])->name('tambak.store');
     Route::get('/{id}', [TambakController::class, 'show'])->name('tambak.show');
     Route::get('/{id}/edit', [TambakController::class, 'edit'])->name('tambak.edit');
-    Route::put('/{id}', [TambakController::class, 'update']);
-    Route::delete('/{id}', [TambakController::class, 'destroy']);
+    Route::put('/{id}', [TambakController::class, 'update'])->name('tambak.update');
+    Route::delete('/{id}', [TambakController::class, 'destroy'])->name('tambak.destroy');
 });
 
 // Route manajemen kolam
-Route::group(['prefix' => 'manajemenKolam'], function(){
+Route::group(['prefix' => 'kolam'], function(){
     Route::get('/', [KolamController::class, 'index'])->name('kolam.index');
-    Route::post('/list', [KolamController::class, 'list']);
+    Route::post('/list', [KolamController::class, 'list'])->name('kolam.list');
     Route::get('/create', [KolamController::class, 'create'])->name('kolam.create');
-    Route::post('/', [KolamController::class, 'store']);
+    Route::post('/', [KolamController::class, 'store'])->name('kolam.store');
     Route::get('/{id}', [KolamController::class, 'show'])->name('kolam.show');
     Route::get('/{id}/edit', [KolamController::class, 'edit'])->name('kolam.edit');
     Route::put('/{id}', [KolamController::class, 'update']);
@@ -81,27 +81,27 @@ Route::group(['prefix' => 'manajemenKolam'], function(){
 });
 
 // Route fase tambak
-Route::group(['prefix' => 'faseKolam'], function(){
+Route::group(['prefix' => 'fasekolam'], function(){
     Route::get('/', [FaseKolamController::class, 'index'])->name('fasekolam.index');
-    Route::post('/list', [FaseKolamController::class, 'list']);
+    Route::post('/list', [FaseKolamController::class, 'list'])->name('fasekolam.list');
     Route::get('/create', [FaseKolamController::class, 'create'])->name('fasekolam.create');
-    Route::post('/', [FaseKolamController::class, 'store']);
+    Route::post('/', [FaseKolamController::class, 'store'])->name('fasekolam.store');
     Route::get('/{id}', [FaseKolamController::class, 'show'])->name('fasekolam.show');
     Route::get('/{id}/edit', [FaseKolamController::class, 'edit'])->name('fasekolam.edit');
-    Route::put('/{id}', [FaseKolamController::class, 'update']);
-    Route::delete('/{id}', [FaseKolamController::class, 'destroy']);
+    Route::put('/{id}', [FaseKolamController::class, 'update'])->name('fasekolam.update');
+    Route::delete('/{id}', [FaseKolamController::class, 'destroy'])->name('fasekolam.destroy');
 });
 
 // Route manajemen pj tambak
 Route::group(['prefix' => 'pjTambak'], function(){
-    Route::get('/', [PjTambakController::class, 'index'])->name('pjtambak.index');
-    Route::post('/list', [PjTambakController::class, 'list']);
-    Route::get('/create', [PjTambakController::class, 'create'])->name('pjtambak.create');
-    Route::post('/', [PjTambakController::class, 'store']);
-    Route::get('/{id}', [PjTambakController::class, 'show'])->name('pjtambak.show');
-    Route::get('/{id}/edit', [PjTambakController::class, 'edit'])->name('pjtambak.edit');
-    Route::put('/{id}', [PjTambakController::class, 'update']);
-    Route::delete('/{id}', [PjTambakController::class, 'destroy']);
+    Route::get('/', [PjTambakController::class, 'index'])->name('pjTambak.index');
+    Route::post('/list', [PjTambakController::class, 'list'])->name('pjTambak.list');
+    Route::get('/create', [PjTambakController::class, 'create'])->name('pjTambak.create');
+    Route::post('/', [PjTambakController::class, 'store'])->name('pjTambak.store');
+    Route::get('/{id}', [PjTambakController::class, 'show'])->name('pjTambak.show');
+    Route::get('/{id}/edit', [PjTambakController::class, 'edit'])->name('pjTambak.edit');
+    Route::put('/{id}', [PjTambakController::class, 'update'])->name('pjTambak.update');
+    Route::delete('/{id}', [PjTambakController::class, 'destroy'])->name('pjTambak.destroy');
 });
 
 // Route anco
