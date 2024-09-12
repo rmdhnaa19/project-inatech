@@ -15,6 +15,6 @@ class KualitasAirModel extends Model
     protected $fillable = ['kd_kualitas_air', 'tanggal_cek', 'waktu_cek', 'pH','salinitas','DO', 'suhu', 'kejernihan_air', 'warna_air', 'catatan','id_fase_tambak', 'created_at', 'updated_at'];
 
 public function faseKolam():BelongsTo{
-        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak', 'id_fase_tambak');
+        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak');
 }
 }

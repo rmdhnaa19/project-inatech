@@ -25,7 +25,7 @@
             var datakematianUdang = $('#table_kematianudang').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('kematianudang/list') }}",
+                    "url": "{{ url('kematianUdang/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {

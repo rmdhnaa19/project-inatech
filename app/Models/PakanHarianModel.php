@@ -15,9 +15,10 @@ class PakanHarianModel extends Model
     protected $fillable = ['kd_pakan_harian', 'tanggal_cek', 'waktu_cek', 'DOC','berat_udang','total_pakan', 'catatan', 'id_fase_tambak','id_detail_pakan', 'created_at', 'updated_at'];
 
 public function faseKolam():BelongsTo{
-        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak', 'id_fase_tambak');
+        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak');
 }
 public function detailPakan():BelongsTo{
-        return $this->belongsTo(FaseKolamModel::class, 'id_detail_pakan', 'id_detail_pakan');
+        return $this->belongsTo(DetailPakanModel::class, 'id_detail_pakan');
 }
+
 }

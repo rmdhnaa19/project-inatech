@@ -15,6 +15,6 @@ class KematianUdangModel extends Model
     protected $fillable = ['kd_kematian_udang', 'size_udang', 'berat_udang', 'catatan','gambar', 'id_fase_tambak', 'created_at', 'updated_at'];
 
 public function faseKolam():BelongsTo{
-        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak', 'id_fase_tambak');
+        return $this->belongsTo(FaseKolamModel::class, 'id_fase_tambak');
 }
 }
