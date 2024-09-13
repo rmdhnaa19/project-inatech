@@ -28,7 +28,7 @@
             var datapakanHarian = $('#table_pakanHarian').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('pakan_harian/list') }}",
+                    "url": "{{ url('pakanHarian/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {

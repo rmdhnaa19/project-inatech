@@ -21,24 +21,30 @@ public function kolam():BelongsTo{
     {
         return $this->hasMany(AncoModel::class, 'id_fase_tambak');
     }
-    public function kualitasairs()
+
+public function kualitasairs() 
     {
-        return $this->hasMany(KualitasAirModel::class, 'id_kualitas_air');
+        return $this->hasMany(KualitasAirModel::class, 'id_fase_tambak');
     }
-    public function penanganans()
+
+public function penanganans() 
     {
-        return $this->hasMany(PenangananModel::class, 'id_penanganan');
+        return $this->hasMany(PenangananModel::class, 'id_fase_tambak');
     }
-    public function samplings()
+
+public function samplings() 
     {
-        return $this->hasMany(SamplingModel::class, 'id_sampling');
+        return $this->hasMany(SamplingModel::class, 'id_fase_tambak');
     }
-    public function pakan_harians()
+
+public function pakan_harians() 
     {
-        return $this->hasMany(PakanHarianModel::class, 'id_pakan_harian');
+        return $this->hasMany(PakanHarianModel::class,'id_fase_tambak');
     }
-    public function kematian_udangs()
+
+public function kematianudangs() 
     {
-        return $this->hasMany(KematianUdangModel::class, 'id_kematian_udang');
-    }
+        return $this->hasMany(KematianUdangModel::class,'id_fase_tambak');
+    }   
+    
 }

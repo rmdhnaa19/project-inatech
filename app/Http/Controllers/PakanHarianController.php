@@ -32,7 +32,7 @@ class PakanHarianController extends Controller
     // menampilkan data table    
     public function list(Request $request)
     {
-        $pakan_harians = PakanHarianModel::select('id_pakan_harian', 'kd_pakan_harian', 'tanggal_cek', 'waktu_cek', 'DOC','berat_udang','total_pakan', 'catatan', 'id_fase_tambak','id_detail_pakan', 'created_at', 'updated_at')->with('fase_tambak', 'detail_pakan'); 
+        $pakan_harians = PakanHarianModel::select('id_pakan_harian', 'kd_pakan_harian', 'tanggal_cek', 'waktu_cek', 'DOC','berat_udang','total_pakan', 'catatan', 'id_fase_tambak','id_detail_pakan', 'created_at', 'updated_at')->with('faseKolam', 'detailPakan'); 
         return DataTables::of($pakan_harians)
         ->make(true);
     }
@@ -53,6 +53,46 @@ class PakanHarianController extends Controller
     $detail_pakan = DetailPakanModel::all();
     return view('pakanharian.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
 }
+
+public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'kd_pakan_harian' => 'required|string|max:255|unique:pakan_harian,kd_pakan_harian',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'DOC' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'catatan' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    // Simpan data ke dalam database
+    $pakan_harians = new PakanHarianModel();
+    $pakan_harians->kd_pakan_harian = $request->kd_pakan_harian;
+    $pakan_harians->tanggal_cek = $request->tanggal_cek;
+    $pakan_harians->waktu_cek = $request->waktu_cek;
+    $pakan_harians->DOC = $request->DOC;
+    $pakan_harians->berat_udang = $request->berat_udang;
+    $pakan_harians->total_pakan = $request->total_pakan;
+    $pakan_harians->catatan = $request->catatan;
+    
+
+    // Simpan file image jika ada
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/pakanharian'), $filename);
+        $pakan_harians->image = $filename;
+    }
+
+    $pakan_harians->save();
+
+    // Redirect ke halaman index dengan pesan sukses
+    return redirect()->route('pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
+}
+
 }
 
 

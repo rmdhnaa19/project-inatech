@@ -30,7 +30,7 @@ class PenangananController extends Controller
     // menampilkan data table    
     public function list(Request $request)
     {
-        $penanganans = PenangananModel::select('id_penanganan', 'kd_penanganan', 'tanggal_cek', 'waktu_cek', 'pemberian_mineral','pemberian_vitamin','pemberian_obat', 'penambahan_air', 'pengurangan_air', 'catatan','id_fase_tambak', 'created_at', 'updated_at')->with('fase_tambak'); 
+        $penanganans = PenangananModel::select('id_penanganan', 'kd_penanganan', 'tanggal_cek', 'waktu_cek', 'pemberian_mineral','pemberian_vitamin','pemberian_obat', 'penambahan_air', 'pengurangan_air', 'catatan','id_fase_tambak', 'created_at', 'updated_at')->with('faseKolam'); 
         return DataTables::of($penanganans)
         ->make(true);
     }
@@ -50,6 +50,45 @@ class PenangananController extends Controller
     $fase_kolam = FaseKolamModel::all();
     return view('penanganan.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
+
+public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'kd_penanganan' => 'required|string|max:255|unique:penanganan,kd_penanganan',
+        'tanggal_cek' => 'required|date',
+        'pemberian_mineral' => 'required|integer',
+        'pemberian_vitamin' => 'required|integer',
+        'pemberian_obat' => 'required|integer',
+        'penambahan_air' => 'required|integer',
+        'pengurangan_air' => 'required|integer',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    // Simpan data ke dalam database
+    $penanganans = new PenangananModel();
+    $penanganans->kd_penanganan = $request->kd_penanganan;
+    $penanganans->tanggal_cek = $request->tanggal_cek;
+    $penanganans->pemberian_mineral = $request->pemberian_mineral;
+    $penanganans->pemberian_vitamin = $request->pemberian_vitamin;
+    $penanganans->pemberian_obat = $request->pemberian_obat;
+    $penanganans->penambahan_air = $request->penambahan_air;
+    $penanganans->pengurangan_air = $request->pengurangan_air;
+
+    // Simpan file image jika ada
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/penanganan'), $filename);
+        $penanganans->image = $filename;
+    }
+
+    $penanganans->save();
+
+    // Redirect ke halaman index dengan pesan sukses
+    return redirect()->route('penanganan.index')->with('success', 'Data penangan berhasil ditambahkan');
+}
+
 }
 
 

@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="pemberian_mineral" class="form-label">Pemberian Mineral</label>
+                        <label for="pemberian_mineral" class="form-label">Pemberian Mineral (Liter)</label>
                         <input type="text" class="form-control" id="pemberian_mineral" name="pemberian_mineral"
                             placeholder="Masukkan pemberian mineral" value="{{ old('pemberian_mineral') }}" required>
                         @error('pemberian_mineral')
@@ -44,7 +44,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pemberian_vitamin" class="form-label">Pemberian Vitamin</label>
+                        <label for="pemberian_vitamin" class="form-label">Pemberian Vitamin (Kg)</label>
                         <input type="text" class="form-control" id="pemberian_vitamin" name="pemberian_vitamin"
                             placeholder="Masukkan pemberian vitamin" value="{{ old('pemberian_mineral') }}" required>
                         @error('pemberian_vitamin')
@@ -55,7 +55,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pemberian_obat" class="form-label">Pemberian Obat</label>
+                        <label for="pemberian_obat" class="form-label">Pemberian Obat (Kg)</label>
                         <input type="text" class="form-control" id="pemberian_obat" name="pemberian_obat"
                             placeholder="Masukkan pemberian obat" value="{{ old('pemberian_obat') }}" required>
                         @error('pemberian_obat')
@@ -66,7 +66,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="penambahan_air" class="form-label">Penambahan Air</label>
+                        <label for="penambahan_air" class="form-label">Penambahan Air (cm)</label>
                         <input type="text" class="form-control" id="penambahan_air" name="penambahan_air"
                             placeholder="Masukkan penambahan air" value="{{ old('penambahan_air') }}" required>
                         @error('penambahan_air')
@@ -77,7 +77,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pengurangan_air" class="form-label">Pengurangan Air</label>
+                        <label for="pengurangan_air" class="form-label">Pengurangan Air (cm)</label>
                         <input type="text" class="form-control" id="pengurangan_air" name="pengurangan_air"
                             placeholder="Masukkan pengurangan air" value="{{ old('pengurangan_air') }}" required>
                         @error('pengurangan_air')
@@ -95,7 +95,7 @@
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-3">
@@ -121,7 +121,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>
