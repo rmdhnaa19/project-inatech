@@ -72,13 +72,16 @@ class TambakController extends Controller
 
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
+    
+    public function show(string $id)
+{
+    $tambak = TambakModel::find($id);
+    if (!$tambak) {
+        return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
+    }
 
-    public function show(string $id){
-        $tambak = TambakModel::find($id); // Pastikan $id diisi dengan nilai yang valid
-        if (!$tambak) {
-            return redirect()->route('tambak.index')->with('error', 'Tambak tidak ditemukan.');
-        }
-        return view('tambak.show', compact('tambak'));
+    $view = view('tambak.show', compact('tambak'))->render();
+    return response()->json(['html' => $view]);
     }
 }
 
