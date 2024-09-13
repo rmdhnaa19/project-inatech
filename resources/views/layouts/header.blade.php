@@ -47,8 +47,7 @@
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                     <div class="avatar mr-1">
-                        <img src="{{ asset('voler-master/dist/assets/images/avatar/avatar-s-1.png') }}" alt=""
-                            srcset="">
+                        <img src="{{ asset('storage/foto_user/' . auth()->user()->foto) }}" alt="foto">
                     </div>
                     <div class="d-none d-md-block d-lg-inline-block">Selamat Datang, {{ auth()->user()->nama }}</div>
                 </a>
