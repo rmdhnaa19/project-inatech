@@ -29,31 +29,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LoginController::class, 'index'])->name('login.index');
+Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
+Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 
 Route::group(['prefix' => 'kelolaPengguna'], function(){
-    Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index');
-    Route::post('/list', [UserController::class, 'list'])->name('kelolaPengguna.list');
-    Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create');
-    Route::post('/', [UserController::class, 'store'])->name('kelolaPengguna.store');
-    Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show');
-    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit');
-    Route::put('/{id}', [UserController::class, 'update'])->name('kelolaPengguna.update');
-    Route::delete('/{id}', [UserController::class, 'destroy'])->name('kelolaPengguna.destroy');
+    Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index')->middleware('auth');
+    Route::post('/list', [UserController::class, 'list'])->name('kelolaPengguna.list')->middleware('auth');
+    Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create')->middleware('auth');
+    Route::post('/', [UserController::class, 'store'])->name('kelolaPengguna.store')->middleware('auth');
+    Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show')->middleware('auth');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit')->middleware('auth');
+    Route::put('/{id}', [UserController::class, 'update'])->name('kelolaPengguna.update')->middleware('auth');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('kelolaPengguna.destroy')->middleware('auth');
 });
 
 Route::group(['prefix' => 'kelolaGudang'], function(){
-    Route::get('/', [GudangController::class, 'index'])->name('kelolaGudang.index');
-    Route::post('/list', [GudangController::class, 'list'])->name('kelolaGudang.list');
-    Route::get('/create', [GudangController::class, 'create'])->name('kelolaGudang.create');
-    Route::post('/', [GudangController::class, 'store'])->name('kelolaGudang.store');
-    Route::get('/{id}', [GudangController::class, 'show'])->name('kelolaGudang.show');
-    Route::get('/{id}/edit', [GudangController::class, 'edit'])->name('kelolaGudang.edit');
-    Route::put('/{id}', [GudangController::class, 'update'])->name('kelolaGudang.update');
-    Route::delete('/{id}', [GudangController::class, 'destroy'])->name('kelolaGudang.destroy');
+    Route::get('/', [GudangController::class, 'index'])->name('kelolaGudang.index')->middleware('auth');
+    Route::post('/list', [GudangController::class, 'list'])->name('kelolaGudang.list')->middleware('auth');
+    Route::get('/create', [GudangController::class, 'create'])->name('kelolaGudang.create')->middleware('auth');
+    Route::post('/', [GudangController::class, 'store'])->name('kelolaGudang.store')->middleware('auth');
+    Route::get('/{id}', [GudangController::class, 'show'])->name('kelolaGudang.show')->middleware('auth');
+    Route::get('/{id}/edit', [GudangController::class, 'edit'])->name('kelolaGudang.edit')->middleware('auth');
+    Route::put('/{id}', [GudangController::class, 'update'])->name('kelolaGudang.update')->middleware('auth');
+    Route::delete('/{id}', [GudangController::class, 'destroy'])->name('kelolaGudang.destroy')->middleware('auth');
 });
 
 // manajemen tambak

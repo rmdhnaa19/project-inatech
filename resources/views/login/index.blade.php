@@ -23,6 +23,11 @@
                                 <h3>Sign In</h3>
                                 <p>Sign In untuk Mengakses Website Fluks Aqua</p>
                             </div>
+                            @if (session()->has('loginError'))
+                                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                                    {{ session('loginError') }}
+                                </div>
+                            @endif
                             <form action="/login" method="post">
                                 @csrf
                                 <div class="form-group position-relative has-icon-left">
