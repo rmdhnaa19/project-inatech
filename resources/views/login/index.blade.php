@@ -23,17 +23,21 @@
                                 <h3>Sign In</h3>
                                 <p>Sign In untuk Mengakses Website Fluks Aqua</p>
                             </div>
-                            <form action="/login" method="POST">
+                            <form action="/login" method="post">
                                 @csrf
                                 <div class="form-group position-relative has-icon-left">
                                     <label for="username">Username</label>
                                     <div class="position-relative">
-                                        <input type="text" class="form-control" id="username" name="username"
-                                            value="{{ old('username') }}" autofocus required>
+                                        <input type="text"
+                                            class="form-control @error('username') is-invalid @enderror" id="username"
+                                            name="username" value="{{ old('username') }}" autofocus required>
                                         <div class="form-control-icon">
                                             <i data-feather="user"></i>
                                         </div>
                                     </div>
+                                    @if ($errors->has('username'))
+                                        <span class="text-danger">{{ $errors->first('username') }}</span>
+                                    @endif
                                 </div>
                                 <div class="form-group position-relative has-icon-left">
                                     <div class="clearfix">
@@ -43,12 +47,16 @@
                                         </a>
                                     </div>
                                     <div class="position-relative">
-                                        <input type="text" class="form-control" id="password" name="password"
-                                            required>
+                                        <input type="password"
+                                            class="form-control @error('password') is-invalid @enderror" id="password"
+                                            name="password" required>
                                         <div class="form-control-icon">
                                             <i data-feather="lock"></i>
                                         </div>
                                     </div>
+                                    @if ($errors->has('password'))
+                                        <span class="text-danger">{{ $errors->first('password') }}</span>
+                                    @endif
                                 </div>
 
                                 <div class='form-check clearfix my-4'>
@@ -58,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <button class="btn btn-primary col-12">Submit</button>
+                                    <button type="submit" class="btn btn-primary col-12">Submit</button>
                                 </div>
                             </form>
                         </div>
