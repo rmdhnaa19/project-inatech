@@ -29,8 +29,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LoginController::class, 'index']);
-Route::get('/login', [LoginController::class, 'authenticate']);
+Route::get('/', [LoginController::class, 'index'])->name('login.index');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
