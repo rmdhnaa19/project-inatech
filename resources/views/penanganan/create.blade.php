@@ -19,7 +19,21 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
                     <div class="form-group">
                         <label for="tanggal_cek" class="form-label">Tanggal Cek</label>
                         <input type="date" class="form-control" id="tanggal_cek" name="tanggal_cek"
@@ -115,34 +129,6 @@
                     </div>
                 </div>
 
-                {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
-                                    </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
-                                </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </form>
     </div>

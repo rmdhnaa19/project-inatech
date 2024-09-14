@@ -59,7 +59,8 @@ public function store(Request $request)
         'size_udang' => 'required|integer',
         'berat_udang' => 'required|integer',
         'catatan' => 'required|string',
-        // 'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        'id_fase_tambak' => 'required',
     ]);
 
     // Simpan data ke dalam database
@@ -68,17 +69,16 @@ public function store(Request $request)
     $kematianudangs->size_udang = $request->size_udang;
     $kematianudangs->berat_udang = $request->berat_udang;
     $kematianudangs->catatan = $request->catatan;
-    // $kematianudangs->gambar = $request->gambar;
+    $kematianudangs->gambar = $request->gambar;
+    $kematianudangs->id_fase_tambak = $request->id_fase_tambak;
    
 
     // Simpan file image jika ada
-    // if ($request->hasFile('gambar')) {
-    //     $file = $request->file('gambar');
-    //     $filename = time() . '_' . $file->getClientOriginalName();
-    //     $file->move(public_path('uploads/kematianUdang'), $filename);
-    //     $kematianudangs->gambar = $filename;
-    // }
+    if ($request->hasFile('gambar')) {
+        $path = $request->file('gambar')->store('foto_kematianudang', 'public');
+        $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
 
+    }
     $kematianudangs->save();
 
     // Redirect ke halaman index dengan pesan sukses

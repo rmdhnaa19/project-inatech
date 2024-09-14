@@ -63,7 +63,8 @@ public function store(Request $request)
         'kondisi_pakan' => 'required|string',
         'kondisi_udang' => 'required|string',
         'catatan' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'id_fase_tambak' => 'required',
+        // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
     // Simpan data ke dalam database
@@ -76,6 +77,7 @@ public function store(Request $request)
     $anco->kondisi_pakan = $request->kondisi_pakan;
     $anco->kondisi_udang = $request->kondisi_udang;
     $anco->catatan = $request->catatan;
+    $anco->id_fase_tambak = $request->id_fase_tambak;
 
     // Simpan file image jika ada
     if ($request->hasFile('image')) {

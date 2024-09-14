@@ -20,6 +20,21 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
+                    <div class="form-group">
                         <label for="tanggal_cek" class="form-label">Tanggal Cek</label>
                         <input type="date" class="form-control" id="tanggal_cek" name="tanggal_cek"
                             placeholder="Masukkan tanggal cek" value="{{ old('tanggal_cek') }}" required>

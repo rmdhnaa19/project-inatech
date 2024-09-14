@@ -69,7 +69,8 @@ public function store(Request $request)
         'biomassa' => 'required|integer',
         'populasi_ekor' => 'required|integer',
         'catatan' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'id_fase_tambak' => 'required',
+        
     ]);
 
     // Simpan data ke dalam database
@@ -88,14 +89,8 @@ public function store(Request $request)
     $samplings->biomassa = $request->biomassa;
     $samplings->populasi_ekor = $request->populasi_ekor;
     $samplings->catatan = $request->catatan;
+    $samplings->id_fase_tambak = $request->id_fase_tambak;
 
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/sampling'), $filename);
-        $samplings->image = $filename;
-    }
 
     $samplings->save();
 

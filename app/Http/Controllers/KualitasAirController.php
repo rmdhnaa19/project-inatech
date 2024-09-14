@@ -65,7 +65,7 @@ public function store(Request $request)
         'kejernihan_air' => 'required|string',
         'warna_air' => 'required|string',
         'catatan' => 'required|string',
-        // 'id_fase_tambak' => 'required|exists:fase_kolam,id_fase_tambak',
+        'id_fase_tambak' => 'required',
         // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
@@ -81,7 +81,7 @@ public function store(Request $request)
         $kualitasairs->kejernihan_air = $request->kejernihan_air;
         $kualitasairs->warna_air = $request->warna_air;
         $kualitasairs->catatan = $request->catatan;
-        // $kualitasairs->id_fase_tambak = $request->id_fase_tambak;
+        $kualitasairs->id_fase_tambak = $request->id_fase_tambak;
 
     // Simpan file image jika ada//
     // if ($request->hasFile('image')) {

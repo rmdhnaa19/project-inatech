@@ -64,7 +64,7 @@ public function store(Request $request)
         'penambahan_air' => 'required|integer',
         'pengurangan_air' => 'required|integer',
         'catatan' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'id_fase_tambak' => 'required',
     ]);
 
     // Simpan data ke dalam database
@@ -78,14 +78,7 @@ public function store(Request $request)
     $penanganans->penambahan_air = $request->penambahan_air;
     $penanganans->pengurangan_air = $request->pengurangan_air;
     $penanganans->catatan = $request->catatan;
-
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/penanganan'), $filename);
-        $penanganans->image = $filename;
-    }
+    $penanganans->id_fase_tambak = $request->id_fase_tambak;
 
     $penanganans->save();
 
