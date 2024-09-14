@@ -57,12 +57,18 @@ public function store(Request $request)
     $request->validate([
         'kd_sampling' => 'required|string|max:255|unique:sampling,kd_sampling',
         'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
         'DOC' => 'required|integer',
         'berat_udang' => 'required|integer',
         'size_udang' => 'required|integer',
+        'interval_hari' => 'required|integer',
         'harga_udang' => 'required|integer',
+        'input_fr' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'ADG_udang' => 'required|integer',
         'biomassa' => 'required|integer',
         'populasi_ekor' => 'required|integer',
+        'catatan' => 'required|string',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
@@ -70,12 +76,18 @@ public function store(Request $request)
     $samplings = new SamplingModel();
     $samplings->kd_sampling = $request->kd_sampling;
     $samplings->tanggal_cek = $request->tanggal_cek;
+    $samplings->waktu_cek = $request->waktu_cek;
     $samplings->DOC = $request->DOC;
     $samplings->berat_udang = $request->berat_udang;
     $samplings->size_udang = $request->size_udang;
     $samplings->harga_udang = $request->harga_udang;
+    $samplings->interval_hari = $request->interval_hari;
+    $samplings->input_fr = $request->input_fr;
+    $samplings->total_pakan = $request->total_pakan;
+    $samplings->ADG_udang = $request->ADG_udang;
     $samplings->biomassa = $request->biomassa;
     $samplings->populasi_ekor = $request->populasi_ekor;
+    $samplings->catatan = $request->catatan;
 
     // Simpan file image jika ada
     if ($request->hasFile('image')) {

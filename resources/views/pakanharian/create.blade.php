@@ -88,7 +88,9 @@
                     </div>
 
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('pakanharian') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>

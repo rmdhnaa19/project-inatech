@@ -3,6 +3,15 @@
 @section('content')
 <div class="card">
     <div class="card-body">
+     @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <form method="POST" action="{{ url('kematianUdang') }}" class="form-horizontal" enctype="multipart/form-data" id="tambahkematianudang">
             @csrf
             <div class="row">
@@ -54,7 +63,9 @@
                     </div>
 
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('kematianUdang') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>
@@ -69,7 +80,7 @@
                                         <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
                                         <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
                                     </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
+                                    <input type="file" name="gambar" class="drop-zone__input" required>
                                 </div>
                             </div>
                             <div class="row text-center">

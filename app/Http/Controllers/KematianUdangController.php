@@ -59,7 +59,7 @@ public function store(Request $request)
         'size_udang' => 'required|integer',
         'berat_udang' => 'required|integer',
         'catatan' => 'required|string',
-        // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        // 'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
     // Simpan data ke dalam database
@@ -68,14 +68,15 @@ public function store(Request $request)
     $kematianudangs->size_udang = $request->size_udang;
     $kematianudangs->berat_udang = $request->berat_udang;
     $kematianudangs->catatan = $request->catatan;
+    // $kematianudangs->gambar = $request->gambar;
    
 
-    // // Simpan file image jika ada
-    // if ($request->hasFile('image')) {
-    //     $file = $request->file('image');
+    // Simpan file image jika ada
+    // if ($request->hasFile('gambar')) {
+    //     $file = $request->file('gambar');
     //     $filename = time() . '_' . $file->getClientOriginalName();
     //     $file->move(public_path('uploads/kematianUdang'), $filename);
-    //     $kematianudangs->image = $filename;
+    //     $kematianudangs->gambar = $filename;
     // }
 
     $kematianudangs->save();

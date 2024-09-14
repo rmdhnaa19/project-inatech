@@ -57,9 +57,12 @@ public function store(Request $request)
     $request->validate([
         'kd_anco' => 'required|string|max:255|unique:anco,kd_anco',
         'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pemberian_pakan' => 'required|string',
         'jamPemberian_pakan' => 'required',
         'kondisi_pakan' => 'required|string',
         'kondisi_udang' => 'required|string',
+        'catatan' => 'required|string',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
@@ -67,9 +70,12 @@ public function store(Request $request)
     $anco = new AncoModel();
     $anco->kd_anco = $request->kd_anco;
     $anco->tanggal_cek = $request->tanggal_cek;
+    $anco->waktu_cek = $request->waktu_cek;
+    $anco->pemberian_pakan = $request->pemberian_pakan;
     $anco->jamPemberian_pakan = $request->jamPemberian_pakan;
     $anco->kondisi_pakan = $request->kondisi_pakan;
     $anco->kondisi_udang = $request->kondisi_udang;
+    $anco->catatan = $request->catatan;
 
     // Simpan file image jika ada
     if ($request->hasFile('image')) {

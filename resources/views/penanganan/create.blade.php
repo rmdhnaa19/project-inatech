@@ -33,6 +33,18 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="tanggal_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label for="pemberian_mineral" class="form-label">Pemberian Mineral (Liter)</label>
                         <input type="text" class="form-control" id="pemberian_mineral" name="pemberian_mineral"
                             placeholder="Masukkan pemberian mineral" value="{{ old('pemberian_mineral') }}" required>
@@ -66,7 +78,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="penambahan_air" class="form-label">Penambahan Air (cm)</label>
+                        <label for="penambahan_air" class="form-label">Penambahan Air (Liter)</label>
                         <input type="text" class="form-control" id="penambahan_air" name="penambahan_air"
                             placeholder="Masukkan penambahan air" value="{{ old('penambahan_air') }}" required>
                         @error('penambahan_air')
@@ -77,7 +89,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pengurangan_air" class="form-label">Pengurangan Air (cm)</label>
+                        <label for="pengurangan_air" class="form-label">Pengurangan Air (Liter)</label>
                         <input type="text" class="form-control" id="pengurangan_air" name="pengurangan_air"
                             placeholder="Masukkan pengurangan air" value="{{ old('pengurangan_air') }}" required>
                         @error('pengurangan_air')
@@ -87,9 +99,18 @@
                         </div>
                         @enderror
                     </div>
-
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('penanganan') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>

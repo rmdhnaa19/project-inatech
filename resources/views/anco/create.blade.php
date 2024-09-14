@@ -31,6 +31,28 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="waktu_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="pemberian_pakan" class="form-label">Pemberian Pakan (kg)</label>
+                        <input type="string" class="form-control" id="pemberian_pakan" name="pemberian_pakan"
+                            placeholder="Masukkan pemberian pakan" value="{{ old('pemberian_pakan') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Pemberian pakan yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="jamPemberian_pakan" class="form-label">Jam Pemberian Pakan</label>
                         <input type="time" class="form-control" id="jamPemberian_pakan" name="jamPemberian_pakan"
                             placeholder="Masukkan jam pPemberian pakan" value="{{ old('jamPemberian_pakan') }}" required>
@@ -73,10 +95,20 @@
                             <span class="text-danger">{{ $errors->first('kondisi_udang') }}</span>
                         @endif
                     </div>
+                    <div class="form-group">
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
 
                     {{-- Tombol kembali dan simpan --}}
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('anco') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>

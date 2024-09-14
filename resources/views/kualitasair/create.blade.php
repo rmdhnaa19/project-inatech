@@ -40,6 +40,17 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="tanggal_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="pH" class="form-label">pH Air</label>
                         <input type="text" class="form-control" id="pH" name="pH"
                             placeholder="Masukkan pH air" value="{{ old('pH') }}" required>
@@ -50,7 +61,39 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                        <label for="salinitas" class="form-label">Salinitas (ppt)</label>
+                        <input type="text" class="form-control" id="salinitas" name="salinitas"
+                            placeholder="Masukkan salinitas" value="{{ old('salinitas') }}" required>
+                        @error('salinitas')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Salinitas yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="salinitas" class="form-label">DO (ppm)</label>
+                        <input type="text" class="form-control" id="DO" name="DO"
+                            placeholder="Masukkan DO" value="{{ old('DO') }}" required>
+                        @error('DO')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            DO yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="salinitas" class="form-label">Suhu (°C)</label>
+                        <input type="text" class="form-control" id="suhu" name="suhu"
+                            placeholder="Masukkan suhu" value="{{ old('suhu') }}" required>
+                        @error('suhu')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Suhu yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
                     <div class="form-group">
                         <label for="kejernihan_air" class="form-label">Kejernihan Air</label>
                         <div class="form-group">
@@ -82,10 +125,19 @@
                             <span class="text-danger">{{ $errors->first('warna_air') }}</span>
                         @endif
                     </div>
-
+                    <div class="form-group">
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
                     {{-- Tombol kembali dan simpan --}}
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('kualitasair') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('kualitasair') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                  
                 <!-- {{-- Tambahkan foto di sini --}}

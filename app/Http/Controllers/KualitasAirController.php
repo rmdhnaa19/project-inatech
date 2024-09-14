@@ -57,9 +57,14 @@ public function store(Request $request)
     $request->validate([
         'kd_kualitas_air' => 'required|string|max:255|unique:kualitas_air,kd_kualitas_air',
         'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
         'pH' => 'required|integer',
+        'salinitas' => 'required|integer',
+        'DO' => 'required|integer',
+        'suhu' => 'required|integer',
         'kejernihan_air' => 'required|string',
         'warna_air' => 'required|string',
+        'catatan' => 'required|string',
         // 'id_fase_tambak' => 'required|exists:fase_kolam,id_fase_tambak',
         // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
@@ -68,9 +73,14 @@ public function store(Request $request)
         $kualitasairs = new KualitasAirModel();
         $kualitasairs->kd_kualitas_air = $request->kd_kualitas_air;
         $kualitasairs->tanggal_cek = $request->tanggal_cek;
+        $kualitasairs->waktu_cek = $request->waktu_cek;
         $kualitasairs->pH = $request->pH;
+        $kualitasairs->salinitas = $request->salinitas;
+        $kualitasairs->DO = $request->DO;
+        $kualitasairs->suhu = $request->suhu;
         $kualitasairs->kejernihan_air = $request->kejernihan_air;
         $kualitasairs->warna_air = $request->warna_air;
+        $kualitasairs->catatan = $request->catatan;
         // $kualitasairs->id_fase_tambak = $request->id_fase_tambak;
 
     // Simpan file image jika ada//
