@@ -27,6 +27,9 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $users = UserModel::select('id_user', 'nama', 'no_hp', 'posisi', 'id_role')->with('role'); 
+        if ($request->id_role) {
+            $users->where('id_role', $request->id_role);
+        }
         return DataTables::of($users)
         ->make(true);
     }

@@ -58,6 +58,9 @@
                     "url": "{{ url('kelolaPengguna/list') }}",
                     "dataType": "json",
                     "type": "POST",
+                    "data": function(d) {
+                        d.id_role = $('#id_role').val();
+                    },
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
@@ -139,6 +142,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Pengguna...');
+            $('#id_role').on('change', function() {
+                dataKelolaPengguna.ajax.reload();
+            })
         });
     </script>
 @endpush
