@@ -47,16 +47,18 @@
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                     <div class="avatar mr-1">
-                        <img src="{{ asset('voler-master/dist/assets/images/avatar/avatar-s-1.png') }}" alt=""
-                            srcset="">
+                        <img src="{{ Storage::url(auth()->user()->foto) }}" alt="foto">
                     </div>
-                    <div class="d-none d-md-block d-lg-inline-block">Hi, Rasyid Gans</div>
+                    <div class="d-none d-md-block d-lg-inline-block">Selamat Datang, {{ auth()->user()->nama }}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
                     <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
+                    <form action="/logout" method="POST">
+                        @csrf
+                        <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout</button>
+                    </form>
                 </div>
             </li>
         </ul>

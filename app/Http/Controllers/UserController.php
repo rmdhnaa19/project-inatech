@@ -27,6 +27,9 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $users = UserModel::select('id_user', 'nama', 'no_hp', 'posisi', 'id_role')->with('role'); 
+        if ($request->id_role) {
+            $users->where('id_role', $request->id_role);
+        }
         return DataTables::of($users)
         ->make(true);
     }
@@ -69,7 +72,9 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $request->file('foto')->store('foto_user', 'public');
+            $path = $request->file('foto')->store('foto_user', 'public');
+            $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+
         }
 
         $validatedData['password'] = bcrypt($validatedData['password']);

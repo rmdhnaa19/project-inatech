@@ -15,6 +15,36 @@
             </table>
         </div>
     </div>
+    
+    {{-- modal --}}
+    <div class="modal fade text-left" id="pjTambakDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="max-width: 500px;">
+        <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <h5 class="modal-title white" id="myModalLabel160">Detail Penanggung Jawab Tambak</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <div id="user-detail-content" class="container text-center">
+                </div>
+            </div>
+            <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Close</span>
+                </button>
+                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Accept</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @push('css')
 @endpush
@@ -35,7 +65,15 @@
                         data: "kd_user_tambak",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
-                        searchable: true
+                        searchable: true,
+                        render: function(data, type, row) {
+                            var url = '{{ route('pjTambak.show', ':id') }}';
+                            url = url.replace(':id', row.id); 
+                            return '<a href="javascript:void(0);" data-id="' + row.id +
+                                '" class="view-user-details" data-url="' + url +
+                                '" data-toggle="modal" data-target="#pjTambakDetailModal">' + data +
+                                '</a>';
+                        }
                     },
                     {
                         data: "user_nama",
