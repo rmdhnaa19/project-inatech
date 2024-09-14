@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <select class="choices form-select @error('id_role') is-invalid @enderror" name="id_role"
                                     id="id_role">
-                                    <option value="{{ old('id_role') }}">- Pilih Role -</option>
+                                    <option value="">- Pilih Role -</option>
                                     @foreach ($role as $item)
                                         <option value="{{ $item->id_role }}">{{ $item->nama }}</option>
                                     @endforeach
@@ -121,7 +121,7 @@
                             <div class="form-group">
                                 <select class="choices form-select @error('posisi') is-invalid @enderror" name="posisi"
                                     id="posisi">
-                                    <option value="{{ old('posisi') }}">- Pilih Posisi -</option>
+                                    <option value="">- Pilih Posisi -</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Teknisi">Teknisi</option>
                                     <option value="Analis Tambak">Analis Tambak</option>
@@ -149,15 +149,19 @@
                                 <div class="row mb-1">
                                     <span class="text-center">Atau</span>
                                 </div>
-                                <div class="row">
+                                <div class="row mb-5">
                                     <div class="form-file">
-                                        <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
                                         <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                         </label>
                                     </div>
                                 </div>
+                                @if ($errors->has('foto'))
+                                    <div class="row alert alert-danger">
+                                        <span class="text-center">{{ $errors->first('foto') }}</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

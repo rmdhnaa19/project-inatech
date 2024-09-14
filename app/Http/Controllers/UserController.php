@@ -74,7 +74,18 @@ class UserController extends Controller
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('foto_user', 'public');
             $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+        }
 
+        if ($request->komisi == null) {
+            $validatedData['komisi'] = 0;
+        }
+
+        if ($request->tunjangan == null) {
+            $validatedData['tunjangan'] = 0;
+        }
+
+        if ($request->potongan_gaji == null) {
+            $validatedData['potongan_gaji'] = 0;
         }
 
         $validatedData['password'] = bcrypt($validatedData['password']);

@@ -95,7 +95,6 @@ thead.thead-light th {
 }
 
 .drop-zone {
-    max-width: 400px;
     height: 200px;
     padding: 20px;
     border: 2px dashed #cccccc;
