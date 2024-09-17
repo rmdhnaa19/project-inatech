@@ -60,6 +60,9 @@
                     "url": "{{ url('kolam/list') }}",
                     "dataType": "json",
                     "type": "POST",
+                    "data": function(d) {
+                        d.id_tambak = $('#id_tambak').val();
+                    },
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
@@ -125,13 +128,14 @@
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_manajemenKolam_filter").append(
-                '<select class="form-control" name="id_tambak" id="id_role" required style="margin-left: 30px; width: 150px;">' +
+                '<select class="form-control" name="id_tambak" id="id_tambak" required style="margin-left: 30px; width: 150px;">' +
                 '<option value="">- SEMUA -</option>' +
                 '@foreach ($tambak as $item)' +
                 '<option value="{{ $item->id_tambak }}">{{ $item->nama_tambak }}</option>' +
                 '@endforeach' +
                 '</select>' +
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
+                
 
             // Tambahkan event listener untuk tombol tambah 
             $("#btn-tambah").on('click', function() {
@@ -141,7 +145,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Kolam...');
-        
+            $('#id_tambak').on('change', function() {
+                dataManajemenKolam.ajax.reload();
+            })        
         });
     </script>
 @endpush

@@ -77,6 +77,7 @@ class UserController extends Controller
 
         }
 
+
         $validatedData['password'] = bcrypt($validatedData['password']);
         UserModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');

@@ -31,6 +31,9 @@ class KolamController extends Controller
     public function list(Request $request)
     {
         $kolams = KolamModel::select('id_kolam', 'kd_kolam', 'tipe_kolam','panjang_kolam', 'lebar_kolam', 'luas_kolam', 'kedalaman', 'id_tambak', 'created_at', 'updated_at')->with('tambak'); 
+        if ($request->id_tambak) {
+            $kolams->where('id_tambak', $request->id_tambak);
+        }
         return DataTables::of($kolams)
         ->make(true);
     }
@@ -74,7 +77,6 @@ class KolamController extends Controller
 
     // Simpan data ke database
     KolamModel::create($validatedData);
-
     return redirect()->route('kolam.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 

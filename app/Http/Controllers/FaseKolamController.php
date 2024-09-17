@@ -30,6 +30,9 @@ class FaseKolamController extends Controller
     public function list(Request $request)
     {
         $fasekolams = FaseKolamModel::select('id_fase_tambak', 'kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar', 'densitas', 'id_kolam', 'created_at', 'updated_at')->with('kolam');  
+        if ($request->id_kolam) {
+            $fasekolams->where('id_kolam', $request->id_kolam);
+        }
         return DataTables::of($fasekolams)
         ->make(true);
     }

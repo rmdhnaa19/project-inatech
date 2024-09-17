@@ -59,6 +59,9 @@
                     "url": "{{ url('fasekolam/list') }}",
                     "dataType": "json",
                     "type": "POST",
+                    "data": function(d) {
+                        d.id_kolam = $('#id_kolam').val();
+                    },
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
@@ -132,6 +135,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');
+            $('#id_kolam').on('change', function() {
+                datafaseKolam.ajax.reload();
+            })    
         });
     </script>
 @endpush

@@ -68,7 +68,6 @@ class TambakController extends Controller
     }
     // Simpan data ke database
     TambakModel::create($validatedData);
-
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 
