@@ -31,6 +31,9 @@ class KolamController extends Controller
     public function list(Request $request)
     {
         $kolams = KolamModel::select('id_kolam', 'kd_kolam', 'tipe_kolam','panjang_kolam', 'lebar_kolam', 'luas_kolam', 'kedalaman', 'id_tambak', 'created_at', 'updated_at')->with('tambak'); 
+        if ($request->id_tambak) {
+            $kolams->where('id_tambak', $request->id_tambak);
+        }
         return DataTables::of($kolams)
         ->make(true);
     }
@@ -74,15 +77,27 @@ class KolamController extends Controller
 
     // Simpan data ke database
     KolamModel::create($validatedData);
-
     return redirect()->route('kolam.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 
-    public function show(string $id){
-        $kolam = KolamModel::find($id); // Pastikan $id diisi dengan nilai yang valid
-        if (!$kolam) {
-            return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan.');
-        }
-        return view('kolam.show', compact('kolam'));
+//     public function show(string $id){
+//         $kolam = KolamModel::find($id); // Pastikan $id diisi dengan nilai yang valid
+//         if (!$kolam) {
+//             return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan.');
+//         }
+//         return view('kolam.show', compact('kolam'));
+//     }
+// }
+
+public function show($id)
+{
+    $kolam = KolamModel::with('tambak')->find($id); // Ambil data tambak dengan relasi gudang
+    if (!$kolam) {
+        return response()->json(['error' => 'Kolam tidak ditemukan.'], 404);
     }
+
+    // Render view dengan data tambak
+    $view = view('kolam.show', compact('kolam'))->render();
+    return response()->json(['html' => $view]);
+}
 }
