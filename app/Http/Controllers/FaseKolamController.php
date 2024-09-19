@@ -76,11 +76,15 @@ class FaseKolamController extends Controller
     return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
     }
 
-    public function show(string $id){
-        $fasekolam = FaseKolamModel::find($id); // Pastikan $id diisi dengan nilai yang valid
-        if (!$fasekolam) {
-            return redirect()->route('fasekolam.index')->with('error', 'Fase kolam tidak ditemukan.');
-        }
-        return view('fasekolam.show', compact('fasekolam'));
+public function show($id)
+{
+    $fasekolam = FaseKolamModel::with('kolam')->find($id); // Ambil data tambak dengan relasi gudang
+    if (!$fasekolam) {
+        return response()->json(['error' => ' Fase kolam tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('fasekolam.show', compact('fasekolam'))->render();
+    return response()->json(['html' => $view]);
 }
 }

@@ -87,11 +87,16 @@ class PjTambakController extends Controller
     return redirect()->route('pjTambak.index')->with('success', 'Data user tambak berhasil ditambahkan');
 }
 
-    public function show(string $id){
-        $pjtambak = pjTambakModel::find($id); // Pastikan $id diisi dengan nilai yang valid
-        if (!$pjtambak) {
-            return redirect()->route('pjTambak.index')->with('error', 'Tambak tidak ditemukan.');
-        }
-        return view('pjTambak.show', compact('pjTambak'));
+public function show($id)
+{
+    $pjtambak = PjTambakModel::with('user', 'tambak')->find($id); 
+    if (!$pjtambak) {
+        return response()->json(['error' => 'Pj Tambak tidak ditemukan.'], 404);
     }
+    // Render view dengan data tambak
+    $view = view('pjtambak.show', compact('pjtambak'))->render();
+    return response()->json(['html' => $view]);
 }
+}
+
+
