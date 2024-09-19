@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <label for="alamat" class="form-label">Alamat</label>
                             <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
-                                placeholder="Masukkan Alamat"></textarea>
+                                placeholder="Masukkan Alamat">{{ old('alamat') }}</textarea>
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif

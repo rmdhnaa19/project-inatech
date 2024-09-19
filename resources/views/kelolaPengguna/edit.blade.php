@@ -86,8 +86,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
-                                    placeholder="Abaikan (jangan diisi) jika tidak ingin mengganti alamat"></textarea>
+                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3">
+                                    {{ old('alamat', $user->alamat) }}
+                                </textarea>
                                 @if ($errors->has('alamat'))
                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                 @endif
@@ -120,7 +121,8 @@
                             <div class="form-group">
                                 <label for="potongan_gaji" class="form-label">Potongan Gaji</label>
                                 <input type="number" class="form-control @error('potongan_gaji') is-invalid @enderror"
-                                    id="potongan_gaji" name="potongan_gaji" value="{{ old('potongan_gaji', ) }}">
+                                    id="potongan_gaji" name="potongan_gaji"
+                                    value="{{ old('potongan_gaji', $user->potongan_gaji) }}">
                                 @if ($errors->has('potongan_gaji'))
                                     <span class="text-danger">{{ $errors->first('potongan_gaji') }}</span>
                                 @endif
@@ -130,11 +132,21 @@
                                 <div class="form-group">
                                     <select class="choices form-select @error('posisi') is-invalid @enderror" name="posisi"
                                         id="posisi">
-                                        <option value="{{ old('posisi') }}">- Pilih Posisi -</option>
-                                        <option value="Manager">Manager</option>
-                                        <option value="Teknisi">Teknisi</option>
-                                        <option value="Analis Tambak">Analis Tambak</option>
-                                        <option value="Pemilik Tambak">Pemilik Tambak</option>
+                                        <option value="">- Pilih Posisi -</option>
+                                        <option value="Manager"
+                                            {{ old('posisi', $user->posisi) == 'Manager' ? 'selected' : '' }}>Manager
+                                        </option>
+                                        <option value="Teknisi"
+                                            {{ old('posisi', $user->posisi) == 'Teknisi' ? 'selected' : '' }}>Teknisi
+                                        </option>
+                                        <option value="Analis Tambak"
+                                            {{ old('posisi', $user->posisi) == 'Analis Tambak' ? 'selected' : '' }}>Analis
+                                            Tambak
+                                        </option>
+                                        <option value="Pemilik Tambak"
+                                            {{ old('posisi', $user->posisi) == 'Pemilik Tambak' ? 'selected' : '' }}>Pemilik
+                                            Tambak
+                                        </option>
                                     </select>
                                 </div>
                                 @if ($errors->has('posisi'))
@@ -153,6 +165,7 @@
                                                 <p>Seret lalu letakkan file di sini</p>
                                             </div>
                                             <input type="file" class="drop-zone__input" id="foto" name="foto">
+                                            <input type="hidden" name="oldImage" value="{{ old('foto', $user->foto) }}">
                                         </div>
                                     </div>
                                     <div class="row mb-1">

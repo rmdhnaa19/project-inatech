@@ -6,6 +6,7 @@ use App\Models\RoleModel;
 use App\Models\UserModel;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -100,5 +101,43 @@ class UserController extends Controller
             return redirect()->route('kelolaPengguna.index')->with('error', 'Pengguna tidak ditemukan.');
         }
         return view('kelolaPengguna.show', compact('user'));
+    }
+
+    public function edit(string $id){
+        $user = UserModel::find($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Pengguna',
+            'paragraph' => 'Berikut ini merupakan form edit data pengguna yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pengguna', 'url' => route('kelolaPengguna.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaPengguna';
+
+        return view('kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user]);
+    }
+
+    public function update(Request $request, string $id){
+        $request->validate([
+            'username' => 'required|string|unique:user,username,'.$id.',id_user',
+            'password' => 'required|string|min:8',
+            'id_role' => 'required|integer',
+            'nama' => 'required|string|unique:user,nama,'.$id.',id_user',
+            'no_hp' => 'required|string|min:11|max:12',
+            'alamat' => 'required|string',
+            'gaji_pokok' => 'required|integer',
+            'komisi' => 'nullable|integer',
+            'tunjangan' => 'nullable|integer',
+            'potongan_gaji' => 'nullable|integer',
+            'posisi' => 'required|string',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        // $user = UserModel::find($id);
+        if ($request->file('foto') != "") {
+            Storage::delete($request->oldImage);
+        }
     }
 }
