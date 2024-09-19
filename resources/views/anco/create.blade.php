@@ -20,6 +20,21 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
+                    <div class="form-group">
                         <label for="tanggal_cek" class="form-label">Tanggal Cek</label>
                         <input type="date" class="form-control" id="tanggal_cek" name="tanggal_cek"
                             placeholder="Masukkan tanggal cek" value="{{ old('tanggal_cek') }}" required>
@@ -27,6 +42,28 @@
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
                             Tanggal cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="waktu_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="pemberian_pakan" class="form-label">Pemberian Pakan (kg)</label>
+                        <input type="string" class="form-control" id="pemberian_pakan" name="pemberian_pakan"
+                            placeholder="Masukkan pemberian pakan" value="{{ old('pemberian_pakan') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Pemberian pakan yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
@@ -73,10 +110,20 @@
                             <span class="text-danger">{{ $errors->first('kondisi_udang') }}</span>
                         @endif
                     </div>
+                    <div class="form-group">
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
 
                     {{-- Tombol kembali dan simpan --}}
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('anco') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>

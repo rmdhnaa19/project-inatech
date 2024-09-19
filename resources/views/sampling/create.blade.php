@@ -19,7 +19,21 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
                     <div class="form-group">
                         <label for="tanggal_cek" class="form-label">Tanggal Cek</label>
                         <input type="date" class="form-control" id="tanggal_cek" name="tanggal_cek"
@@ -31,7 +45,17 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                        <label for="waktu_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
                     <div class="form-group">
                         <label for="DOC" class="form-label">DOC (hari)</label>
                         <input type="text" class="form-control" id="DOC" name="DOC"
@@ -44,7 +68,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="berat_udang" class="form-label">Berat Udang / Ekor (gram)</label>
+                        <label for="berat_udang" class="form-label">Berat Udang / Ekor (gr)</label>
                         <input type="text" class="form-control" id="berat_udang" name="berat_udang"
                             placeholder="Masukkan berat udang" value="{{ old('berat_udang') }}" required>
                         @error('berat_udang')
@@ -56,12 +80,23 @@
                     </div>
                     <div class="form-group">
                         <label for="size_udang" class="form-label">Size Udang (cm)</label>
-                        <input type="text" class="form-control" id="size_udang" name="size_udang"
+                        <input type="text" class="form-control" id="size_udang" name="size_udang"  step="0.01" required oninput="calculatePopulasi()"
                             placeholder="Masukkan size udang" value="{{ old('size_udang') }}" required>
                         @error('size_udang')
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
                             Size udang yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="harga_udang" class="form-label">Interval Hari</label>
+                        <input type="text" class="form-control" id="interval_hari" name="interval_hari"
+                            placeholder="Masukkan interval" value="{{ old('interval_hari') }}" required>
+                        @error('interval_hari')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Interval yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
@@ -77,8 +112,41 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="input_fr" class="form-label">Input FR (%)</label>
+                        <input type="text" class="form-control" id="input_fr" name="input_fr"
+                            placeholder="Masukkan Input FR" value="{{ old('input_fr') }}" required>
+                        @error('input_fr')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Input FR udang yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="total_pakan" class="form-label">Total Pakan (kg)</label>
+                        <input type="text" class="form-control" id="total_pakan" name="total_pakan"
+                            placeholder="Otomatis dari penjumlahan pakan sebelumnya" value="{{ old('total_pakan') }}" required>
+                        @error('total_pakan')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Total pakan yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="ADG_udang" class="form-label">ADG udang (otomatis)</label>
+                        <input type="text" class="form-control" id="ADG_udang" name="ADG_udang"
+                            placeholder="(Berat sekarang - Berat sebelumnya/Interval hari)" value="{{ old('total_pakan') }}" required>
+                        @error('ADG_udang')
+                        <!-- <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Total pakan yang anda masukkan tidak valid
+                        </div> -->
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="biomassa" class="form-label">Biomassa (kg)</label>
-                        <input type="text" class="form-control" id="biomassa" name="biomassa"
+                        <input type="text" class="form-control" id="biomassa" name="biomassa"  step="0.01" required oninput="calculatePopulasi()"
                             placeholder="Masukkan biomassa" value="{{ old('biomassa') }}" required>
                         @error('biomassa')
                         <div class="invalid-feedback">
@@ -88,51 +156,30 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="populasi_ekor" class="form-label">Populasi Ekor</label>
-                        <input type="text" class="form-control" id="populasi_ekor" name="populasi_ekor"
-                            placeholder="Masukkan populasi ekor" value="{{ old('populasi_ekor') }}" required>
-                        @error('populasi_ekor')
-                        <div class="invalid-feedback">
-                            <i class="bx bx-radio-circle"></i>
-                            Populasi ekor anda masukkan tidak valid
+                            <label for="populasi_ekor" class="form-label">Populasi Ekor</label>
+                            <input type="number" class="form-control @error('populasi_ekor') is-invalid @enderror" id="populasi_ekor"
+                                name="populasi_ekor" value="{{ old('populasi_ekor') }}" step="0.01" readonly>
+                            <p><small class="text-muted">Hasil Hitung (Biomassa x Size)</small></p>
+                            @if ($errors->has('populasi_ekor'))
+                                <span class="text-danger">{{ $errors->first('populasi_ekor') }}</span>
+                            @endif
                         </div>
-                        @enderror
-                    </div>
-
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('sampling') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>
 
-                {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
-                                    </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
-                                </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </form>
     </div>
@@ -211,4 +258,12 @@
         }
     }
 </script>
+<script>
+        function calculatePopulasi() {
+            let size_udang = parseFloat(document.getElementById('size_udang').value) || 0;
+            let biomassa = parseFloat(document.getElementById('biomassa').value) || 0;
+            let populasi_ekor = size_udang * biomassa;
+            document.getElementById('populasi_ekor').value = populasi_ekor;
+        }
+    </script>
 @endpush

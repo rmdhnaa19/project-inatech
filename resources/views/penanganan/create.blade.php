@@ -19,7 +19,21 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
                     <div class="form-group">
                         <label for="tanggal_cek" class="form-label">Tanggal Cek</label>
                         <input type="date" class="form-control" id="tanggal_cek" name="tanggal_cek"
@@ -28,6 +42,18 @@
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
                             Tanggal cek yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tanggal_cek" class="form-label">Waktu Cek</label>
+                        <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
+                            placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
+                        @error('waktu_cek')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Waktu cek yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
@@ -66,7 +92,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="penambahan_air" class="form-label">Penambahan Air (cm)</label>
+                        <label for="penambahan_air" class="form-label">Penambahan Air (Liter)</label>
                         <input type="text" class="form-control" id="penambahan_air" name="penambahan_air"
                             placeholder="Masukkan penambahan air" value="{{ old('penambahan_air') }}" required>
                         @error('penambahan_air')
@@ -77,7 +103,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pengurangan_air" class="form-label">Pengurangan Air (cm)</label>
+                        <label for="pengurangan_air" class="form-label">Pengurangan Air (Liter)</label>
                         <input type="text" class="form-control" id="pengurangan_air" name="pengurangan_air"
                             placeholder="Masukkan pengurangan air" value="{{ old('pengurangan_air') }}" required>
                         @error('pengurangan_air')
@@ -87,41 +113,22 @@
                         </div>
                         @enderror
                     </div>
-
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" rows="3"
+                            placeholder="Tambahkan catatan"></textarea>
+                        @if ($errors->has('catatan'))
+                            <span class="text-danger">{{ $errors->first('catatan') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('penanganan') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>
 
-                {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
-                                    </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
-                                </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </form>
     </div>
