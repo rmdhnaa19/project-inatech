@@ -88,6 +88,17 @@ public function store(Request $request)
     return redirect()->route('pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
 }
 
+public function show($id)
+{
+    $pakan_harians = PakanHarianModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi fase
+    if (!$pakan_harians) {
+        return response()->json(['error' => 'Pakan Harian tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('pakanharian.show', compact('pakan_harians'))->render();
+    return response()->json(['html' => $view]);
+}
 }
 
 

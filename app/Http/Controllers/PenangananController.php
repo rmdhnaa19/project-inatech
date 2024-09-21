@@ -86,6 +86,18 @@ public function store(Request $request)
     return redirect()->route('penanganan.index')->with('success', 'Data penangan berhasil ditambahkan');
 }
 
+public function show($id)
+{
+    $penanganans = PenangananModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi fase
+    if (!$penanganans) {
+        return response()->json(['error' => 'Penanganan tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('penanganan.show', compact('penanganans'))->render();
+    return response()->json(['html' => $view]);
+}
+
 }
 
 

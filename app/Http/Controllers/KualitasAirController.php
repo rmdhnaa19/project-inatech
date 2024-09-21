@@ -97,6 +97,17 @@ public function store(Request $request)
     return redirect()->route('kualitasair.index');
 }
 
+public function show($id)
+{
+    $kualitasairs = KualitasAirModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi fase
+    if (!$kualitasairs) {
+        return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('kualitasair.show', compact('kualitasairs'))->render();
+    return response()->json(['html' => $view]);
+}
 }
 
 
