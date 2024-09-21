@@ -77,8 +77,8 @@ Route::group(['prefix' => 'kolam'], function(){
     Route::post('/', [KolamController::class, 'store'])->name('kolam.store');
     Route::get('/{id}', [KolamController::class, 'show'])->name('kolam.show');
     Route::get('/{id}/edit', [KolamController::class, 'edit'])->name('kolam.edit');
-    Route::put('/{id}', [KolamController::class, 'update']);
-    Route::delete('/{id}', [KolamController::class, 'destroy']);
+    Route::put('/{id}', [KolamController::class, 'update'])->name('kolam.update');
+    Route::delete('/{id}', [KolamController::class, 'destroy'])->name('kolam.destroy');
 });
 
 // Route fase tambak

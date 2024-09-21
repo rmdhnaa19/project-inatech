@@ -7,7 +7,6 @@
             @csrf
             @method('PUT')
             <div class="row">
-                <!-- Left Side Form Fields -->
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="nama_tambak">Nama Tambak</label>

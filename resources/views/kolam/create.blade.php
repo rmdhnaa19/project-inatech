@@ -24,12 +24,8 @@
                             <option value="bundar" {{ old('tipe_kolam') == 'bundar' ? 'selected' : '' }}>Bundar</option>
                         </select>
                     </div>
-
                     <div id="kolom-tambahan">
-                        <!-- Dinamically added fields will appear here -->
                     </div>
-
-                    <!-- Script for dynamically changing form fields and calculations -->
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             const tipeKolamSelect = document.getElementById('tipe_kolam');

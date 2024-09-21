@@ -10,10 +10,7 @@
                         <th>KODE KOLAM</th>
                         <th>TIPE KOLAM</th>
                         <th>NAMA TAMBAK</th>
-                        {{-- <th>PANJANG KOLAM </th>
-                        <th>LEBAR KOLAM</th> --}}
                         <th>LUAS KOLAM</th>
-                        {{-- <th>KEDALAMAN</th> --}}
                     </tr>
                 </thead>
             </table>
@@ -33,7 +30,7 @@
            </div>
            <div class="modal-body" style="padding: 20px;">
                
-               {{-- Modal Detail --}}
+             {{-- detail --}}
                <div id="user-detail-content" class="container">
                    <div class="row">
                        <div class="col-md-4">
@@ -53,22 +50,9 @@
                                    <th>Nama Tambak:</th>
                                    <td id="tambak-nama"></td>
                                </tr>
-                               {{-- <tr>
-                                   <th>Panjang Kolam:</th>
-                                   <td id="kolam-panjang-kolam"></td>
-                               </tr>
-                               <tr>
-                                   <th>Lebar Kolam:</th>
-                                   <td id="kolam-lebar-kolam"></td>
-                               </tr> --}}
-                               <tr>
                                 <th>Luas Kolam:</th>
                                 <td id="kolam-luas-kolam"></td>
                             </tr>
-                            {{-- <tr>
-                                <th>Kedalaman:</th>
-                                <td id="kolam-kedalaman"></td>
-                            </tr> --}}
                            </table>
                        </div>
                    </div>
@@ -77,12 +61,11 @@
            <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
                    <i class="bx bx-x d-block d-sm-none"></i>
-                   <span class="d-none d-sm-block">Delete</span>
+                   <span class="d-none d-sm-block">Hapus</span>
                </button>
-               <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                   <i class="bx bx-check d-block d-sm-none"></i>
-                   <span class="d-none d-sm-block">Update</span>
-               </button>
+               <button type="button" class="btn btn-warning ml-1" id="edit-kolam" data-id="">
+                <span class="d-none d-sm-block">Edit</span>
+            </button>
            </div>
        </div>
    </div>
@@ -154,30 +137,12 @@
                         orderable: false,
                         searchable: true
                     },
-                    // {
-                    //     data: "panjang_kolam",
-                    //     className: "", 
-                    //     orderable: true,
-                    //     searchable: true
-                    // },
-                    // {
-                    //     data: "lebar_kolam",
-                    //     className: "", 
-                    //     orderable: true,
-                    //     searchable: true
-                    // },
                     {
                         data: "luas_kolam",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
-                    // {
-                    //     data: "kedalaman",
-                    //     className: "", 
-                    //     orderable: true,
-                    //     searchable: true
-                    // },
                 ],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables
@@ -186,27 +151,41 @@
                 }
             });
 
-             // Event listener untuk menampilkan detail tambak
-            $(document).on('click', '.view-user-details', function() {
-    var url = $(this).data('url'); // Ambil URL dari data-url
-    $.ajax({
-        url: url,
-        type: 'GET',
-        success: function(response) {
-            if (response.html) {
-                $('#user-detail-content').html(response.html); // Muat konten ke modal
-                $('#kolamDetailModal').modal('show'); // Tampilkan modal
-            } else {
+            // Event listener untuk menampilkan detail tambak
+    $(document).on('click', '.view-user-details', function() {
+        var url = $(this).data('url');
+        var id_kolam = $(this).data('id'); // Ambil ID tambak dari elemen yang diklik
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    // Load konten detail ke modal
+                    $('#user-detail-content').html(response.html);
+
+                    // Set ID tambak ke tombol Edit
+                    $('#edit-kolam').data('id', id_kolam);
+                    $('#kolamDetailModal').modal('show');
+                } else {
+                    alert('Gagal memuat detail kolam');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
                 alert('Gagal memuat detail kolam');
             }
-        },
-        error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-            alert('Gagal memuat detail kolam');
+        });
+    });
+
+    // Event listener untuk tombol Edit di dalam modal
+    $(document).on('click', '#edit-kolam', function() {
+        var id = $(this).data('id'); // Ambil ID tambak dari tombol Edit
+        if (id) {
+            var url = '{{ route("kolam.edit", ":id") }}';
+            url = url.replace(':id', id);
+            window.location.href = url;
         }
     });
-});
-
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_manajemenKolam_filter").append(
