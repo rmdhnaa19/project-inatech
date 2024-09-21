@@ -80,16 +80,7 @@ class KolamController extends Controller
     return redirect()->route('kolam.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 
-//     public function show(string $id){
-//         $kolam = KolamModel::find($id); // Pastikan $id diisi dengan nilai yang valid
-//         if (!$kolam) {
-//             return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan.');
-//         }
-//         return view('kolam.show', compact('kolam'));
-//     }
-// }
-
-public function show($id)
+    public function show($id)
 {
     $kolam = KolamModel::with('tambak')->find($id); // Ambil data tambak dengan relasi gudang
     if (!$kolam) {
@@ -99,5 +90,59 @@ public function show($id)
     // Render view dengan data tambak
     $view = view('kolam.show', compact('kolam'))->render();
     return response()->json(['html' => $view]);
+}
+
+    public function edit($id)
+{
+    $kolam = KolamModel::find($id);
+    $tambak = TambakModel::all();
+    
+    if (!$kolam) {
+        return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan');
+    }
+    
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Kolam',
+        'paragraph' => 'Berikut ini merupakan form edit data kolam yang ada di dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kelola Kolam', 'url' => route('kolam.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+
+    $activeMenu = 'manajemenKolam';
+
+    return view('kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
+}
+
+public function update(Request $request, $id)
+{
+    $kolam = KolamModel::find($id);
+
+    if (!$kolam) {
+        return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan');
+    }
+
+    // Validasi input
+    $validatedData = $request->validate([
+        'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        'nama_tambak' => 'required|string|unique:tambak,nama_tambak,' . $id . ',id_tambak',
+        'id_gudang' => 'required|integer',
+        'luas_lahan' => 'required|integer',
+        'luas_tambak' => 'required|integer',
+        'lokasi_tambak' => 'required|string',
+    ]);
+
+    // Mengelola upload foto jika ada
+    if ($request->hasFile('foto')) {
+        $path = $request->file('foto')->store('foto_tambak', 'public');
+        $validatedData['foto'] = $path;
+    }
+
+    // Update data tambak
+    $tambak->update($validatedData);
+
+    return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diubah');
 }
 }

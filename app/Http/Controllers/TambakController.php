@@ -71,22 +71,9 @@ class TambakController extends Controller
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 
-
-//     public function show(string $id)
-// {
-//     $tambak = TambakModel::find($id);
-//     if (!$tambak) {
-//         return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
-//     }
-
-//     $view = view('tambak.show', compact('tambak'))->render();
-//     return response()->json(['html' => $view]);
-//     }
-// }
-
 public function show($id)
 {
-    $tambak = TambakModel::with('gudang')->find($id); // Ambil data tambak dengan relasi gudang
+    $tambak = TambakModel::with('gudang')->find($id); 
     if (!$tambak) {
         return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
     }
@@ -94,5 +81,59 @@ public function show($id)
     // Render view dengan data tambak
     $view = view('tambak.show', compact('tambak'))->render();
     return response()->json(['html' => $view]);
+}
+
+public function edit($id)
+{
+    $tambak = TambakModel::find($id);
+    $gudang = GudangModel::all();
+    
+    if (!$tambak) {
+        return redirect()->route('tambak.index')->with('error', 'Tambak tidak ditemukan');
+    }
+    
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Tambak',
+        'paragraph' => 'Berikut ini merupakan form edit data tambak yang ada di dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kelola Tambak', 'url' => route('tambak.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+
+    $activeMenu = 'manajemenTambak';
+
+    return view('tambak.edit', compact('tambak', 'gudang', 'breadcrumb', 'activeMenu'));
+}
+
+public function update(Request $request, $id)
+{
+    $tambak = TambakModel::find($id);
+
+    if (!$tambak) {
+        return redirect()->route('tambak.index')->with('error', 'Tambak tidak ditemukan');
+    }
+
+    // Validasi input
+    $validatedData = $request->validate([
+        'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        'nama_tambak' => 'required|string|unique:tambak,nama_tambak,' . $id . ',id_tambak',
+        'id_gudang' => 'required|integer',
+        'luas_lahan' => 'required|integer',
+        'luas_tambak' => 'required|integer',
+        'lokasi_tambak' => 'required|string',
+    ]);
+
+    // Mengelola upload foto jika ada
+    if ($request->hasFile('foto')) {
+        $path = $request->file('foto')->store('foto_tambak', 'public');
+        $validatedData['foto'] = $path;
+    }
+
+    // Update data tambak
+    $tambak->update($validatedData);
+
+    return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diubah');
 }
 }

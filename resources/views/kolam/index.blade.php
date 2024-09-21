@@ -10,10 +10,10 @@
                         <th>KODE KOLAM</th>
                         <th>TIPE KOLAM</th>
                         <th>NAMA TAMBAK</th>
-                        <th>PANJANG KOLAM </th>
-                        <th>LEBAR KOLAM</th>
+                        {{-- <th>PANJANG KOLAM </th>
+                        <th>LEBAR KOLAM</th> --}}
                         <th>LUAS KOLAM</th>
-                        <th>KEDALAMAN</th>
+                        {{-- <th>KEDALAMAN</th> --}}
                     </tr>
                 </thead>
             </table>
@@ -53,26 +53,22 @@
                                    <th>Nama Tambak:</th>
                                    <td id="tambak-nama"></td>
                                </tr>
-                               <tr>
+                               {{-- <tr>
                                    <th>Panjang Kolam:</th>
                                    <td id="kolam-panjang-kolam"></td>
                                </tr>
                                <tr>
                                    <th>Lebar Kolam:</th>
                                    <td id="kolam-lebar-kolam"></td>
-                               </tr>
+                               </tr> --}}
                                <tr>
                                 <th>Luas Kolam:</th>
                                 <td id="kolam-luas-kolam"></td>
                             </tr>
-                            <tr>
-                                   <th>Panjang Kolam:</th>
-                                   <td id="kolam-panjang-kolam"></td>
-                               </tr>
-                               <tr>
+                            {{-- <tr>
                                 <th>Kedalaman:</th>
                                 <td id="kolam-kedalaman"></td>
-                            </tr>
+                            </tr> --}}
                            </table>
                        </div>
                    </div>
@@ -158,30 +154,30 @@
                         orderable: false,
                         searchable: true
                     },
-                    {
-                        data: "panjang_kolam",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "lebar_kolam",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
+                    // {
+                    //     data: "panjang_kolam",
+                    //     className: "", 
+                    //     orderable: true,
+                    //     searchable: true
+                    // },
+                    // {
+                    //     data: "lebar_kolam",
+                    //     className: "", 
+                    //     orderable: true,
+                    //     searchable: true
+                    // },
                     {
                         data: "luas_kolam",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
-                    {
-                        data: "kedalaman",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    },
+                    // {
+                    //     data: "kedalaman",
+                    //     className: "", 
+                    //     orderable: true,
+                    //     searchable: true
+                    // },
                 ],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables

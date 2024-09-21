@@ -65,14 +65,14 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
                     <i class="bx bx-x d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Delete</span>
                 </button>
-                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                    <i class="bx bx-check d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">Update</span>
+                <button type="button" class="btn btn-warning ml-1" id="edit-tambak" data-id="">
+                    <span class="d-none d-sm-block">Edit</span>
                 </button>
+                
             </div>
         </div>
     </div>
@@ -90,13 +90,13 @@
         border-radius: 15px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         max-height: 70vh; 
-        overflow-y: auto; /* Tambahkan scrollbar jika konten terlalu panjang */
+        overflow-y: auto; 
     }
 
     .table-borderless th, .table-borderless td {
         padding: 0.5rem 0.5rem;
     }
-</style>
+    </style>
 @endpush
 
 
@@ -104,92 +104,107 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
-            serverSide: true,
-            ajax: {
-                "url": "{{ url('tambak/list') }}",
-                "dataType": "json",
-                "type": "POST",
-                "error": function(xhr, error, thrown) {
-                    console.error('Error fetching data: ', thrown);
+    var dataManajemenTambak = $('#table_manajemenTambak').DataTable({
+        serverSide: true,
+        ajax: {
+            "url": "{{ url('tambak/list') }}",
+            "dataType": "json",
+            "type": "POST",
+            "error": function(xhr, error, thrown) {
+                console.error('Error fetching data: ', thrown);
+            }
+        },
+        columns: [{
+                data: "nama_tambak",
+                orderable: true,
+                searchable: true,
+                render: function(data, type, row) {
+                    var url = '{{ route('tambak.show', ':id') }}';
+                    url = url.replace(':id', row.id_tambak);
+                    return '<a href="javascript:void(0);" data-id="' + row.id_tambak +
+                        '" class="view-user-details" data-url="' + url +
+                        '" data-toggle="modal" data-target="#tambakDetailModal">' + data +
+                        '</a>';
                 }
             },
-            columns: [{
-                    data: "nama_tambak",
-                    orderable: true,
-                    searchable: true,
-                    render: function(data, type, row) {
-                        var url = '{{ route('tambak.show', ':id') }}';
-                        url = url.replace(':id', row.id_tambak);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_tambak +
-                               '" class="view-user-details" data-url="' + url +
-                               '" data-toggle="modal" data-target="#tambakDetailModal">' + data +
-                               '</a>';
-                    }
-                },
-                {
-                    data: "gudang.nama",
-                    orderable: false,
-                    searchable: true
-                },
-                {
-                    data: "luas_lahan",
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: "luas_tambak",
-                    orderable: true,
-                    searchable: true
-                },
-                {
-                    data: "lokasi_tambak",
-                    orderable: true,
-                    searchable: true
-                }
-            ],
-
-            pagingType: "simple_numbers",
-            dom: 'frtip',
-            language: {
-                search: ""
+            {
+                data: "gudang.nama",
+                orderable: false,
+                searchable: true
+            },
+            {
+                data: "luas_lahan",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "luas_tambak",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "lokasi_tambak",
+                orderable: true,
+                searchable: true
             }
-        });
+        ],
 
-        // Event listener untuk menampilkan detail tambak
-        $(document).on('click', '.view-user-details', function() {
-            var url = $(this).data('url');
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function(response) {
-                    if (response.html) {
-                        // Load konten detail ke modal
-                        $('#user-detail-content').html(response.html);
-                        $('#tambakDetailModal').modal('show');
-                    } else {
-                        alert('Gagal memuat detail tambak');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+        pagingType: "simple_numbers",
+        dom: 'frtip',
+        language: {
+            search: ""
+        }
+    });
+
+    // Event listener untuk menampilkan detail tambak
+    $(document).on('click', '.view-user-details', function() {
+        var url = $(this).data('url');
+        var id_tambak = $(this).data('id'); // Ambil ID tambak dari elemen yang diklik
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    // Load konten detail ke modal
+                    $('#user-detail-content').html(response.html);
+
+                    // Set ID tambak ke tombol Edit
+                    $('#edit-tambak').data('id', id_tambak);
+                    $('#tambakDetailModal').modal('show');
+                } else {
                     alert('Gagal memuat detail tambak');
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+                alert('Gagal memuat detail tambak');
+            }
         });
-
-        // Tambahkan tombol "Tambah" setelah kolom pencarian
-        $("#table_manajemenTambak_filter").append(
-            '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
-        );
-
-        // Event listener untuk tombol tambah
-        $("#btn-tambah").on('click', function() {
-            window.location.href = "{{ url('tambak/create') }}";
-        });
-
-        // Menambahkan placeholder pada kolom search
-        $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
     });
+
+    // Event listener untuk tombol Edit di dalam modal
+    $(document).on('click', '#edit-tambak', function() {
+        var id = $(this).data('id'); // Ambil ID tambak dari tombol Edit
+        if (id) {
+            var url = '{{ route("tambak.edit", ":id") }}';
+            url = url.replace(':id', id);
+            window.location.href = url;
+        }
+    });
+
+    // Tambahkan tombol "Tambah" setelah kolom pencarian
+    $("#table_manajemenTambak_filter").append(
+        '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+    );
+
+    // Event listener untuk tombol tambah
+    $("#btn-tambah").on('click', function() {
+        window.location.href = "{{ url('tambak/create') }}";
+    });
+
+    // Menambahkan placeholder pada kolom search
+    $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
+});
+
 </script>
 @endpush
