@@ -174,8 +174,8 @@ class UserController extends Controller
 
     public function destroy($id) {
         $user = UserModel::findOrFail($id);
-        $user->delete();
-    
-        return redirect()->route('kelolaPengguna.index')->with('success', 'User berhasil dihapus');
+        Storage::delete($user->foto);
+        UserModel::destroy($id);
+        return response()->redirect()->route('kelolaPengguna.index');
     }
 }

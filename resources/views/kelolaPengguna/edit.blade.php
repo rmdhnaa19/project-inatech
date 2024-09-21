@@ -163,7 +163,7 @@
                                             <p>Seret lalu letakkan file di sini</p>
                                         </div>
                                         <input type="file" class="drop-zone__input" id="foto" name="foto">
-                                        <input type="hidden" name="oldImage" value="{{ old('foto', $user->foto) }}">
+                                        <input type="hidden" name="oldImage" value="{{ $user->foto }}">
                                     </div>
                                 </div>
                                 <div class="row mb-1">

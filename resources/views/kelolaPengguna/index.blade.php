@@ -82,12 +82,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
+                    <button type="button" class="btn btn-danger" id="btn-delete-user">Hapus</button>
                     <button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
                 </div>
             </div>
@@ -187,6 +182,34 @@
                 if (currentUserId) {
                     var editUrl = '{{ route('kelolaPengguna.edit', ':id') }}'.replace(':id', currentUserId);
                     window.location.href = editUrl;
+                } else {
+                    alert('ID pengguna tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-user', function() {
+                if (currentUserId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+                        var deleteUrl = '{{ route('kelolaPengguna.destroy', ':id') }}'.replace(':id',
+                            currentUserId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#userDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_kelolaPengguna').DataTable().ajax.reload();
+                                alert('Pengguna berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus pengguna: ' + xhr.responseText);
+                            }
+                        });
+                    }
                 } else {
                     alert('ID pengguna tidak ditemukan');
                 }
