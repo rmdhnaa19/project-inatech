@@ -111,6 +111,7 @@ class UserController extends Controller
 
     public function edit(string $id){
         $user = UserModel::find($id);
+        $role = RoleModel::all();
 
         $breadcrumb = (object) [
             'title' => 'Edit Data Pengguna',
@@ -123,17 +124,17 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
 
-        return view('kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user]);
+        return view('kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
     }
 
     public function update(Request $request, string $id){
         $request->validate([
             'username' => 'required|string|unique:user,username,'.$id.',id_user',
-            'password' => 'required|string|min:8',
+            'password' => 'nullable|string|min:8',
             'id_role' => 'required|integer',
             'nama' => 'required|string|unique:user,nama,'.$id.',id_user',
             'no_hp' => 'required|string|min:11|max:12',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'gaji_pokok' => 'required|integer',
             'komisi' => 'nullable|integer',
             'tunjangan' => 'nullable|integer',
@@ -141,114 +142,40 @@ class UserController extends Controller
             'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        if ($request->file('foto') != "") {
-            Storage::delete($request->oldImage);
-
-            if ($request->hasFile('foto')) {
-                $path = $request->file('foto')->store('foto_user', 'public');
-            }
-
-            if ($request->komisi == "") {
-                UserModel::find($id)->update([
-                    'komisi' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'komisi' => $request->komisi
-                ]);
-            }
     
-            if ($request->tunjangan == "") {
-                UserModel::find($id)->update([
-                    'tunjangan' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'tunjangan' => $request->tunjangan
-                ]);
-            }
+        $user = UserModel::findOrFail($id);
+        
+        $updateData = [
+            'username' => $request->username,
+            'id_role' => $request->id_role,
+            'nama' => $request->nama,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'gaji_pokok' => $request->gaji_pokok,
+            'komisi' => $request->komisi ?? 0,
+            'tunjangan' => $request->tunjangan ?? 0,
+            'potongan_gaji' => $request->potongan_gaji ?? 0,
+            'posisi' => $request->posisi,
+        ];
     
-            if ($request->potongan_gaji == "") {
-                UserModel::find($id)->update([
-                    'potongan_gaji' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'potongan_gaji' => $request->potongan_gaji
-                ]);
-            }
-            
-            UserModel::find($id)->update([
-                'username' => $request->username,
-                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-                'id_role' => $request->id_role,
-                'nama' => $request->nama,
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'gaji_pokok' => $request->gaji_pokok,
-                'posisi' => $request->posisi,
-                'foto' => $path['foto'],
-            ]);
-
-        }else{
-            if ($request->komisi == "") {
-                UserModel::find($id)->update([
-                    'komisi' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'komisi' => $request->komisi
-                ]);
-            }
-    
-            if ($request->tunjangan == "") {
-                UserModel::find($id)->update([
-                    'tunjangan' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'tunjangan' => $request->tunjangan
-                ]);
-            }
-    
-            if ($request->potongan_gaji == "") {
-                UserModel::find($id)->update([
-                    'potongan_gaji' => 0
-                ]);
-            }else{
-                UserModel::find($id)->update([
-                    'potongan_gaji' => $request->potongan_gaji
-                ]);
-            }
-
-            UserModel::find($id)->update([
-                'username' => $request->username,
-                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-                'id_role' => $request->id_role,
-                'nama' => $request->nama,
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'gaji_pokok' => $request->gaji_pokok,
-                'posisi' => $request->posisi,
-            ]);
+        if ($request->filled('password')) {
+            $updateData['password'] = bcrypt($request->password);
         }
+    
+        if ($request->hasFile('foto')) {
+            Storage::delete($request->oldImage);
+            $path = $request->file('foto')->store('foto_user', 'public');
+            $updateData['foto'] = $path;
+        }
+    
+        $user->update($updateData);
         return redirect()->route('kelolaPengguna.index');
     }
 
-    public function destroy(string $id)
-    {
-        $check = UserModel::find($id);
-        if(!$check){
-            // Alert::toast('Data administrasi tidak ditemukan', 'error');
-            return redirect()->route('kelolaPengguna.index');
-        }
-        try{
-            UserModel::destroy($id);
-            // Alert::toast('Data administrasi berhasil dihapus', 'success');
-            return redirect()->route('kelolaPengguna.index');
-        }catch(\Illuminate\Database\QueryException $e){
-            // Alert::toast('Data administrasi gagal dihapus', 'error');
-            return redirect()->route('kelolaPengguna.index');
-        }
+    public function destroy($id) {
+        $user = UserModel::findOrFail($id);
+        $user->delete();
+    
+        return redirect()->route('kelolaPengguna.index')->with('success', 'User berhasil dihapus');
     }
 }

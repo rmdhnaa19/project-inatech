@@ -8,6 +8,7 @@
                 <thead>
                     <a href=""></a>
                     <tr class="text-center">
+                        <th style="display: none">ID</th>
                         <th>NAMA</th>
                         <th>NO HP</th>
                         <th>POSISI</th>
@@ -87,10 +88,7 @@
                         <button type="submit" class="btn btn-sm btn-danger"
                             style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
                     </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
                 </div>
             </div>
         </div>
@@ -100,6 +98,7 @@
 @endpush
 @push('js')
     <script>
+        var currentUserId;
         $(document).ready(function() {
             var dataKelolaPengguna = $('#table_kelolaPengguna').DataTable({
                 serverSide: true,
@@ -115,34 +114,39 @@
                     }
                 },
                 columns: [{
-                    data: "nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: true,
-                    searchable: true,
-                    render: function(data, type, row) {
-                        var url = '{{ route('kelolaPengguna.show', ':id') }}';
-                        url = url.replace(':id', row.id_user);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_user +
-                            '" class="view-user-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#userDetailModal">' + data +
-                            '</a>';
+                        data: "id_user",
+                        visible: false
+                    },
+                    {
+                        data: "nama",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true,
+                        render: function(data, type, row) {
+                            var url = '{{ route('kelolaPengguna.show', ':id') }}';
+                            url = url.replace(':id', row.id_user);
+                            return '<a href="javascript:void(0);" data-id="' + row.id_user +
+                                '" class="view-user-details" data-url="' + url +
+                                '" data-toggle="modal" data-target="#userDetailModal">' + data +
+                                '</a>';
+                        }
+                    }, {
+                        data: "no_hp",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: "posisi",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "role.nama",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: false,
+                        searchable: true
                     }
-                }, {
-                    data: "no_hp",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: "posisi",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: true,
-                    searchable: true
-                }, {
-                    data: "role.nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
-                    searchable: true
-                }],
+                ],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables
                 language: {
@@ -153,7 +157,7 @@
             // Event listener untuk menampilkan detail tambak
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_user = $(this).data('id');
+                currentUserId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -164,11 +168,10 @@
                             $('#user-detail-content').html(response.html);
                             $('#userDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('kelolaPengguna.destroy', ':id') }}';
-                            deleteUrl = deleteUrl.replace(':id', id_user);
-                            $('#form-delete-user').attr('action',
-                                deleteUrl); // Setel action form
+                            // Tambahkan tombol edit secara dinamis
+                            var editButton =
+                                '<button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>';
+                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail user');
                         }
@@ -178,6 +181,15 @@
                         alert('Gagal memuat detail user');
                     }
                 });
+            });
+
+            $(document).on('click', '#btn-edit-user', function() {
+                if (currentUserId) {
+                    var editUrl = '{{ route('kelolaPengguna.edit', ':id') }}'.replace(':id', currentUserId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID pengguna tidak ditemukan');
+                }
             });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
