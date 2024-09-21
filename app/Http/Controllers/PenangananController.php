@@ -57,31 +57,28 @@ public function store(Request $request)
     $request->validate([
         'kd_penanganan' => 'required|string|max:255|unique:penanganan,kd_penanganan',
         'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
         'pemberian_mineral' => 'required|integer',
         'pemberian_vitamin' => 'required|integer',
         'pemberian_obat' => 'required|integer',
         'penambahan_air' => 'required|integer',
         'pengurangan_air' => 'required|integer',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
     ]);
 
     // Simpan data ke dalam database
     $penanganans = new PenangananModel();
     $penanganans->kd_penanganan = $request->kd_penanganan;
     $penanganans->tanggal_cek = $request->tanggal_cek;
+    $penanganans->waktu_cek = $request->waktu_cek;
     $penanganans->pemberian_mineral = $request->pemberian_mineral;
     $penanganans->pemberian_vitamin = $request->pemberian_vitamin;
     $penanganans->pemberian_obat = $request->pemberian_obat;
     $penanganans->penambahan_air = $request->penambahan_air;
     $penanganans->pengurangan_air = $request->pengurangan_air;
-
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/penanganan'), $filename);
-        $penanganans->image = $filename;
-    }
+    $penanganans->catatan = $request->catatan;
+    $penanganans->id_fase_tambak = $request->id_fase_tambak;
 
     $penanganans->save();
 

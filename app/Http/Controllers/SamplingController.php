@@ -57,33 +57,40 @@ public function store(Request $request)
     $request->validate([
         'kd_sampling' => 'required|string|max:255|unique:sampling,kd_sampling',
         'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
         'DOC' => 'required|integer',
         'berat_udang' => 'required|integer',
         'size_udang' => 'required|integer',
+        'interval_hari' => 'required|integer',
         'harga_udang' => 'required|integer',
+        'input_fr' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'ADG_udang' => 'required|integer',
         'biomassa' => 'required|integer',
         'populasi_ekor' => 'required|integer',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+        
     ]);
 
     // Simpan data ke dalam database
     $samplings = new SamplingModel();
     $samplings->kd_sampling = $request->kd_sampling;
     $samplings->tanggal_cek = $request->tanggal_cek;
+    $samplings->waktu_cek = $request->waktu_cek;
     $samplings->DOC = $request->DOC;
     $samplings->berat_udang = $request->berat_udang;
     $samplings->size_udang = $request->size_udang;
     $samplings->harga_udang = $request->harga_udang;
+    $samplings->interval_hari = $request->interval_hari;
+    $samplings->input_fr = $request->input_fr;
+    $samplings->total_pakan = $request->total_pakan;
+    $samplings->ADG_udang = $request->ADG_udang;
     $samplings->biomassa = $request->biomassa;
     $samplings->populasi_ekor = $request->populasi_ekor;
+    $samplings->catatan = $request->catatan;
+    $samplings->id_fase_tambak = $request->id_fase_tambak;
 
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/sampling'), $filename);
-        $samplings->image = $filename;
-    }
 
     $samplings->save();
 

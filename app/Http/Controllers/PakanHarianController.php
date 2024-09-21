@@ -65,7 +65,8 @@ public function store(Request $request)
         'berat_udang' => 'required|integer',
         'total_pakan' => 'required|integer',
         'catatan' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'id_fase_tambak' => 'required',
+        // 'id_detail_pakan' => 'required',
     ]);
 
     // Simpan data ke dalam database
@@ -77,15 +78,9 @@ public function store(Request $request)
     $pakan_harians->berat_udang = $request->berat_udang;
     $pakan_harians->total_pakan = $request->total_pakan;
     $pakan_harians->catatan = $request->catatan;
+    $pakan_harians->id_fase_tambak = $request->id_fase_tambak;
+    // $pakan_harians->id_detail_pakan = $request->id_detail_pakan;
     
-
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/pakanharian'), $filename);
-        $pakan_harians->image = $filename;
-    }
 
     $pakan_harians->save();
 

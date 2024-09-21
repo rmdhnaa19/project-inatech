@@ -3,6 +3,15 @@
 @section('content')
 <div class="card">
     <div class="card-body">
+     @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <form method="POST" action="{{ url('kematianUdang') }}" class="form-horizontal" enctype="multipart/form-data" id="tambahkematianudang">
             @csrf
             <div class="row">
@@ -19,7 +28,21 @@
                         </div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                            <label for="fase_tambak" class="form-label">Fase Kolam</label>
+                            <div class="form-group">
+                                <select class="choices form-select @error('id_fase_tambak') is-invalid @enderror" name="id_fase_tambak"
+                                    id="id_fase_tambak">
+                                    <option value="{{ old('id_fase_tambak') }}">- Pilih Fase Kolam -</option>
+                                    @foreach ($fase_kolam as $item)
+                                        <option value="{{ $item->id_fase_tambak }}">{{ $item->kd_fase_tambak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($errors->has('id_fase_tambak'))
+                                <span class="text-danger">{{ $errors->first('id_fase_tambak') }}</span>
+                            @endif
+                    </div>
                     <div class="form-group">
                         <label for="size_udang" class="form-label">Size Udang</label>
                         <input type="text" class="form-control" id="size_udang" name="size_udang"
@@ -54,39 +77,42 @@
                     </div>
 
                     <div class="form-group">
-                        <a class="btn btn-sm btn-default" href="{{ url('administrasi') }}">Kembali</a>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('kematianUdang') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
                     </div>
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                        <div class="form-group">
+                            <div class="col">
+                                <div class="row mb-1">
+                                    <div class="drop-zone px-5">
+                                        <div class="text-center">
+                                            <i class="fa-solid fa-cloud-arrow-up"
+                                                style="height: 50px; font-size: 50px"></i>
+                                            <p>Seret lalu letakkan file di sini</p>
+                                        </div>
+                                        <input type="file" class="drop-zone__input" id="gambar" name="gambar">
                                     </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
                                 </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
+                                <div class="row mb-1">
+                                    <span class="text-center">Atau</span>
+                                </div>
+                                <div class="row">
+                                    <div class="form-file">
+                                        <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
+                                        <label class="form-file-label" for="gambar">
+                                            <span class="form-file-text">Choose file...</span>
+                                            <span class="form-file-button">Browse</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> -->
             </div>
         </form>
     </div>
@@ -99,70 +125,47 @@
 
 @push('js')
 <script>
-    document.querySelectorAll('.drop-zone__input').forEach((inputElement) => {
-        const dropZoneElement = inputElement.closest('.drop-zone');
+        const dropZone = document.querySelector('.drop-zone');
+        const dropZoneInput = document.querySelector('.drop-zone__input');
+        const browseInput = document.querySelector('#gambar');
+        const fileNameLabel = document.querySelector('.form-file-text');
 
-        dropZoneElement.addEventListener('click', (e) => {
-            inputElement.click();
+        // Handle the file drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone--over');
         });
 
-        inputElement.addEventListener('change', (e) => {
-            if (inputElement.files.length) {
-                updateThumbnail(dropZoneElement, inputElement.files[0]);
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone--over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone--over');
+            const files = e.dataTransfer.files;
+            dropZoneInput.files = files;
+            updateFileName(files[0].name);
+            uploadFile(files[0]);
+        });
+
+        // Handle the file browse
+        browseInput.addEventListener('change', function() {
+            dropZoneInput.files = browseInput.files; // Sync files with drop zone
+            updateFileName(this.files[0].name);
+            uploadFile(this.files[0]);
+        });
+
+        // Update the filename in the label
+        dropZoneInput.addEventListener('change', function() {
+            if (dropZoneInput.files.length > 0) {
+                updateFileName(dropZoneInput.files[0].name);
+                uploadFile(dropZoneInput.files[0]); // Upload file to server
             }
         });
 
-        dropZoneElement.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZoneElement.classList.add('drop-zone--over');
-        });
-
-        ['dragleave', 'dragend'].forEach((type) => {
-            dropZoneElement.addEventListener(type, (e) => {
-                dropZoneElement.classList.remove('drop-zone--over');
-            });
-        });
-
-        dropZoneElement.addEventListener('drop', (e) => {
-            e.preventDefault();
-
-            if (e.dataTransfer.files.length) {
-                inputElement.files = e.dataTransfer.files;
-                updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
-            }
-
-            dropZoneElement.classList.remove('drop-zone--over');
-        });
-    });
-
-    function updateThumbnail(dropZoneElement, file) {
-        let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
-
-        // Remove the prompt
-        if (dropZoneElement.querySelector('.drop-zone__prompt')) {
-            dropZoneElement.querySelector('.drop-zone__prompt').remove();
+        function updateFileName(name) {
+            fileNameLabel.textContent = name;
         }
-
-        // First time - there is no thumbnail element, so let's create it
-        if (!thumbnailElement) {
-            thumbnailElement = document.createElement('div');
-            thumbnailElement.classList.add('drop-zone__thumb');
-            dropZoneElement.appendChild(thumbnailElement);
-        }
-
-        thumbnailElement.dataset.label = file.name;
-
-        // Show thumbnail for image files
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
-            };
-        } else {
-            thumbnailElement.style.backgroundImage = null;
-        }
-    }
-</script>
+    </script>
 @endpush
