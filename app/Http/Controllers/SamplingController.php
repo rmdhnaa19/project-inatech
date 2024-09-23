@@ -98,6 +98,18 @@ public function store(Request $request)
     return redirect()->route('sampling.index')->with('success', 'Data sampling berhasil ditambahkan');
 }
 
+public function show($id)
+{
+    $samplings = SamplingModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi fase
+    if (!$samplings) {
+        return response()->json(['error' => 'Sampling tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('sampling.show', compact('samplings'))->render();
+    return response()->json(['html' => $view]);
+}
+
 }
 
 

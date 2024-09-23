@@ -92,6 +92,18 @@ public function store(Request $request)
     // Redirect ke halaman index dengan pesan sukses
     return redirect()->route('anco.index')->with('success', 'Data anco berhasil ditambahkan');
 }
+
+public function show($id)
+{
+    $anco = AncoModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$anco) {
+        return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
+    }
+
+    // Render view dengan data tambak
+    $view = view('anco.show', compact('anco'))->render();
+    return response()->json(['html' => $view]);
+}
 }
 
 
