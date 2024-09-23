@@ -10,9 +10,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PjTambakController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $breadcrumb = (object) [
@@ -97,6 +94,7 @@ class PjTambakController extends Controller
         $view = view('pjtambak.show', compact('pjtambak'))->render();
         return response()->json(['html' => $view]);
     }
+    
 
     public function edit($id)
     {
