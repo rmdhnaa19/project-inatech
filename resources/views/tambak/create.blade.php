@@ -89,7 +89,7 @@
                             <div class="row mb-1">
                                 <span class="text-center">Atau</span>
                             </div>
-                            <div class="row">
+                            <div class="row mb-5">
                                 <div class="form-file">
                                     <label class="form-file-label" for="foto">
                                         <span class="form-file-text">Choose file...</span>
@@ -97,19 +97,22 @@
                                     </label>
                                 </div>
                             </div>
+                            @if ($errors->has('foto'))
+                                <div class="row alert alert-danger">
+                                    <span class="text-center">{{ $errors->first('foto') }}</span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-            
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-sm btn-danger"
-                    onclick="window.location.href='{{ url('tambak') }}'"
+                    onclick="window.location.href='{{ url('kelolaPengguna') }}'"
                     style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                 <button type="submit" class="btn btn-primary btn-sm"
                     style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
             </div>
-
         </form>
     </div>
 </div>
@@ -123,7 +126,7 @@
     const browseInput = document.querySelector('#foto');
     const fileNameLabel = document.querySelector('.form-file-text');
 
-    // File foto drag n drop
+    // Handle the file drop
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('drop-zone--over');
@@ -142,18 +145,18 @@
         uploadFile(files[0]);
     });
 
-    // File foto cari
+    // Handle the file browse
     browseInput.addEventListener('change', function() {
         dropZoneInput.files = browseInput.files; // Sync files with drop zone
         updateFileName(this.files[0].name);
         uploadFile(this.files[0]);
     });
 
-    // Update nama file di label
+    // Update the filename in the label
     dropZoneInput.addEventListener('change', function() {
         if (dropZoneInput.files.length > 0) {
             updateFileName(dropZoneInput.files[0].name);
-            uploadFile(dropZoneInput.files[0]); // Upload foto ke server
+            uploadFile(dropZoneInput.files[0]); // Upload file to server
         }
     });
 
