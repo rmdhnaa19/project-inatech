@@ -54,7 +54,7 @@ class KematianUdangController extends Controller
 public function store(Request $request)
 {
     // Validasi input
-    $request->validate([
+    $validatedData = $request->validate([
         'kd_kematian_udang' => 'required|string|max:255|unique:kematian_udang,kd_kematian_udang',
         'size_udang' => 'required|integer',
         'berat_udang' => 'required|integer',
@@ -63,29 +63,30 @@ public function store(Request $request)
         'id_fase_tambak' => 'required',
     ]);
 
-    // Simpan data ke dalam database
-    $kematianudangs = new KematianUdangModel();
-    $kematianudangs->kd_kematian_udang = $request->kd_kematian_udang;
-    $kematianudangs->size_udang = $request->size_udang;
-    $kematianudangs->berat_udang = $request->berat_udang;
-    $kematianudangs->catatan = $request->catatan;
-    $kematianudangs->gambar = $request->gambar;
-    $kematianudangs->id_fase_tambak = $request->id_fase_tambak;
-   
-
-    // Simpan file image jika ada
-    if ($request->hasFile('gambar')) {
+     // Simpan file image jika ada
+     if ($request->hasFile('gambar')) {
         $path = $request->file('gambar')->store('foto_kematianudang', 'public');
-        $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
+        $validatedData['gambar'] = $path;// Tambahkan path foto ke validated data
 
-    }
-    $kematianudangs->save();
+    } 
+    
+    KematianUdangModel::create($validatedData);
 
     // Redirect ke halaman index dengan pesan sukses
     return redirect()->route('kematianudang.index')->with('success', 'Data kematian udang berhasil ditambahkan');
 }
 
+public function show($id)
+{
+    $kematianudangs = KematianUdangModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi fase
+    if (!$kematianudangs) {
+        return response()->json(['error' => 'Kematian udang tidak ditemukan.'], 404);
+    }
 
+    // Render view dengan data tambak
+    $view = view('kematianudang.show', compact('kematianudangs'))->render();
+    return response()->json(['html' => $view]);
+}
 }
 
 
