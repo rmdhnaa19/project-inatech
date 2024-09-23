@@ -107,72 +107,72 @@ Route::group(['prefix' => 'pjTambak'], function(){
 
 // Route anco
 Route::group(['prefix' => 'anco'], function(){
-    Route::get('/', [AncoController::class, 'index'])->name('anco.index');
-    Route::post('/list', [AncoController::class, 'list']);
-    Route::get('/create', [AncoController::class, 'create'])->name('anco.create');
-    Route::post('/', [AncoController::class, 'store'])->name('anco.store');
-    Route::get('/{id}', [AncoController::class, 'show'])->name('anco.show');
-    Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('anco.edit');
-    Route::put('/{id}', [AncoController::class, 'update']);
-    Route::delete('/{id}', [AncoController::class, 'destroy']);
+    Route::get('/', [AncoController::class, 'index'])->name('anco.index')->middleware('auth');
+    Route::post('/list', [AncoController::class, 'list'])->name('anco.list')->middleware('auth');
+    Route::get('/create', [AncoController::class, 'create'])->name('anco.create')->middleware('auth');
+    Route::post('/', [AncoController::class, 'store'])->name('anco.store')->middleware('auth');
+    Route::get('/{id}', [AncoController::class, 'show'])->name('anco.show')->middleware('auth');
+    Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('anco.edit')->middleware('auth');
+    Route::put('/{id}', [AncoController::class, 'update'])->name('anco.update')->middleware('auth');
+    Route::delete('/{id}', [AncoController::class, 'destroy'])->name('anco.destroy')->middleware('auth');
 });
 
 // Route kualitas air
 Route::group(['prefix' => 'kualitasair'], function(){
-    Route::get('/', [KualitasAirController::class, 'index'])->name('kualitasair.index');
-    Route::post('/list', [KualitasAirController::class, 'list']);
-    Route::get('/create', [KualitasAirController::class, 'create'])->name('kualitasair.create');
-    Route::post('/', [KualitasAirController::class, 'store'])->name('kualitasair.store');
-    Route::get('/{id}', [KualitasAirController::class, 'show'])->name('kualitasair.show');
-    Route::get('/{id}/edit', [KualitasAirController::class, 'edit'])->name('kualitasair.edit');
-    Route::put('/{id}', [KualitasAirController::class, 'update']);
-    Route::delete('/{id}', [KualitasAirController::class, 'destroy']);
+    Route::get('/', [KualitasAirController::class, 'index'])->name('kualitasair.index')->middleware('auth');
+    Route::post('/list', [KualitasAirController::class, 'list'])->name('kualitasair.list')->middleware('auth');
+    Route::get('/create', [KualitasAirController::class, 'create'])->name('kualitasair.create')->middleware('auth');
+    Route::post('/', [KualitasAirController::class, 'store'])->name('kualitasair.store')->middleware('auth');
+    Route::get('/{id}', [KualitasAirController::class, 'show'])->name('kualitasair.show')->middleware('auth');
+    Route::get('/{id}/edit', [KualitasAirController::class, 'edit'])->name('kualitasair.edit')->middleware('auth');
+    Route::put('/{id}', [KualitasAirController::class, 'update'])->name('kualitasair.update')->middleware('auth');
+    Route::delete('/{id}', [KualitasAirController::class, 'destroy'])->name('kualitasair.destroy')->middleware('auth');
 });
 
 // Route penanganan
 Route::group(['prefix' => 'penanganan'], function(){
-    Route::get('/', [PenangananController::class, 'index'])->name('penanganan.index');
-    Route::post('/list', [PenangananController::class, 'list']);
-    Route::get('/create', [PenangananController::class, 'create'])->name('penanganan.create');
-    Route::post('/', [PenangananController::class, 'store'])->name('penanganan.store');
-    Route::get('/{id}', [PenangananController::class, 'show'])->name('penanganan.show');
-    Route::get('/{id}/edit', [PenangananController::class, 'edit'])->name('penanganan.edit');
-    Route::put('/{id}', [PenangananController::class, 'update']);
-    Route::delete('/{id}', [PenangananController::class, 'destroy']);
+    Route::get('/', [PenangananController::class, 'index'])->name('penanganan.index')->middleware('auth');
+    Route::post('/list', [PenangananController::class, 'list'])->name('penanganan.list')->middleware('auth');
+    Route::get('/create', [PenangananController::class, 'create'])->name('penanganan.create')->middleware('auth');
+    Route::post('/', [PenangananController::class, 'store'])->name('penanganan.store')->middleware('auth');
+    Route::get('/{id}', [PenangananController::class, 'show'])->name('penanganan.show')->middleware('auth');
+    Route::get('/{id}/edit', [PenangananController::class, 'edit'])->name('penanganan.edit')->middleware('auth');
+    Route::put('/{id}', [PenangananController::class, 'update'])->name('penanganan.update')->middleware('auth');
+    Route::delete('/{id}', [PenangananController::class, 'destroy'])->name('penanganan.destroy')->middleware('auth');
 });
 
 // Route sampling
 Route::group(['prefix' => 'sampling'], function(){
-    Route::get('/', [SamplingController::class, 'index'])->name('sampling.index');
-    Route::post('/list', [SamplingController::class, 'list']);
-    Route::get('/create', [SamplingController::class, 'create'])->name('sampling.create');
-    Route::post('/', [SamplingController::class, 'store'])->name('sampling.store');
-    Route::get('/{id}', [SamplingController::class, 'show'])->name('sampling.show');
-    Route::get('/{id}/edit', [SamplingController::class, 'edit'])->name('sampling.edit');
-    Route::put('/{id}', [SamplingController::class, 'update']);
-    Route::delete('/{id}', [SamplingController::class, 'destroy']);
+    Route::get('/', [SamplingController::class, 'index'])->name('sampling.index')->middleware('auth');
+    Route::post('/list', [SamplingController::class, 'list'])->name('sampling.list')->middleware('auth');
+    Route::get('/create', [SamplingController::class, 'create'])->name('sampling.create')->middleware('auth');
+    Route::post('/', [SamplingController::class, 'store'])->name('sampling.store')->middleware('auth');
+    Route::get('/{id}', [SamplingController::class, 'show'])->name('sampling.show')->middleware('auth');
+    Route::get('/{id}/edit', [SamplingController::class, 'edit'])->name('sampling.edit')->middleware('auth');
+    Route::put('/{id}', [SamplingController::class, 'update'])->name('sampling.update')->middleware('auth');
+    Route::delete('/{id}', [SamplingController::class, 'destroy'])->name('sampling.destroy')->middleware('auth');
 });
 
 // Route pakan harian
 Route::group(['prefix' => 'pakanHarian'], function(){
-    Route::get('/', [PakanHarianController::class, 'index'])->name('pakanharian.index');
-    Route::post('/list', [PakanHarianController::class, 'list']);
-    Route::get('/create', [PakanHarianController::class, 'create'])->name('pakanharian.create');
-    Route::post('/', [PakanHarianController::class, 'store'])->name('pakanharian.store');
-    Route::get('/{id}', [PakanHarianController::class, 'show'])->name('pakanharian.show');
-    Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('pakanharian.edit');
-    Route::put('/{id}', [PakanHarianController::class, 'update']);
-    Route::delete('/{id}', [PakanHarianController::class, 'destroy']);
+    Route::get('/', [PakanHarianController::class, 'index'])->name('pakanharian.index')->middleware('auth');
+    Route::post('/list', [PakanHarianController::class, 'list'])->name('pakanharian.list')->middleware('auth');
+    Route::get('/create', [PakanHarianController::class, 'create'])->name('pakanharian.create')->middleware('auth');
+    Route::post('/', [PakanHarianController::class, 'store'])->name('pakanharian.store')->middleware('auth');
+    Route::get('/{id}', [PakanHarianController::class, 'show'])->name('pakanharian.show')->middleware('auth');
+    Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('pakanharian.edit')->middleware('auth');
+    Route::put('/{id}', [PakanHarianController::class, 'update'])->name('pakanharian.update')->middleware('auth');
+    Route::delete('/{id}', [PakanHarianController::class, 'destroy'])->name('pakanharian.destroy')->middleware('auth');
 });
 
 // Route kematian udang
 Route::group(['prefix' => 'kematianUdang'], function(){
-    Route::get('/', [KematianUdangController::class, 'index'])->name('kematianudang.index');
-    Route::post('/list', [KematianUdangController::class, 'list']);
-    Route::get('/create', [KematianUdangController::class, 'create'])->name('kematianudang.create');
-    Route::post('/', [KematianUdangController::class, 'store'])->name('kematianudang.store');
-    Route::get('/{id}', [KematianUdangController::class, 'show'])->name('kematianudang.show');
-    Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit');
-    Route::put('/{id}', [KematianUdangController::class, 'update']);
-    Route::delete('/{id}', [KematianUdangController::class, 'destroy']);
+    Route::get('/', [KematianUdangController::class, 'index'])->name('kematianudang.index')->middleware('auth');
+    Route::post('/list', [KematianUdangController::class, 'list'])->name('kematianudang.list')->middleware('auth');
+    Route::get('/create', [KematianUdangController::class, 'create'])->name('kematianudang.create')->middleware('auth');
+    Route::post('/', [KematianUdangController::class, 'store'])->name('kematianudang.store')->middleware('auth');
+    Route::get('/{id}', [KematianUdangController::class, 'show'])->name('kematianudang.show')->middleware('auth');
+    Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit')->middleware('auth');
+    Route::put('/{id}', [KematianUdangController::class, 'update'])->name('kematianudang.update')->middleware('auth');
+    Route::delete('/{id}', [KematianUdangController::class, 'destroy'])->name('kematianudang.destroy')->middleware('auth');
 });
