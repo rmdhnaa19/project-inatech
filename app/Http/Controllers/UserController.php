@@ -176,6 +176,6 @@ class UserController extends Controller
         $user = UserModel::findOrFail($id);
         Storage::delete($user->foto);
         UserModel::destroy($id);
-        return response()->redirect()->route('kelolaPengguna.index');
+        return redirect()->route('kelolaPengguna.index');
     }
 }
