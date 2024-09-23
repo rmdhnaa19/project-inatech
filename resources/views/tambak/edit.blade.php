@@ -55,7 +55,7 @@
                         @enderror
                     </div>
 
-                    <!-- Foto Tambak Saat Ini -->
+                    <!-- Foto Tambak Saat Ini yang tersimpan di database -->
                     <div class="form-group">
                         <label for="current_foto">Foto Tambak Saat Ini</label>
                         @if($tambak->foto)
@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Right Side Drag and Drop -->
+                <!-- Drag and Drop -->
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
@@ -97,7 +97,7 @@
                 </div>
             </div>
 
-            <!-- Centered Submit Button -->
+            <!-- Submit Button -->
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">Simpan</button>

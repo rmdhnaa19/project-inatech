@@ -29,28 +29,28 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             const tipeKolamSelect = document.getElementById('tipe_kolam');
-    const kolomTambahanDiv = document.getElementById('kolom-tambahan');
-    let panjangInput, lebarInput, diameterInput, luasKolamInput;
+                            const kolomTambahanDiv = document.getElementById('kolom-tambahan');
+                            let panjangInput, lebarInput, diameterInput, luasKolamInput;
 
-    function calculateCircularArea(diameter) {
-        const radius = diameter / 2;
-        return Math.PI * Math.pow(radius, 2);
-    }
+                            function calculateCircularArea(diameter) {
+                                const radius = diameter / 2;
+                                return Math.PI * Math.pow(radius, 2);
+                            }
 
-    function calculateRectangularArea(panjang, lebar) {
-        return panjang * lebar;
-    }
+                            function calculateRectangularArea(panjang, lebar) {
+                                return panjang * lebar;
+                            }
 
-    function hitungLuasKolamCircular() {
-        const diameter = parseFloat(diameterInput.value) || 0;
-        luasKolamInput.value = Math.round(calculateCircularArea(diameter)); // Pembulatan ke integer
-    }
+                            function hitungLuasKolamCircular() {
+                                const diameter = parseFloat(diameterInput.value) || 0;
+                                luasKolamInput.value = Math.round(calculateCircularArea(diameter)); // Pembulatan ke integer
+                            }
 
-    function hitungLuasKolamRectangular() {
-        const panjang = parseFloat(panjangInput.value) || 0;
-        const lebar = parseFloat(lebarInput.value) || 0;
-        luasKolamInput.value = Math.round(calculateRectangularArea(panjang, lebar)); // Pembulatan ke integer
-    }
+                            function hitungLuasKolamRectangular() {
+                                const panjang = parseFloat(panjangInput.value) || 0;
+                                const lebar = parseFloat(lebarInput.value) || 0;
+                                luasKolamInput.value = Math.round(calculateRectangularArea(panjang, lebar)); // Pembulatan ke integer
+                            }
 
                             tipeKolamSelect.addEventListener('change', function () {
                                 const tipeKolam = this.value;

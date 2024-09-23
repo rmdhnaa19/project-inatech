@@ -1,17 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\KolamModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class KolamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $breadcrumb = (object) [
@@ -27,6 +25,7 @@ class KolamController extends Controller
         return view('kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
+
     public function list(Request $request)
     {
         $kolams = KolamModel::select('id_kolam', 'kd_kolam', 'tipe_kolam', 'panjang_kolam', 'lebar_kolam', 'luas_kolam', 'kedalaman', 'id_tambak', 'created_at', 'updated_at')->with('tambak'); 
@@ -35,6 +34,7 @@ class KolamController extends Controller
         }
         return DataTables::of($kolams)->make(true);
     }
+
 
     public function create()
     {
@@ -52,9 +52,10 @@ class KolamController extends Controller
         return view('kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
+
     public function store(Request $request)
     {
-        // Validasi input
+        
         $validatedData = $request->validate([
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
             'tipe_kolam' => 'required|in:kotak,bundar',
@@ -66,13 +67,13 @@ class KolamController extends Controller
             'id_tambak' => 'required|integer',
         ]);
 
-        // Mengelola upload foto jika ada
+        // Upload foto jika ada
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_kolam', 'public'); // Simpan ke storage
-            $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+            $path = $request->file('foto')->store('foto_kolam', 'public'); // Menyimpan ke storage
+            $validatedData['foto'] = $path; // Menambahkan path foto ke validated data
         }
 
-        // Simpan data ke database
+        // Menyimpan data ke database
         KolamModel::create($validatedData);
         return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
     }
@@ -86,6 +87,7 @@ class KolamController extends Controller
         $view = view('kolam.show', compact('kolam'))->render();
         return response()->json(['html' => $view]);
     }
+
 
     public function edit($id)
     {
@@ -111,16 +113,11 @@ class KolamController extends Controller
         return view('kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
     }
 
+
     public function update(Request $request, $id)
     {
         $kolam = KolamModel::find($id);
-
-        if (!$kolam) {
-            return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan');
-        }
-
-        // Validasi input
-        $validatedData = $request->validate([
+            $validatedData = $request->validate([
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
             'tipe_kolam' => 'required|in:kotak,bundar',
             'kd_kolam' => 'required|string|unique:kolam,kd_kolam,' . $id . ',id_kolam',
@@ -130,16 +127,16 @@ class KolamController extends Controller
             'kedalaman' => 'required|integer',
             'id_tambak' => 'required|integer',
         ]);
-
-        // Mengelola upload foto jika ada
         if ($request->hasFile('foto')) {
+            Storage::delete('public/' . $kolam->foto);
             $path = $request->file('foto')->store('foto_kolam', 'public');
+            // dd($path); debug $path
             $validatedData['foto'] = $path;
-        }
+        } 
 
-        // Update data kolam
+        // Mengupdate data kolam di database
         $kolam->update($validatedData);
-
+            
         return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil diubah');
     }
-}
+}    

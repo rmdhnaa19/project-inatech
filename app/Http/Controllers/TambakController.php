@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 use App\Models\GudangModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class TambakController extends Controller
 {
-   
+
     public function index()
     {
         $breadcrumb = (object) [
@@ -61,17 +62,19 @@ class TambakController extends Controller
             'lokasi_tambak' => 'required|string',            
         ]);
 
-        // Mengelola upload foto jika ada
+        // Upload foto jika ada 
     if ($request->hasFile('foto')) {
-        $path = $request->file('foto')->store('foto_tambak', 'public'); // Simpan ke storage
-        $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+        $path = $request->file('foto')->store('foto_tambak', 'public'); // Menyimpan ke storage
+        $validatedData['foto'] = $path; // Menambahkan path foto ke validated data
     }
-    // Simpan data ke database
+
+    // Menyimpan data ke database
     TambakModel::create($validatedData);
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
 }
 
-public function show($id)
+
+    public function show($id)
 {
     $tambak = TambakModel::with('gudang')->find($id); 
     if (!$tambak) {
@@ -83,7 +86,8 @@ public function show($id)
     return response()->json(['html' => $view]);
 }
 
-public function edit($id)
+
+    public function edit($id)
 {
     $tambak = TambakModel::find($id);
     $gudang = GudangModel::all();
@@ -107,7 +111,8 @@ public function edit($id)
     return view('tambak.edit', compact('tambak', 'gudang', 'breadcrumb', 'activeMenu'));
 }
 
-public function update(Request $request, $id)
+
+    public function update(Request $request, $id)
 {
     $tambak = TambakModel::find($id);
 
@@ -135,5 +140,13 @@ public function update(Request $request, $id)
     $tambak->update($validatedData);
 
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diubah');
+}
+
+
+    public function destroy($id) {
+    $tambak = TambakModel::findOrFail($id);
+    Storage::delete($tambak->foto);
+    TambakModel::destroy($id);
+    return response()->redirect()->route('tambak.index');
 }
 }
