@@ -173,6 +173,6 @@ Route::group(['prefix' => 'kematianUdang'], function(){
     Route::post('/', [KematianUdangController::class, 'store'])->name('kematianudang.store')->middleware('auth');
     Route::get('/{id}', [KematianUdangController::class, 'show'])->name('kematianudang.show')->middleware('auth');
     Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit')->middleware('auth');
-    Route::put('/{id}', [KematianUdangController::class, 'update'])->name('kematianudang.update')->middleware('auth');
+    Route::post('/{id}', [KematianUdangController::class, 'update'])->name('kematianudang.update')->middleware('auth');
     Route::delete('/{id}', [KematianUdangController::class, 'destroy'])->name('kematianudang.destroy')->middleware('auth');
 });

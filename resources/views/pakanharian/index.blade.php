@@ -79,16 +79,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-pakanharian">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-pakanharian">Edit</button>
                 </div>
             </div>
         </div>
@@ -98,6 +90,7 @@
 @endpush
 @push('js')
     <script>
+        var currentPakanHarianId;
         $(document).ready(function() {
             var datapakanHarian = $('#table_pakanHarian').DataTable({
                 serverSide: true,
@@ -167,10 +160,10 @@
                 }
             });
 
-            // Event listener untuk menampilkan detail tambak
+            // Event listener untuk menampilkan detail pakan harian
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_pakan_harian = $(this).data('id');
+                currentPakanHarianId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -182,10 +175,9 @@
                             $('#pakanharianDetailModal').modal('show');
 
                             // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('pakanharian.destroy', ':id') }}';
-                            deleteUrl = deleteUrl.replace(':id', id_pakan_harian);
-                            $('#form-delete-pakanharian').attr('action',
-                                deleteUrl); // Setel action form
+                            var editButton =
+                                '<button type="button" class="btn btn-primary" id="btn-edit-pakanharian">Edit</button>';
+                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail pakan harian');
                         }
@@ -195,6 +187,43 @@
                         alert('Gagal memuat detail pakan harian');
                     }
                 });
+            });
+
+            $(document).on('click', '#btn-edit-pakanharian', function() {
+                if (currentPakanHarianId) {
+                    var editUrl = '{{ route('pakanharian.edit', ':id') }}'.replace(':id', currentPakanHarianId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID Pakan Harian tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-pakanharian', function() {
+                if (currentPakanHarianId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data pakan harian ini?')) {
+                        var deleteUrl = '{{ route('pakanharian.destroy', ':id') }}'.replace(':id',
+                            currentPakanHarianId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#pakanharianDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_pakanHarian').DataTable().ajax.reload();
+                                alert('Data Pakan Harian berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus data pakan harian: ' + xhr.responseText);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Data Pakan Harian tidak ditemukan');
+                }
             });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
@@ -215,7 +244,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Pakan Harian...');
-        
+            $('#id_fase_tambak').on('change', function() {
+                datapakanHarian.ajax.reload();
+            })
         });
     </script>
 @endpush

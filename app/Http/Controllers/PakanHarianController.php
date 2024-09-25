@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetailPakanModel;
 use App\Models\PakanHarianModel;
 use App\Models\FaseKolamModel;
+use App\Models\PakanModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -99,6 +100,61 @@ public function show($id)
     $view = view('pakanharian.show', compact('pakan_harians'))->render();
     return response()->json(['html' => $view]);
 }
+
+public function edit(string $id){
+    $pakan_harians = PakanHarianModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Pakan Harian',
+        'paragraph' => 'Berikut ini merupakan form edit data Pakan Harian yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'pakanHarian', 'url' => route('pakanharian.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'pakanHarian';
+
+    return view('pakanharian.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakan_harians' => $pakan_harians, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_pakan_harian' => 'required|string|max:255|unique:pakan_harian,kd_pakan_harian',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'DOC' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+        // 'id_detail_pakan' => 'required',
+    ]);
 
+    $pakan_harians = PakanHarianModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_pakan_harian' => $request->kd_pakan_harian,
+        'tanggal_cek' => $request->tanggal_cek,
+        'waktu_cek' => $request->waktu_cek,
+        'DOC' => $request->DOC,
+        'berat_udang' => $request->berat_udang,
+        'total_pakan' => $request->total_pakan,
+        'catatan' => $request->catatan,
+        'id_fase_tambak' => $request->id_fase_tambak,
+        // 'id_detail_pakan' => $request->id_detail_pakan,
+    ];
+    
+    $pakan_harians->update($updateData);
+    return redirect()->route('pakanharian.index');
+}
+
+public function destroy($id) {
+    $pakan_harians = PakanHarianModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $pakan_harians->delete();
+    return redirect()->route('pakanharian.index');
+}
+
+}
