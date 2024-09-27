@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KematianUdangModel;
 use App\Models\FaseKolamModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class KematianUdangController extends Controller
@@ -67,7 +68,6 @@ public function store(Request $request)
      if ($request->hasFile('gambar')) {
         $path = $request->file('gambar')->store('foto_kematianudang', 'public');
         $validatedData['gambar'] = $path;// Tambahkan path foto ke validated data
-
     } 
     
     KematianUdangModel::create($validatedData);
@@ -87,6 +87,61 @@ public function show($id)
     $view = view('kematianudang.show', compact('kematianudangs'))->render();
     return response()->json(['html' => $view]);
 }
+
+public function edit(string $id){
+    $kematianudangs = KematianUdangModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Kematian Udang',
+        'paragraph' => 'Berikut ini merupakan form edit data Kematian Udang yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'kematianUdang', 'url' => route('kematianudang.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'kematianUdang';
+
+    return view('kematianudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kematianudangs' => $kematianudangs, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_kematian_udang' => 'required|string|max:255|unique:kematian_udang,kd_kematian_udang',
+        'size_udang' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'catatan' => 'required|string',
+        'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        'id_fase_tambak' => 'required',
+    ]);
 
+    $kematianudangs = KematianUdangModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_kematian_udang' => $request->kd_kematian_udang,
+        'size_udang' => $request->size_udang,
+        'berat_udang' => $request->berat_udang,
+        'catatan' => $request->catatan,
+        'gambar' => $request->gambar,
+        'id_fase_tambak' => $request->id_fase_tambak,
+    ];
+
+    if ($request->hasFile('gambar')) {
+        Storage::delete($request->gambar);
+        $path = $request->file('gambar')->store('foto_kematianudang', 'public');
+        $updateData['gambar'] = $path;// Tambahkan path foto ke validated data
+    } 
+    
+    $kematianudangs->update($updateData);
+    return redirect()->route('kematianudang.index');
+}
+
+public function destroy($id) {
+    $kematianudangs = KematianUdangModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $kematianudangs->delete();
+    return redirect()->route('kematianudang.index');
+}
+
+}

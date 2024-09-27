@@ -265,5 +265,5 @@
             let populasi_ekor = size_udang * biomassa;
             document.getElementById('populasi_ekor').value = populasi_ekor;
         }
-    </script>
+</script>
 @endpush

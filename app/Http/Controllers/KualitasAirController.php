@@ -66,7 +66,6 @@ public function store(Request $request)
         'warna_air' => 'required|string',
         'catatan' => 'required|string',
         'id_fase_tambak' => 'required',
-        // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
         // Simpan data ke dalam database
@@ -82,14 +81,6 @@ public function store(Request $request)
         $kualitasairs->warna_air = $request->warna_air;
         $kualitasairs->catatan = $request->catatan;
         $kualitasairs->id_fase_tambak = $request->id_fase_tambak;
-
-    // Simpan file image jika ada//
-    // if ($request->hasFile('image')) {
-    //     $file = $request->file('image');
-    //     $filename = time() . '_' . $file->getClientOriginalName();
-    //     $file->move(public_path('uploads/anco'), $filename);
-    //     $kualitasairs->image = $filename;
-    // }
 
     $kualitasairs->save();
 
@@ -108,6 +99,65 @@ public function show($id)
     $view = view('kualitasair.show', compact('kualitasairs'))->render();
     return response()->json(['html' => $view]);
 }
+
+public function edit(string $id){
+    $kualitasairs = KualitasAirModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Kualitas Air',
+        'paragraph' => 'Berikut ini merupakan form edit data kualitas air yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kualitas Air', 'url' => route('kualitasair.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'kualitasAir';
+
+    return view('kualitasair.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kualitasairs' => $kualitasairs, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_kualitas_air' => 'required|string|max:255|unique:kualitas_air,kd_kualitas_air',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pH' => 'required|integer',
+        'salinitas' => 'required|integer',
+        'DO' => 'required|integer',
+        'suhu' => 'required|integer',
+        'kejernihan_air' => 'required|string',
+        'warna_air' => 'required|string',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
 
+    $kualitasairs = KualitasAirModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_kualitas_air' => $request->kd_kualitas_air,
+        'tanggal_cek' => $request->tanggal_cek,
+        'waktu_cek' => $request->waktu_cek,
+        'pH' => $request->pH,
+        'salinitas' => $request->salinitas,
+        'DO' => $request->DO,
+        'suhu' => $request->suhu,
+        'kejernihan_air' => $request->kejernihan_air,
+        'warna_air' => $request->warna_air,
+        'catatan' => $request->catatan,
+        'id_fase_tambak' => $request->id_fase_tambak,
+    ];
+    
+    $kualitasairs->update($updateData);
+    return redirect()->route('kualitasair.index');
+}
+
+public function destroy($id) {
+    $kualitasairs = KualitasAirModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $kualitasairs->delete();
+    return redirect()->route('kualitasair.index');
+}
+
+}

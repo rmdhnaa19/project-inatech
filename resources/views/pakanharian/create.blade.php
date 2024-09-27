@@ -70,7 +70,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="berat_udang" class="form-label">Berat Udang</label>
+                        <label for="berat_udang" class="form-label">Berat Udang (gr)</label>
                         <input type="text" class="form-control" id="berat_udang" name="berat_udang"
                             placeholder="Masukkan berat udang" value="{{ old('berat_udang') }}" required>
                         @error('berat_udang')
@@ -82,7 +82,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="total_pakan" class="form-label">Total Pakan</label>
+                        <label for="total_pakan" class="form-label">Total Pakan (kg)</label>
                         <input type="text" class="form-control" id="total_pakan" name="total_pakan"
                             placeholder="Masukkan total pakan" value="{{ old('total_pakan') }}" required>
                         @error('total_pakan')
