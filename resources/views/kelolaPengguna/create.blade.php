@@ -212,7 +212,7 @@
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 dropZoneInput.files = files;
-                handleFile(files[0]);
+                uploadFile(this.files[0]);
             }
         });
 
@@ -220,23 +220,16 @@
         browseInput.addEventListener('change', function() {
             if (this.files.length > 0) {
                 dropZoneInput.files = this.files; // Sync files with drop zone
-                handleFile(this.files[0]);
+                uploadFile(this.files[0]);
             }
         });
 
         // Update the filename in the label
-        dropZoneInput.addEventListener('change', function() {
-            if (dropZoneInput.files.length > 0) {
-                updateFileName(dropZoneInput.files[0].name);
-                uploadFile(dropZoneInput.files[0]); // Upload file to server
-            }
-        });
-
         function updateFileName(name) {
             fileNameLabel.textContent = name;
         }
 
-        // preview image
+        // Preview image
         function previewImage(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -265,6 +258,7 @@
             console.log('Uploading file:', file.name);
         }
 
+        // Function to reset the drop zone
         function resetDropZone() {
             dropZone.innerHTML = `
         <div class="text-center">
@@ -277,6 +271,7 @@
             fileNameLabel.textContent = 'Choose file...';
         }
 
+        // Add click event to preview image to allow changing the image
         dropZone.addEventListener('click', () => {
             if (dropZone.querySelector('.preview-image')) {
                 if (confirm('Do you want to change the image?')) {
@@ -285,5 +280,50 @@
                 }
             }
         });
+
+        // form.addEventListener('submit', function(e) {
+        //     e.preventDefault();
+
+        //     const formData = new FormData(this);
+
+        //     if (currentFile) {
+        //         formData.set('foto', currentFile);
+        //     }
+
+        //     // Log form data for debugging
+        //     for (let [key, value] of formData.entries()) {
+        //         console.log(`${key}: ${value}`);
+        //     }
+
+        //     fetch(this.action, {
+        //             method: 'POST',
+        //             body: formData,
+        //             headers: {
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+        //                     'content'),
+        //                 'Accept': 'application/json'
+        //             }
+        //         })
+        //         .then(response => {
+        //             if (!response.ok) {
+        //                 return response.text().then(text => {
+        //                     throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+        //                 });
+        //             }
+        //             return response.json();
+        //         })
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Data berhasil disimpan');
+        //                 window.location.href = '{{ url('kelolaPengguna') }}';
+        //             } else {
+        //                 alert('Terjadi kesalahan: ' + (data.message || 'Unknown error'));
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             alert('Terjadi kesalahan saat mengirim data: ' + error.message);
+        //         });
+        // });
     </script>
 @endpush

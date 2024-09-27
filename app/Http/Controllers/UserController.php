@@ -74,8 +74,12 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_user', 'public');
-            $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+            // $imageName = time().'.'.$request->foto->extension();  
+            // $path = $request->foto->move(public_path('foto_user'), $imageName);
+            // $path = $request->file('foto')->store('foto_user', 'public');
+            $imageName = time().'.'.$request->foto->extension();  
+            $path = $request->foto->move(public_path('images'), $imageName);
+            $validatedData['foto'] = $path;
         }
 
         if ($request->komisi == null) {
@@ -95,6 +99,7 @@ class UserController extends Controller
         UserModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
         return redirect()->route('kelolaPengguna.index');
+        // response()->json(['success' => true])->
     }
 
     public function show($id)
