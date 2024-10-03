@@ -190,13 +190,13 @@
         const fileNameLabel = document.querySelector('.form-file-text');
 
         // Fungsi untuk menangani file yang dipilih
-        function handleFile(file) {
-            if (file) {
-                updateFileName(file.name);
-                previewImage(file);
-                uploadFile(file);
-            }
-        }
+        // function handleFile(file) {
+        //     if (file) {
+        //         updateFileName(files[0].name);
+        //         previewImage(files[0]);
+        //         uploadFile(files[0]);
+        //     }
+        // }
 
         // Fungsi untuk menangani event dragover
         dropZone.addEventListener('dragover', (e) => {
@@ -216,7 +216,10 @@
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 dropZoneInput.files = files;
-                handleFile(files[0]);
+                // handleFile(files[0]);
+                updateFileName(files[0].name);
+                previewImage(files[0]);
+                uploadFile(files[0]);
             }
         });
 
@@ -224,7 +227,9 @@
         browseInput.addEventListener('change', function() {
             if (this.files.length > 0) {
                 dropZoneInput.files = this.files; // Sync files dengan drop zone
-                handleFile(this.files[0]);
+                updateFileName(this.files[0].name);
+                previewImage(this.files[0]);
+                uploadFile(this.files[0]);
             }
         });
 

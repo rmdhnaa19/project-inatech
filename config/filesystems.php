@@ -46,7 +46,8 @@ return [
         
         'foto_user' => [
             'driver' => 'local',
-            'root' => storage_path('public/foto_user'),
+            'root' => storage_path('app/public/foto_user'),
+            'url' => env('APP_URL').'/foto_user',
             'visibility' => 'public',
         ],
 
