@@ -6,7 +6,6 @@
         <div class="card-body">
             <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
-                    <a href=""></a>
                     <tr class="text-center">
                         <th style="display: none">ID</th>
                         <th>NAMA</th>
@@ -109,39 +108,37 @@
                     }
                 },
                 columns: [{
-                        data: "id_user",
-                        visible: false
-                    },
-                    {
-                        data: "nama",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row) {
-                            var url = '{{ route('kelolaPengguna.show', ':id') }}';
-                            url = url.replace(':id', row.id_user);
-                            return '<a href="javascript:void(0);" data-id="' + row.id_user +
-                                '" class="view-user-details" data-url="' + url +
-                                '" data-toggle="modal" data-target="#userDetailModal">' + data +
-                                '</a>';
-                        }
-                    }, {
-                        data: "no_hp",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: false
-                    }, {
-                        data: "posisi",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    }, {
-                        data: "role.nama",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: true
+                    data: "id_user",
+                    visible: false
+                }, {
+                    data: "nama",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
+                    searchable: true,
+                    render: function(data, type, row) {
+                        var url = '{{ route('kelolaPengguna.show', ':id') }}';
+                        url = url.replace(':id', row.id_user);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_user +
+                            '" class="view-user-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#userDetailModal">' + data +
+                            '</a>';
                     }
-                ],
+                }, {
+                    data: "no_hp",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: false,
+                    searchable: false
+                }, {
+                    data: "posisi",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
+                    searchable: true
+                }, {
+                    data: "role.nama",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: false,
+                    searchable: true
+                }],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables
                 language: {
@@ -223,12 +220,15 @@
                 '<option value="{{ $item->id_role }}">{{ $item->nama }}</option>' +
                 '@endforeach' +
                 '</select>' +
-                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
+                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+            );
+
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
                     "{{ url('kelolaPengguna/create') }}"; // Arahkan ke halaman tambah pengguna
             });
+
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Pengguna...');
             $('#id_role').on('change', function() {

@@ -43,13 +43,6 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
-        
-        'foto_user' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/foto_user'),
-            'url' => env('APP_URL').'/foto_user',
-            'visibility' => 'public',
-        ],
 
         's3' => [
             'driver' => 's3',

@@ -54,11 +54,11 @@ class GudangController extends Controller
             'lebar' => 'required|numeric',
             'luas' => 'required|numeric',
             'alamat' => 'required|string',
-            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+            'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('foto')) {
-            $request->file('foto')->store('foto_gudang', 'public');
+        if ($request->hasFile('gambar')) {
+            $request->file('gambar')->store('foto_gudang', 'public');
         }
         GudangModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
