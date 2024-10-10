@@ -144,8 +144,6 @@
                                                 style="height: 50px; font-size: 50px"></i>
                                             <p>Seret lalu letakkan file di sini</p>
                                         </div>
-                                        <input type="file" class="drop-zone__input" id="foto" name="foto"
-                                            hidden>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -156,6 +154,7 @@
                                         <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
+                                            <input type="file" class="drop-zone__input" id="foto" name="foto">
                                         </label>
                                     </div>
                                 </div>
@@ -190,15 +189,6 @@
             const browseInput = document.querySelector('#foto');
             const fileNameLabel = document.querySelector('.form-file-text');
 
-            // Fungsi untuk menangani file yang dipilih
-            // function handleFile(file) {
-            //     if (file) {
-            //         updateFileName(files[0].name);
-            //         previewImage(files[0]);
-            //         uploadFile(files[0]);
-            //     }
-            // }
-
             // Fungsi untuk menangani event dragover
             dropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -217,7 +207,6 @@
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     dropZoneInput.files = files;
-                    // handleFile(files[0]);
                     updateFileName(files[0].name);
                     previewImage(files[0]);
                     uploadFile(files[0]);
@@ -291,102 +280,4 @@
             });
         })
     </script>
-    {{-- <script>
-        const dropZone = document.querySelector('.drop-zone');
-        const dropZoneInput = document.querySelector('.drop-zone__input');
-        const browseInput = document.querySelector('#foto');
-        const fileNameLabel = document.querySelector('.form-file-text');
-
-        function handleFile(file) {
-            if (file) {
-                updateFileName(file.name);
-                previewImage(file);
-                uploadFile(file);
-            }
-        }
-
-        // Handle the file drop
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drop-zone--over');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drop-zone--over');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drop-zone--over');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                dropZoneInput.files = files;
-                handleFile(files[0]);
-            }
-        });
-
-        // Handle the file browse
-        browseInput.addEventListener('change', function() {
-            if (this.files.length > 0) {
-                dropZoneInput.files = this.files; // Sync files with drop zone
-                handleFile(this.files[0]);
-            }
-        });
-
-        // Update the filename in the label
-        function updateFileName(name) {
-            fileNameLabel.textContent = name;
-        }
-
-        // Preview image
-        function previewImage(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Create an image element
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'preview-image';
-                img.style.maxWidth = '100%';
-                img.style.maxHeight = '100%';
-                img.style.objectFit = 'contain';
-
-                // Clear the drop zone and append the image
-                dropZone.innerHTML = '';
-                dropZone.appendChild(img);
-
-                // Change drop zone style
-                dropZone.style.padding = '0';
-                dropZone.style.border = 'none';
-            }
-            reader.readAsDataURL(file);
-        }
-
-        // Placeholder for uploadFile function
-        function uploadFile(file) {
-            // Implement file upload logic here
-            console.log('Uploading file:', file.name);
-        }
-
-        // Function to reset the drop zone
-        function resetDropZone() {
-            dropZone.innerHTML = `
-                <div class="text-center">
-                <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
-                <p>Seret lalu letakkan file di sini</p>
-                </div>`;
-            dropZone.style.padding = ''; // Reset to default
-            dropZone.style.border = ''; // Reset to default
-            fileNameLabel.textContent = 'Choose file...';
-        }
-
-        // Add click event to preview image to allow changing the image
-        dropZone.addEventListener('click', () => {
-            if (dropZone.querySelector('.preview-image')) {
-                if (confirm('Do you want to change the image?')) {
-                    resetDropZone();
-                    browseInput.click();
-                }
-            }
-        });
-    </script> --}}
 @endpush
