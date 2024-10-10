@@ -107,50 +107,48 @@
 @endpush
 @push('js')
     <script>
-        $(document).ready(function() {
-            const dropZone = document.querySelector('.drop-zone');
-            const dropZoneInput = document.querySelector('.drop-zone__input');
-            const browseInput = document.querySelector('#gambar');
-            const fileNameLabel = document.querySelector('.form-file-text');
+        const dropZone = document.querySelector('.drop-zone');
+        const dropZoneInput = document.querySelector('.drop-zone__input');
+        const browseInput = document.querySelector('#gambar');
+        const fileNameLabel = document.querySelector('.form-file-text');
 
-            // Handle the file drop
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('drop-zone--over');
-            });
+        // Handle the file drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone--over');
+        });
 
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('drop-zone--over');
-            });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone--over');
+        });
 
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('drop-zone--over');
-                const files = e.dataTransfer.files;
-                dropZoneInput.files = files;
-                updateFileName(files[0].name);
-                uploadFile(files[0]);
-            });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone--over');
+            const files = e.dataTransfer.files;
+            dropZoneInput.files = files;
+            updateFileName(files[0].name);
+            uploadFile(files[0]);
+        });
 
-            // Handle the file browse
-            browseInput.addEventListener('change', function() {
-                dropZoneInput.files = browseInput.files; // Sync files with drop zone
-                updateFileName(this.files[0].name);
-                uploadFile(this.files[0]);
-            });
+        // Handle the file browse
+        browseInput.addEventListener('change', function() {
+            dropZoneInput.files = browseInput.files; // Sync files with drop zone
+            updateFileName(this.files[0].name);
+            uploadFile(this.files[0]);
+        });
 
-            // Update the filename in the label
-            dropZoneInput.addEventListener('change', function() {
-                if (dropZoneInput.files.length > 0) {
-                    updateFileName(dropZoneInput.files[0].name);
-                    uploadFile(dropZoneInput.files[0]); // Upload file to server
-                }
-            });
-
-            function updateFileName(name) {
-                fileNameLabel.textContent = name;
+        // Update the filename in the label
+        dropZoneInput.addEventListener('change', function() {
+            if (dropZoneInput.files.length > 0) {
+                updateFileName(dropZoneInput.files[0].name);
+                uploadFile(dropZoneInput.files[0]); // Upload file to server
             }
-        })
+        });
+
+        function updateFileName(name) {
+            fileNameLabel.textContent = name;
+        }
     </script>
     <script>
         function calculateLuas() {

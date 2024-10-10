@@ -58,10 +58,23 @@ class GudangController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            $request->file('gambar')->store('foto_gudang', 'public');
+            $path = $request->file('gambar')->store('foto_gudang', 'public'); // Simpan ke storage
+            $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
         }
         GudangModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
         return redirect()->route('kelolaGudang.index');
+    }
+
+    public function show($id)
+    {
+        $gudang = GudangModel::find($id); // Ambil data tambak dengan relasi gudang
+        if (!$gudang) {
+            return response()->json(['error' => 'Gudang tidak ditemukan.'], 404);
+        }
+
+        // Render view dengan data tambak
+        $view = view('kelolaGudang.show', compact('gudang'))->render();
+        return response()->json(['html' => $view]);
     }
 }
