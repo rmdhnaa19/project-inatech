@@ -15,10 +15,10 @@
         </div>
         <div class="row">
             <div class="col">
-                <p><strong>Username : </strong> {{ $user->username }} m²</p>
+                <p><strong>Username : </strong> {{ $user->username }} </p>
             </div>
             <div class="col">
-                <p><strong>Nomor HP : </strong> {{ $user->no_hp }} m²</p>
+                <p><strong>Nomor HP : </strong> {{ $user->no_hp }} </p>
             </div>
         </div>
         <div class="row">

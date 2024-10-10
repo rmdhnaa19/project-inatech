@@ -110,6 +110,72 @@ public function show($id)
     return response()->json(['html' => $view]);
 }
 
+public function edit(string $id){
+    $samplings = SamplingModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Sampling',
+        'paragraph' => 'Berikut ini merupakan form edit data Sampling yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Sampling', 'url' => route('sampling.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'sampling';
+
+    return view('sampling.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'samplings' => $samplings, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_sampling' => 'required|string|max:255|unique:sampling,kd_sampling',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'DOC' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'size_udang' => 'required|integer',
+        'interval_hari' => 'required|integer',
+        'harga_udang' => 'required|integer',
+        'input_fr' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'ADG_udang' => 'required|integer',
+        'biomassa' => 'required|integer',
+        'populasi_ekor' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
 
+    $samplings = SamplingModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_sampling' => $request->kd_sampling,
+        'tanggal_cek' => $request->tanggal_cek,
+        'waktu_cek' => $request->waktu_cek,
+        'DOC' => $request->DOC,
+        'berat_udang' => $request->berat_udang,
+        'size_udang' => $request->size_udang,
+        'interval_hari' => $request->interval_hari,
+        'harga_udang' => $request->harga_udang,
+        'input_fr' => $request->input_fr,
+        'total_pakan' => $request->total_pakan,
+        'ADG_udang' => $request->ADG_udang,
+        'biomassa' => $request->biomassa,
+        'populasi_ekor' => $request->populasi_ekor,
+        'catatan' => $request->catatan,
+        'id_fase_tambak' => $request->id_fase_tambak,
+    ];
+    
+    $samplings->update($updateData);
+    return redirect()->route('sampling.index');
+}
+
+public function destroy($id) {
+    $samplings = SamplingModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $samplings->delete();
+    return redirect()->route('sampling.index');
+}
+
+}

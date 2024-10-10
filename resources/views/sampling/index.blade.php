@@ -108,16 +108,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-sampling">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-sampling">Edit</button>
                 </div>
             </div>
         </div>
@@ -127,6 +119,7 @@
 @endpush
 @push('js')
     <script>
+        var currentSamplingId;
         $(document).ready(function() {
             var datasampling = $('#table_sampling').DataTable({
                 serverSide: true,
@@ -205,7 +198,7 @@
             // Event listener untuk menampilkan detail tambak
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_sampling = $(this).data('id');
+                currentSamplingId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -216,11 +209,10 @@
                             $('#user-detail-content').html(response.html);
                             $('#samplingDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('sampling.destroy', ':id') }}';
-                            deleteUrl = deleteUrl.replace(':id', id_sampling);
-                            $('#form-delete-sampling').attr('action',
-                                deleteUrl); // Setel action form
+                            // Setel action form penghapusan sesuai dengan ID sampling
+                            var editButton =
+                                '<button type="button" class="btn btn-primary" id="btn-edit-sampling">Edit</button>';
+                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail sampling');
                         }
@@ -231,6 +223,44 @@
                     }
                 });
             });
+
+            $(document).on('click', '#btn-edit-sampling', function() {
+                if (currentSamplingId) {
+                    var editUrl = '{{ route('sampling.edit', ':id') }}'.replace(':id', currentSamplingId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID sampling tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-sampling', function() {
+                if (currentSamplingId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data sampling ini?')) {
+                        var deleteUrl = '{{ route('sampling.destroy', ':id') }}'.replace(':id',
+                            currentSamplingId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#samplingDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_sampling').DataTable().ajax.reload();
+                                alert('Data Sampling berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus data sampling: ' + xhr.responseText);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Data Sampling tidak ditemukan');
+                }
+            });
+
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_sampling_filter").append(
@@ -250,7 +280,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data sampling...');
-        
+            $('#id_fase_tambak').on('change', function() {
+                dataSampling.ajax.reload();
+            })
         });
     </script>
 @endpush

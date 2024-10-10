@@ -183,6 +183,115 @@
 @endpush
 @push('js')
     <script>
+        $(document).ready(function() {
+            // Pilih elemen-elemen yang dibutuhkan
+            const dropZone = document.querySelector('.drop-zone');
+            const dropZoneInput = document.querySelector('.drop-zone__input');
+            const browseInput = document.querySelector('#foto');
+            const fileNameLabel = document.querySelector('.form-file-text');
+
+            // Fungsi untuk menangani file yang dipilih
+            // function handleFile(file) {
+            //     if (file) {
+            //         updateFileName(files[0].name);
+            //         previewImage(files[0]);
+            //         uploadFile(files[0]);
+            //     }
+            // }
+
+            // Fungsi untuk menangani event dragover
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drop-zone--over');
+            });
+
+            // Fungsi untuk menangani event dragleave
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drop-zone--over');
+            });
+
+            // Fungsi untuk menangani event drop
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drop-zone--over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    dropZoneInput.files = files;
+                    // handleFile(files[0]);
+                    updateFileName(files[0].name);
+                    previewImage(files[0]);
+                    uploadFile(files[0]);
+                }
+            });
+
+            // Fungsi untuk menangani event change pada input file
+            browseInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    dropZoneInput.files = this.files; // Sync files dengan drop zone
+                    updateFileName(this.files[0].name);
+                    previewImage(this.files[0]);
+                    uploadFile(this.files[0]);
+                }
+            });
+
+            // Fungsi untuk mengupdate nama file pada label
+            function updateFileName(name) {
+                fileNameLabel.textContent = name;
+            }
+
+            // Fungsi untuk preview gambar
+            function previewImage(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Buat elemen gambar
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '100%';
+                    img.style.objectFit = 'contain';
+
+                    // Hapus isi drop zone dan tambahkan gambar
+                    dropZone.innerHTML = '';
+                    dropZone.appendChild(img);
+
+                    // Ubah style drop zone
+                    dropZone.style.padding = '0';
+                    dropZone.style.border = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+
+            // Fungsi placeholder untuk upload file
+            function uploadFile(file) {
+                // Implementasi logika upload file di sini
+                console.log('Mengupload file:', file.name);
+            }
+
+            // Fungsi untuk reset drop zone
+            function resetDropZone() {
+                dropZone.innerHTML = `
+        <div class="text-center">
+        <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+        <p>Seret lalu letakkan file di sini</p>
+        </div>`;
+                dropZone.style.padding = ''; // Reset ke default
+                dropZone.style.border = ''; // Reset ke default
+                fileNameLabel.textContent = 'Pilih file...';
+            }
+
+            // Tambahkan event click pada preview gambar untuk mengganti gambar
+            dropZone.addEventListener('click', () => {
+                if (dropZone.querySelector('.preview-image')) {
+                    if (confirm('Apakah Anda ingin mengganti gambar?')) {
+                        resetDropZone();
+                        browseInput.click();
+                    }
+                }
+            });
+        })
+    </script>
+    {{-- <script>
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');
         const browseInput = document.querySelector('#foto');
@@ -225,18 +334,11 @@
         });
 
         // Update the filename in the label
-        dropZoneInput.addEventListener('change', function() {
-            if (dropZoneInput.files.length > 0) {
-                updateFileName(dropZoneInput.files[0].name);
-                uploadFile(dropZoneInput.files[0]); // Upload file to server
-            }
-        });
-
         function updateFileName(name) {
             fileNameLabel.textContent = name;
         }
 
-        // preview image
+        // Preview image
         function previewImage(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -265,18 +367,19 @@
             console.log('Uploading file:', file.name);
         }
 
+        // Function to reset the drop zone
         function resetDropZone() {
             dropZone.innerHTML = `
-        <div class="text-center">
-            <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
-            <p>Seret lalu letakkan file di sini</p>
-        </div>
-    `;
+                <div class="text-center">
+                <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                <p>Seret lalu letakkan file di sini</p>
+                </div>`;
             dropZone.style.padding = ''; // Reset to default
             dropZone.style.border = ''; // Reset to default
             fileNameLabel.textContent = 'Choose file...';
         }
 
+        // Add click event to preview image to allow changing the image
         dropZone.addEventListener('click', () => {
             if (dropZone.querySelector('.preview-image')) {
                 if (confirm('Do you want to change the image?')) {
@@ -285,5 +388,5 @@
                 }
             }
         });
-    </script>
+    </script> --}}
 @endpush

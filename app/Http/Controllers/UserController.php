@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\RoleModel;
 use App\Models\UserModel;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -54,7 +54,6 @@ class UserController extends Controller
             'role' => $role
         ]);
     }
-    
     public function store(Request $request)
     {
         // Validasi input
@@ -73,27 +72,30 @@ class UserController extends Controller
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // Jika ada file foto, simpan file tersebut dan tambahkan path ke validatedData
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_user', 'public');
-            $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+            // $fileName = Str::uuid() . '.' . $request->foto->getClientOriginalExtension();
+            // $path = Storage::disk('public')->put('foto_user', $request->file('foto'), $fileName);
+            // $validatedData['foto'] = $path;
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('foto_user')->put($namaFoto, file_get_contents($foto));
+            $validatedData['foto'] = $path;
         }
+        
+        // Jika komisi, tunjangan, atau potongan gaji kosong, isi dengan nilai 0
+        $validatedData['potongan_gaji'] = $request->potongan_gaji ?? 0;
+        $validatedData['komisi'] = $request->komisi ?? 0;
+        $validatedData['tunjangan'] = $request->tunjangan ?? 0;
+        
 
-        if ($request->komisi == null) {
-            $validatedData['komisi'] = 0;
-        }
-
-        if ($request->tunjangan == null) {
-            $validatedData['tunjangan'] = 0;
-        }
-
-        if ($request->potongan_gaji == null) {
-            $validatedData['potongan_gaji'] = 0;
-        }
-
-
+        // Enkripsi password
         $validatedData['password'] = bcrypt($validatedData['password']);
+
+        // Buat user baru
         UserModel::create($validatedData);
-        // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
+
+        // Redirect ke halaman kelola pengguna
         return redirect()->route('kelolaPengguna.index');
     }
 

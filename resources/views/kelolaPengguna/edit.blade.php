@@ -201,7 +201,7 @@
         const dropZoneInput = document.querySelector('.drop-zone__input');
         const browseInput = document.querySelector('#foto');
         const fileNameLabel = document.querySelector('.form-file-text');
-
+ 
         // Handle the file drop
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
