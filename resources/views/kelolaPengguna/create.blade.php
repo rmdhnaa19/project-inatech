@@ -154,7 +154,8 @@
                                         <label class="form-file-label" for="foto">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
-                                            <input type="file" class="drop-zone__input" id="foto" name="foto">
+                                            <input type="file" class="drop-zone__input" id="foto"
+                                                name="foto">
                                         </label>
                                     </div>
                                 </div>
@@ -260,10 +261,10 @@
             // Fungsi untuk reset drop zone
             function resetDropZone() {
                 dropZone.innerHTML = `
-        <div class="text-center">
-        <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
-        <p>Seret lalu letakkan file di sini</p>
-        </div>`;
+                    <div class="text-center">
+                    <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                    <p>Seret lalu letakkan file di sini</p>
+                    </div>`;
                 dropZone.style.padding = ''; // Reset ke default
                 dropZone.style.border = ''; // Reset ke default
                 fileNameLabel.textContent = 'Pilih file...';
