@@ -74,12 +74,9 @@ class UserController extends Controller
 
         // Jika ada file foto, simpan file tersebut dan tambahkan path ke validatedData
         if ($request->hasFile('foto')) {
-            // $fileName = Str::uuid() . '.' . $request->foto->getClientOriginalExtension();
-            // $path = Storage::disk('public')->put('foto_user', $request->file('foto'), $fileName);
-            // $validatedData['foto'] = $path;
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-            $path = Storage::disk('foto_user')->put($namaFoto, file_get_contents($foto));
+            $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
             $validatedData['foto'] = $path;
         }
         
