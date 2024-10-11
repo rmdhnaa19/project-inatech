@@ -61,14 +61,15 @@
         </div>
         <div class="col-md-6">
             <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px;">
-                <p><strong>Role : </strong> {{ $user->role->nama ?? '-' }} </p>
+                <p><strong>Posisi : </strong> {{ $user->posisi ?? '-' }} </p>
                 <p><strong>Username : </strong> {{ $user->username ?? '-' }} </p>
+                <p><strong>Role : </strong> {{ $user->role->nama ?? '-' }} </p>
                 <p><strong>Nomor HP : </strong> {{ $user->no_hp ?? '-' }} </p>
-                <p><strong>Alamat : </strong> {{ $user->alamat ?? '-' }}</p>
-                <p><strong>Gaji Pokok : </strong> {{ $user->gaji_pokok ?? '-' }}</p>
-                <p><strong>Komisi : </strong> {{ $user->komisi ?? '-' }}</p>
-                <p><strong>Tunjangan : </strong> {{ $user->tunjangan ?? '-' }}</p>
-                <p><strong>Posisi : </strong> {{ $user->posisi ?? '-' }}</p>
+                <p><strong>Alamat : </strong> {{ $user->alamat ?? '-' }} </p>
+                <p><strong>Gaji Pokok : </strong> Rp {{ $user->gaji_pokok ?? '-' }} </p>
+                <p><strong>Komisi : </strong> Rp {{ $user->komisi ?? '-' }} </p>
+                <p><strong>Tunjangan : </strong> Rp {{ $user->tunjangan ?? '-' }} </p>
+                <p><strong>Potongan Gaji : </strong> Rp {{ $user->potongan_gaji ?? '-' }} </p>
             </div>
         </div>
     </div>

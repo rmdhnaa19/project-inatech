@@ -110,14 +110,15 @@
                             </div>
                             <div class="col-md-8">
                                 <div style="max-height: 50vh; overflow-y: auto; padding-right: 15px;">
-                                    <p><strong>Role : </strong></p>
+                                    <p><strong>Posisi : </strong></p>
                                     <p><strong>Username : </strong></p>
+                                    <p><strong>Role : </strong></p>
                                     <p><strong>Nomor HP : </strong></p>
                                     <p><strong>Alamat : </strong></p>
                                     <p><strong>Gaji Pokok : </strong></p>
                                     <p><strong>Komisi : </strong></p>
                                     <p><strong>Tunjangan : </strong></p>
-                                    <p><strong>Posisi : </strong></p>
+                                    <p><strong>Potongan Gaji : </strong></p>
                                 </div>
                             </div>
                         </div>
