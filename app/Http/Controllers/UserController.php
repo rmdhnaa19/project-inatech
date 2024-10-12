@@ -140,11 +140,10 @@ class UserController extends Controller
             'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-    
-        $user = UserModel::findOrFail($id);
         
         $updateData = [
             'username' => $request->username,
+            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
             'id_role' => $request->id_role,
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
@@ -155,18 +154,17 @@ class UserController extends Controller
             'potongan_gaji' => $request->potongan_gaji ?? 0,
             'posisi' => $request->posisi,
         ];
-    
-        if ($request->filled('password')) {
-            $updateData['password'] = bcrypt($request->password);
-        }
-    
-        if ($request->hasFile('foto')) {
+        
+        if ($request->filled('foto')) {
             Storage::delete($request->oldImage);
-            $path = $request->file('foto')->store('foto_user', 'public');
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
             $updateData['foto'] = $path;
         }
-    
-        $user->update($updateData);
+
+        UserModel::find($id)->update($updateData);
+        
         return redirect()->route('kelolaPengguna.index');
     }
 
