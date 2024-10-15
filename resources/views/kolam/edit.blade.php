@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -11,7 +11,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
             <form action="{{ url('/kolam/' . $kolam->id_kolam) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')

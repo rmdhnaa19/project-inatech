@@ -99,27 +99,28 @@ class PjTambakController extends Controller
     public function edit($id)
     {
         $pjtambak = PjTambakModel::find($id);
-        $user = UserModel::all();
-        $tambak = TambakModel::all();
-        
         if (!$pjtambak) {
             return redirect()->route('pjTambak.index')->with('error', 'Pj Tambak tidak ditemukan');
-        }
-        
-        $breadcrumb = (object) [
-            'title' => 'Edit Data Pj Tambak',
-            'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab tambak yang ada di dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pj Tambak', 'url' => route('pjTambak.index')],
-                ['label' => 'Edit'],
-            ]
-        ];
-
-        $activeMenu = 'manajemenpjTambak';
-
-        return view('pjTambak.edit', compact('pjtambak', 'tambak', 'user', 'breadcrumb', 'activeMenu'));
     }
+    
+    $user = UserModel::all();
+    $tambak = TambakModel::all();
+
+    // Breadcrumb and active menu
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Pj Tambak',
+        'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab tambak yang ada di dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kelola Pj Tambak', 'url' => route('pjTambak.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+
+    $activeMenu = 'manajemenpjTambak';
+    return view('pjTambak.edit', compact('pjtambak', 'tambak', 'user', 'breadcrumb', 'activeMenu'));
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -131,7 +132,7 @@ class PjTambakController extends Controller
 
         // Validasi input
         $validatedData = $request->validate([
-            'kd_user_tambak' => 'required|string|unique:pj_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
+            'kd_user_tambak' => 'required|string|unique:user_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
             'id_user' => 'required|integer',
             'id_tambak' => 'required|integer',
         ]);

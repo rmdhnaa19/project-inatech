@@ -49,7 +49,6 @@ class TambakController extends Controller
             return view('tambak.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'tambak' => $tambak]);
     }
 
-
     public function store(Request $request)
     {
         // Validasi input
@@ -140,12 +139,15 @@ class TambakController extends Controller
 
     return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diubah');
     }
-    
 
-    public function destroy($id) {
-        $tambak = TambakModel::findOrFail($id);
-        Storage::delete($tambak->foto);
-        TambakModel::destroy($id);
-        return response()->redirect()->route('tambak.index');
+    public function destroy($id)
+    {
+    $tambak = TambakModel::findOrFail($id);
+    if ($tambak->foto) {
+        Storage::delete($tambak->foto); // Hapus file foto dari storage
+    }
+    $tambak->delete(); // Hapus data dari database
+    
+    return response()->json(['success' => 'Data tambak berhasil dihapus.']);
     }
 }

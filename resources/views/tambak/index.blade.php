@@ -65,42 +65,19 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
-                    <i class="bx bx-x d-block d-sm-none"></i>
+                <button type="button" class="btn btn-danger" id="delete-tambak" data-id="">
                     <span class="d-none d-sm-block">Delete</span>
-                </button>
+                </button>                
                 <button type="button" class="btn btn-warning ml-1" id="edit-tambak" data-id="">
                     <span class="d-none d-sm-block">Edit</span>
                 </button>
-                
-            </div>
+            </div>            
         </div>
     </div>
 </div>
 @endsection
-
 @push('css')
-<style>
-    .modal-dialog {
-        max-width: 40%;
-        margin: 5vh auto; 
-    }
-
-    .modal-content {
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        max-height: 70vh; 
-        overflow-y: auto; 
-    }
-
-    .table-borderless th, .table-borderless td {
-        padding: 0.5rem 0.5rem;
-    }
-    </style>
 @endpush
-
-
-
 @push('js')
 <script>
     $(document).ready(function() {
@@ -168,9 +145,10 @@
                     // Load konten detail ke modal
                     $('#user-detail-content').html(response.html);
 
-                    // Set ID tambak ke tombol Edit
+                    // Set ID tambak ke tombol Edit & Delete
                     $('#edit-tambak').data('id', id_tambak);
                     $('#tambakDetailModal').modal('show');
+                    $('#delete-tambak').data('id', id_tambak); 
                 } else {
                     alert('Gagal memuat detail tambak');
                 }
@@ -191,6 +169,41 @@
             window.location.href = url;
         }
     });
+
+    // Event listener untuk delete data tambak
+    $(document).on('click', '#delete-tambak', function() {
+    var id = $(this).data('id'); // Ambil ID tambak dari tombol Delete
+    if (id) {
+        // Konfirmasi pengguna
+        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+            var url = '{{ route("tambak.destroy", ":id") }}';
+            url = url.replace(':id', id);
+            
+            // Penghapusan dengan AJAX
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}', // Kirim token CSRF untuk keamanan
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Data berhasil dihapus');
+                        $('#tambakDetailModal').modal('hide'); // Tutup modal
+                        $('#table_manajemenTambak').DataTable().ajax.reload(); // Reload tabel
+                    } else {
+                        alert('Gagal menghapus data');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('Terjadi kesalahan saat menghapus data');
+                }
+            });
+        }
+    }
+});
+
 
     // Tambahkan tombol "Tambah" setelah kolom pencarian
     $("#table_manajemenTambak_filter").append(

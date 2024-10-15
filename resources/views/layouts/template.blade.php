@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
-
     @stack('css')
 </head>
 
@@ -75,6 +74,10 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
+
+    <!-- SweetAlert2 -->
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+
     <script>
         $.ajaxSetup({
             headers: {

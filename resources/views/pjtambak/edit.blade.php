@@ -3,6 +3,15 @@
 @section('content')
 <div class="card">
     <div class="card-body">
+        {{-- @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif --}}
         <form action="{{ route('pjTambak.update', $pjtambak->id_user_tambak) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -10,33 +19,35 @@
                 <!-- Left Side Form Fields -->
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="kd_pjtambak">Kode Pj Tambak</label>
-                        <input type="text" name="kd_pjtambak" class="form-control @error('kd_pjtambak') is-invalid @enderror" value="{{ old('kd_pjtambak', $pjtambak->kd_pjtambak) }}" required>
-                        @error('kd_pjtambak')
+                        <label for="kd_user_tambak">Kode Pj Tambak</label>
+                        <input type="text" name="kd_user_tambak" class="form-control @error('kd_user_tambak') is-invalid @enderror" value="{{ old('kd_user_tambak', $pjtambak->kd_user_tambak) }}" required>
+                        @error('kd_user_tambak')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="id_user">Nama Pj Tambak</label>
+                        <select name="id_user" class="form-control @error('id_user') is-invalid @enderror" required>
+                            <option value="">-- Pilih Nama Pj Tambak --</option>
+                            @foreach($user as $item) 
+                                <option value="{{ $item->id_user }}" {{ old('id_user', $pjtambak->id_user) == $item->id_user ? 'selected' : '' }}>
+                                    {{ $item->nama }}
+                                </option>
+                            @endforeach
+                        </select>                        
+                        @error('id_user')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="id_user_tambak">Nama Pj Tambak</label>
-                        <select name="id_user_tambak" class="form-control @error('id_user_tambak') is-invalid @enderror" required>
-                            <option value="">-- Pilih Nama Pj Tambak --</option>
-                            @foreach($pjtambak as $item)
-                                <option value="{{ $item->id_user_tambak }}" {{ old('id_user_tambak', $pjtambak->id_user_tambak) == $item->id_user_tambak ? 'selected' : '' }}>
-                                    {{ $item->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_user_tambak')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
                         <label for="id_tambak">Nama Tambak</label>
                         <select name="id_tambak" class="form-control @error('id_tambak') is-invalid @enderror" required>
                             <option value="">-- Pilih Nama Tambak --</option>
-                            @foreach($tambak as $item)
-                                <option value="{{ $item->id_tambak }}" {{ old('id_tambak', $tambak->id_tambak) == $item->id_tambak ? 'selected' : '' }}>
+                            @foreach($tambak as $item) <!-- Iterate over the $tambak collection -->
+                                <option value="{{ $item->id_tambak }}" {{ old('id_tambak', $pjtambak->id_tambak) == $item->id_tambak ? 'selected' : '' }}>
                                     {{ $item->nama_tambak }}
                                 </option>
                             @endforeach
