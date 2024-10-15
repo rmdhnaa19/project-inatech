@@ -98,6 +98,62 @@ public function show($id)
     return response()->json(['html' => $view]);
 }
 
+public function edit(string $id){
+    $penanganans = PenangananModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Penanganan',
+        'paragraph' => 'Berikut ini merupakan form edit data Penanganan yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Penanganan', 'url' => route('penanganan.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'penanganan';
+
+    return view('penanganan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'penanganans' => $penanganans, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_penanganan' => 'required|string|max:255|unique:penanganan,kd_penanganan',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pemberian_mineral' => 'required|integer',
+        'pemberian_vitamin' => 'required|integer',
+        'pemberian_obat' => 'required|integer',
+        'penambahan_air' => 'required|integer',
+        'pengurangan_air' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
 
+    $penanganans = PenangananModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_penanganan' => $request->kd_penanganan,
+        'tanggal_cek' => $request->tanggal_cek,
+        'waktu_cek' => $request->waktu_cek,
+        'pemberian_mineral' => $request->pemberian_mineral,
+        'pemberian_vitamin' => $request->pemberian_vitamin,
+        'pemberian_obat' => $request->pemberian_obat,
+        'penambahan_air' => $request->penambahan_air,
+        'pengurangan_air' => $request->pengurangan_air,
+        'catatan' => $request->catatan,
+        'id_fase_tambak' => $request->id_fase_tambak, 
+    ];
+    
+    $penanganans->update($updateData);
+    return redirect()->route('penanganan.index');
+}
+
+public function destroy($id) {
+    $penanganans = PenangananModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $penanganans->delete();
+    return redirect()->route('penanganan.index');
+}
+
+}

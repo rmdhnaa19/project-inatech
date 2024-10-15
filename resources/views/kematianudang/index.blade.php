@@ -64,16 +64,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-kematianudang">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-kematianudang">Edit</button>
                 </div>
             </div>
         </div>
@@ -83,6 +75,7 @@
 @endpush
 @push('js')
     <script>
+        var currentKematianUdangId;
         $(document).ready(function() {
             var datakematianUdang = $('#table_kematianudang').DataTable({
                 serverSide: true,
@@ -137,7 +130,7 @@
             // Event listener untuk menampilkan detail tambak
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_kematian_udang = $(this).data('id');
+                currentKematianUdangId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -164,6 +157,44 @@
                 });
             });
 
+            $(document).on('click', '#btn-edit-kematianudang', function() {
+                if (currentKematianUdangId) {
+                    var editUrl = '{{ route('kematianudang.edit', ':id') }}'.replace(':id', currentKematianUdangId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID Kematian Udang tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-kematianudang', function() {
+                if (currentKematianUdangId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data kematian udang ini?')) {
+                        var deleteUrl = '{{ route('kematianudang.destroy', ':id') }}'.replace(':id',
+                            currentKematianUdangId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#kematianudangDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_kematianudang').DataTable().ajax.reload();
+                                alert('Data Kematian Udang berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus data kematian udang: ' + xhr.responseText);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Data Kematian Udang tidak ditemukan');
+                }
+            });
+
+
              // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kematianudang_filter").append(
                 '<select class="form-control" name="id_fase_tambak" id="id_fase_tambak" required style="margin-left: 30px; width: 150px;">' +
@@ -182,6 +213,9 @@
 
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Kematian Udang...');
+            $('#id_fase_tambak').on('change', function() {
+                datakematianUdang.ajax.reload();
+            })
         });
     </script>
 @endpush

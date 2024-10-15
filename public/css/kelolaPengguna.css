@@ -94,6 +94,10 @@ thead.thead-light th {
     border-bottom-right-radius: 5px !important;
 }
 
+.table-borderless th, .table-borderless td {
+    padding: 0.5rem 0.5rem;
+}
+
 .drop-zone {
     height: 200px;
     padding: 20px;
@@ -115,19 +119,26 @@ thead.thead-light th {
 }
 
 .modal-dialog {
-    max-width: 40%;
+    max-width: 80%; /* Ubah dari 40% ke 80% untuk memberikan lebih banyak ruang */
     margin: 5vh auto;
 }
 
 .modal-content {
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-height: 70vh;
-    overflow-y: auto; /* Tambahkan scrollbar jika konten terlalu panjang */
+    max-height: 90vh; /* Tingkatkan dari 70vh ke 90vh untuk memberikan lebih banyak ruang */
+    display: flex;
+    flex-direction: column;
 }
 
-.table-borderless th, .table-borderless td {
-    padding: 0.5rem 0.5rem;
+.modal-body {
+    flex: 1;
+    overflow-y: auto; /* Pindahkan scrollbar ke modal-body */
+    padding: 20px;
+}
+
+.modal-header, .modal-footer {
+    flex-shrink: 0; /* Mencegah header dan footer dari penyusutan */
 }
 
 
@@ -173,5 +184,9 @@ thead.thead-light th {
     #table_kelolaPengguna_filter button {
         width: 100%;
         margin-bottom: 10px;
+    }
+
+    .modal-dialog {
+        max-width: 95%; /* Responsif untuk layar kecil */
     }
 }

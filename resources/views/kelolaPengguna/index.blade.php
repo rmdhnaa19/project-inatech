@@ -6,7 +6,6 @@
         <div class="card-body">
             <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
-                    <a href=""></a>
                     <tr class="text-center">
                         <th style="display: none">ID</th>
                         <th>NAMA</th>
@@ -20,7 +19,7 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    {{-- <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
@@ -31,7 +30,6 @@
                     </button>
                 </div>
                 <div class="modal-body" style="padding: 20px;">
-                    {{-- Modal Detail --}}
                     <div id="user-detail-content" class="container">
                         <div class="row">
                             <div class="col-md-4">
@@ -87,6 +85,51 @@
                 </div>
             </div>
         </div>
+    </div> --}}
+    <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                    <h5 class="modal-title white" id="myModalLabel160">Detail Pengguna</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
+                    <div id="user-detail-content" class="container-fluid">
+                        <div class="text-center mb-3">
+                            <h4 class="mb-4"></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div style="position: sticky; top: 20px;">
+                                    <img src="" alt="Foto User" class="img-fluid"
+                                        style="max-width: 100%; height: auto;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div style="max-height: 50vh; overflow-y: auto; padding-right: 15px;">
+                                    <p><strong>Posisi : </strong></p>
+                                    <p><strong>Username : </strong></p>
+                                    <p><strong>Role : </strong></p>
+                                    <p><strong>Nomor HP : </strong></p>
+                                    <p><strong>Alamat : </strong></p>
+                                    <p><strong>Gaji Pokok : </strong></p>
+                                    <p><strong>Komisi : </strong></p>
+                                    <p><strong>Tunjangan : </strong></p>
+                                    <p><strong>Potongan Gaji : </strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                    <button type="button" class="btn btn-danger" id="btn-delete-user">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @push('css')
@@ -109,39 +152,37 @@
                     }
                 },
                 columns: [{
-                        data: "id_user",
-                        visible: false
-                    },
-                    {
-                        data: "nama",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row) {
-                            var url = '{{ route('kelolaPengguna.show', ':id') }}';
-                            url = url.replace(':id', row.id_user);
-                            return '<a href="javascript:void(0);" data-id="' + row.id_user +
-                                '" class="view-user-details" data-url="' + url +
-                                '" data-toggle="modal" data-target="#userDetailModal">' + data +
-                                '</a>';
-                        }
-                    }, {
-                        data: "no_hp",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: false
-                    }, {
-                        data: "posisi",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true
-                    }, {
-                        data: "role.nama",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: true
+                    data: "id_user",
+                    visible: false
+                }, {
+                    data: "nama",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
+                    searchable: true,
+                    render: function(data, type, row) {
+                        var url = '{{ route('kelolaPengguna.show', ':id') }}';
+                        url = url.replace(':id', row.id_user);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_user +
+                            '" class="view-user-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#userDetailModal">' + data +
+                            '</a>';
                     }
-                ],
+                }, {
+                    data: "no_hp",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: false,
+                    searchable: false
+                }, {
+                    data: "posisi",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
+                    searchable: true
+                }, {
+                    data: "role.nama",
+                    className: "", // Jika tidak ada class, hapus baris ini
+                    orderable: false,
+                    searchable: true
+                }],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables
                 language: {
@@ -180,7 +221,8 @@
 
             $(document).on('click', '#btn-edit-user', function() {
                 if (currentUserId) {
-                    var editUrl = '{{ route('kelolaPengguna.edit', ':id') }}'.replace(':id', currentUserId);
+                    var editUrl = '{{ route('kelolaPengguna.edit', ':id') }}'.replace(':id',
+                        currentUserId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID pengguna tidak ditemukan');
@@ -223,12 +265,15 @@
                 '<option value="{{ $item->id_role }}">{{ $item->nama }}</option>' +
                 '@endforeach' +
                 '</select>' +
-                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
+                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+            );
+
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
                     "{{ url('kelolaPengguna/create') }}"; // Arahkan ke halaman tambah pengguna
             });
+
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data Pengguna...');
             $('#id_role').on('change', function() {

@@ -64,7 +64,6 @@ public function store(Request $request)
         'kondisi_udang' => 'required|string',
         'catatan' => 'required|string',
         'id_fase_tambak' => 'required',
-        // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
     // Simpan data ke dalam database
@@ -104,6 +103,61 @@ public function show($id)
     $view = view('anco.show', compact('anco'))->render();
     return response()->json(['html' => $view]);
 }
+
+public function edit(string $id){
+    $anco = AncoModel::find($id);
+    $faseKolam = FaseKolamModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Anco',
+        'paragraph' => 'Berikut ini merupakan form edit data anco yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Anco', 'url' => route('anco.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+    $activeMenu = 'anco';
+
+    return view('anco.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'anco' => $anco, 'faseKolam' => $faseKolam]);
 }
 
+public function update(Request $request, string $id){
+    $request->validate([
+        'kd_anco' => 'required|string|max:255|unique:anco,kd_anco',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pemberian_pakan' => 'required|string',
+        'jamPemberian_pakan' => 'required',
+        'kondisi_pakan' => 'required|string',
+        'kondisi_udang' => 'required|string',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
 
+    $anco = AncoModel::findOrFail($id);
+    
+    $updateData = [
+        'kd_anco' => $request->kd_anco,
+        'tanggal_cek' => $request->tanggal_cek,
+        'waktu_cek' => $request->waktu_cek,
+        'pemberian_pakan' => $request->pemberian_pakan,
+        'jamPemberian_pakan' => $request->jamPemberian_pakan,
+        'kondisi_pakan' => $request->kondisi_pakan,
+        'kondisi_udang' => $request->kondisi_udang,
+        'catatan' => $request->catatan,
+        'id_fase_tambak' => $request->id_fase_tambak,
+    ];
+    
+    $anco->update($updateData);
+    return redirect()->route('anco.index');
+}
+
+public function destroy($id) {
+    $anco = AncoModel::findOrFail($id);
+    // AncoModel::destroy($id);
+    $anco->delete();
+    return redirect()->route('anco.index');
+}
+
+}

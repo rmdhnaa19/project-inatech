@@ -52,7 +52,7 @@
                                 name="luas" value="{{ old('luas') }}" step="0.01" readonly>
                             <p><small class="text-muted">Hasil Hitung dalam meter<sup>2</sup>.</small></p>
                             @if ($errors->has('luas'))
-                                <span class="text-danger">{{ $errors->first('lebar') }}</span>
+                                <span class="text-danger">{{ $errors->first('luas') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
@@ -73,7 +73,7 @@
                                             <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
                                             <p>Seret lalu letakkan file di sini</p>
                                         </div>
-                                        <input type="file" class="drop-zone__input" id="foto" name="foto">
+                                        <input type="file" class="drop-zone__input" id="gambar" name="gambar">
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -109,7 +109,7 @@
     <script>
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');
-        const browseInput = document.querySelector('#foto');
+        const browseInput = document.querySelector('#gambar');
         const fileNameLabel = document.querySelector('.form-file-text');
 
         // Handle the file drop

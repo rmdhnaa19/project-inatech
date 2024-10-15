@@ -35,10 +35,6 @@
                     {{-- Modal Detail --}}
                     <div id="user-detail-content" class="container">
                         <div class="row">
-                            <!-- <div class="col-md-4">
-                                <img id="foto" class="img-fluid rounded mb-3" src="" alt="Foto Pengguna"
-                                    style="max-width: 100%; height: auto;">
-                            </div> -->
                             <div class="col-md-8">
                                 <table class="table table-borderless">
                                     <tr>
@@ -87,16 +83,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-penanganan">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-penanganan">Edit</button>
                 </div>
             </div>
         </div>
@@ -106,8 +94,9 @@
 @endpush
 @push('js')
     <script>
+        var currentPenangananId;
         $(document).ready(function() {
-            var datapenanganan = $('#table_penanganan').DataTable({
+            var dataPenanganan = $('#table_penanganan').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('penanganan/list') }}",
@@ -177,7 +166,7 @@
             // Event listener untuk menampilkan detail tambak
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_penanganan = $(this).data('id');
+                currentPenangananId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -188,11 +177,10 @@
                             $('#user-detail-content').html(response.html);
                             $('#penangananDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('penanganan.destroy', ':id') }}';
-                            deleteUrl = deleteUrl.replace(':id', id_penanganan);
-                            $('#form-delete-penanganan').attr('action',
-                                deleteUrl); // Setel action form
+                            // Setel action form penghapusan sesuai dengan ID penanganan
+                            var editButton =
+                                '<button type="button" class="btn btn-primary" id="btn-edit-penanganan">Edit</button>';
+                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail penanganan');
                         }
@@ -202,6 +190,43 @@
                         alert('Gagal memuat detail penanganan');
                     }
                 });
+            });
+
+            $(document).on('click', '#btn-edit-penanganan', function() {
+                if (currentPenangananId) {
+                    var editUrl = '{{ route('penanganan.edit', ':id') }}'.replace(':id', currentPenangananId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID Penanganan tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-penanganan', function() {
+                if (currentPenangananId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data penanganan ini?')) {
+                        var deleteUrl = '{{ route('penanganan.destroy', ':id') }}'.replace(':id',
+                            currentPenangananId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#penangananDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_penanganan').DataTable().ajax.reload();
+                                alert('Data Penanganan berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus data penanganan: ' + xhr.responseText);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Data Penanganan tidak ditemukan');
+                }
             });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
@@ -222,7 +247,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data penanganan...');
-        
+            $('#id_fase_tambak').on('change', function() {
+                dataPenanganan.ajax.reload();
+            })
         });
     </script>
 @endpush

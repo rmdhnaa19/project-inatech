@@ -81,7 +81,7 @@
                                     </tr>
                                     <tr>
                                         <th>Catatan : </th>
-                                        <td id="Catatan"></td>
+                                        <td id="catatan"></td>
                                     </tr>
                                 </table>
                             </div>
@@ -89,16 +89,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <form id="form-delete-user" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-hapus">Hapus</button>
-                    </form>
-                    <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                        <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">EDIT</span>
-                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-kualitasair">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-kualitasair">Edit</button>
                 </div>
             </div>
         </div>
@@ -108,6 +100,7 @@
 @endpush
 @push('js')
     <script>
+        var currentKualitasAirId
         $(document).ready(function() {
             var datakualitasAir = $('#table_kualitasAir').DataTable({
                 serverSide: true,
@@ -118,7 +111,7 @@
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
-                },
+                }, 
                 columns: [{
                         data: "kd_kualitas_air",
                         className: "", // Jika tidak ada class, hapus baris ini
@@ -165,10 +158,10 @@
                 }
             });
 
-            // Event listener untuk menampilkan detail tambak
+            // Event listener untuk menampilkan detail kualitas air
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                var id_kualitas_air = $(this).data('id');
+                currentKualitasAirId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -179,11 +172,10 @@
                             $('#user-detail-content').html(response.html);
                             $('#kualitasairDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('kualitasair.destroy', ':id') }}';
-                            deleteUrl = deleteUrl.replace(':id', id_kualitas_air);
-                            $('#form-delete-kualitasair').attr('action',
-                                deleteUrl); // Setel action form
+                            // Setel action form penghapusan sesuai dengan ID kualitas air
+                            var editButton =
+                                '<button type="button" class="btn btn-primary" id="btn-edit-kualitasair">Edit</button>';
+                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail kualitas air');
                         }
@@ -193,6 +185,43 @@
                         alert('Gagal memuat detail kualitas air');
                     }
                 });
+            });
+
+            $(document).on('click', '#btn-edit-kualitasair', function() {
+                if (currentKualitasAirId) {
+                    var editUrl = '{{ route('kualitasair.edit', ':id') }}'.replace(':id', currentKualitasAirId);
+                    window.location.href = editUrl;
+                } else {
+                    alert('ID Kualitas Air tidak ditemukan');
+                }
+            });
+
+            $(document).on('click', '#btn-delete-kualitasair', function() {
+                if (currentKualitasAirId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data kualitas air ini?')) {
+                        var deleteUrl = '{{ route('kualitasair.destroy', ':id') }}'.replace(':id',
+                            currentKualitasAirId);
+
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                $('#kualitasairDetailModal').modal('hide');
+                                // Reload DataTable
+                                $('#table_kualitasAir').DataTable().ajax.reload();
+                                alert('Data Kualitas Air berhasil dihapus');
+                            },
+                            error: function(xhr) {
+                                alert('Gagal menghapus data kualitas air: ' + xhr.responseText);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Data Kualitas Air tidak ditemukan');
+                }
             });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
@@ -213,7 +242,9 @@
             });
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data kualitas air...');
-        
+            $('#id_fase_tambak').on('change', function() {
+                datakualitasAir.ajax.reload();
+            })
         });
     </script>
 @endpush

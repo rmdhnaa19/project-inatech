@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\RoleModel;
 use App\Models\UserModel;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -54,7 +53,6 @@ class UserController extends Controller
             'role' => $role
         ]);
     }
-    
     public function store(Request $request)
     {
         // Validasi input
@@ -73,27 +71,27 @@ class UserController extends Controller
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // Jika ada file foto, simpan file tersebut dan tambahkan path ke validatedData
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('foto_user', 'public');
-            $validatedData['foto'] = $path; // Tambahkan path foto ke validated data
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
+            $validatedData['foto'] = $path;
         }
+        
+        // Jika komisi, tunjangan, atau potongan gaji kosong, isi dengan nilai 0
+        $validatedData['potongan_gaji'] = $request->potongan_gaji ?? 0;
+        $validatedData['komisi'] = $request->komisi ?? 0;
+        $validatedData['tunjangan'] = $request->tunjangan ?? 0;
+        
 
-        if ($request->komisi == null) {
-            $validatedData['komisi'] = 0;
-        }
-
-        if ($request->tunjangan == null) {
-            $validatedData['tunjangan'] = 0;
-        }
-
-        if ($request->potongan_gaji == null) {
-            $validatedData['potongan_gaji'] = 0;
-        }
-
-
+        // Enkripsi password
         $validatedData['password'] = bcrypt($validatedData['password']);
+
+        // Buat user baru
         UserModel::create($validatedData);
-        // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
+
+        // Redirect ke halaman kelola pengguna
         return redirect()->route('kelolaPengguna.index');
     }
 
@@ -142,11 +140,10 @@ class UserController extends Controller
             'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-    
-        $user = UserModel::findOrFail($id);
         
         $updateData = [
             'username' => $request->username,
+            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
             'id_role' => $request->id_role,
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
@@ -157,18 +154,17 @@ class UserController extends Controller
             'potongan_gaji' => $request->potongan_gaji ?? 0,
             'posisi' => $request->posisi,
         ];
-    
-        if ($request->filled('password')) {
-            $updateData['password'] = bcrypt($request->password);
-        }
-    
-        if ($request->hasFile('foto')) {
+        
+        if ($request->filled('foto')) {
             Storage::delete($request->oldImage);
-            $path = $request->file('foto')->store('foto_user', 'public');
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
             $updateData['foto'] = $path;
         }
-    
-        $user->update($updateData);
+
+        UserModel::find($id)->update($updateData);
+        
         return redirect()->route('kelolaPengguna.index');
     }
 
