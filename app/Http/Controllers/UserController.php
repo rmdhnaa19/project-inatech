@@ -140,6 +140,10 @@ class UserController extends Controller
             'posisi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        if ($request->file('foto') != '') {
+            # code...
+        }
         
         $updateData = [
             'username' => $request->username,
@@ -153,6 +157,7 @@ class UserController extends Controller
             'tunjangan' => $request->tunjangan ?? 0,
             'potongan_gaji' => $request->potongan_gaji ?? 0,
             'posisi' => $request->posisi,
+            'foto' => $path
         ];
         
         if ($request->filled('foto')) {
