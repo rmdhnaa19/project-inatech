@@ -156,8 +156,7 @@ class UserController extends Controller
             'komisi' => $request->komisi ?? 0,
             'tunjangan' => $request->tunjangan ?? 0,
             'potongan_gaji' => $request->potongan_gaji ?? 0,
-            'posisi' => $request->posisi,
-            'foto' => $path
+            'posisi' => $request->posisi
         ];
         
         if ($request->filled('foto')) {
