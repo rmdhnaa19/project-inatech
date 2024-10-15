@@ -3,7 +3,16 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('kolam.update', $kolam->id_kolam) }}" method="POST" enctype="multipart/form-data">
+            {{-- @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif --}}
+            <form action="{{ url('/kolam/' . $kolam->id_kolam) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -72,6 +81,15 @@
                         
                                     if (tipeKolam === 'kotak') {
                                         kolomTambahanDiv.innerHTML = `
+                                        <div class="form-group">
+                                            <label for="id_tambak" class="form-label">Nama Tambak</label>
+                                            <select class="choices form-select" name="id_tambak" id="id_tambak">
+                                                <option value="">- Pilih Nama Tambak -</option>
+                                                @foreach ($tambak as $item)
+                                                    <option value="{{ $item->id_tambak }}" {{ old('id_tambak', $kolam->id_tambak) == $item->id_tambak ? 'selected' : '' }}>{{ $item->nama_tambak }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                             <div class="form-group">
                                                 <label for="panjang_kolam" class="form-label">Panjang Kolam (m)</label>
                                                 <input type="number" class="form-control" id="panjang_kolam" name="panjang_kolam" value="{{ old('panjang_kolam', $kolam->panjang_kolam) }}" required>
@@ -131,15 +149,19 @@
                         </script>                            
                     </div>                       
 
-                   <!-- Right Side Drag and Drop -->
+                <!-- Right Side Drag and Drop -->
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-1">
                                 <div class="drop-zone px-5" id="drop-zone">
                                     <div class="text-center" id="drop-zone-preview">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
-                                        <p>Seret lalu letakkan file di sini</p>
+                                        @if($kolam->foto)
+                                            <img src="{{ asset('storage/'.$kolam->foto) }}" class="img-fluid" alt="Foto Kolam" style="max-width: 100%;">
+                                        @else
+                                            <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                                            <p>Seret lalu letakkan file di sini</p>
+                                        @endif
                                     </div>
                                     <input type="file" class="drop-zone__input" id="foto" name="foto">
                                 </div>
@@ -171,6 +193,7 @@
 </div>
 
 @endsection
+
 
 @push('css')
 <style>
@@ -267,3 +290,4 @@
     }
 </script>
 @endpush
+

@@ -206,5 +206,7 @@
     $('input[type="search"]').attr('placeholder', 'Cari data Tambak...');
 });
 
+
+
 </script>
 @endpush
