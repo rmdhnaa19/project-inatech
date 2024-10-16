@@ -19,67 +19,47 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content"
-                style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                ">
-                <div class="modal-header bg-primary"
-                    style="
-                    border-top-left-radius: 15px;
-                    border-top-right-radius: 15px;
-                ">
-                    <h5 class="modal-title white" id="myModalLabel160">
-                        Detail Pengguna
-                    </h5>
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                    <h5 class="modal-title white" id="myModalLabel17">Detail Pengguna</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
-                <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden">
+                <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
                     <div id="user-detail-content" class="container-fluid">
                         <div class="text-center mb-3">
                             <h4 class="mb-4"></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <div style="position: sticky; top: 20px">
+                                <div style="position: sticky; top: 20px;">
                                     <img src="" alt="Foto User" class="img-fluid"
-                                        style="max-width: 100%; height: auto">
+                                        style="width: auto; height: 30vh;">
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div
-                                    style="
-                                    max-height: 50vh;
-                                    overflow-y: auto;
-                                    padding-right: 15px;
-                                ">
-                                    <p><strong>Role : </strong></p>
+                                <div style="max-height: 50vh; overflow-y: auto; padding-right: 15px;">
+                                    <p><strong>Posisi : </strong></p>
                                     <p><strong>Username : </strong></p>
+                                    <p><strong>Role : </strong></p>
                                     <p><strong>Nomor HP : </strong></p>
                                     <p><strong>Alamat : </strong></p>
                                     <p><strong>Gaji Pokok : </strong></p>
                                     <p><strong>Komisi : </strong></p>
                                     <p><strong>Tunjangan : </strong></p>
-                                    <p><strong>Posisi : </strong></p>
+                                    <p><strong>Potongan Gaji : </strong></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer"
-                    style="
-                    border-bottom-left-radius: 15px;
-                    border-bottom-right-radius: 15px;
-                ">
-                    <button type="button" class="btn btn-danger" id="btn-delete-user">
-                        Hapus
-                    </button>
-                    <button type="button" class="btn btn-primary" id="btn-edit-user">
-                        Edit
-                    </button>
+                <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                    <button type="button" class="btn btn-danger" id="btn-delete-user">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
                 </div>
             </div>
         </div>

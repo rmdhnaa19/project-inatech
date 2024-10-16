@@ -119,26 +119,26 @@ thead.thead-light th {
 }
 
 .modal-dialog {
-    max-width: 80%; /* Ubah dari 40% ke 80% untuk memberikan lebih banyak ruang */
+    max-width: auto;
     margin: 5vh auto;
 }
 
 .modal-content {
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-height: 90vh; /* Tingkatkan dari 70vh ke 90vh untuk memberikan lebih banyak ruang */
+    max-height: 90vh; 
     display: flex;
     flex-direction: column;
 }
 
 .modal-body {
     flex: 1;
-    overflow-y: auto; /* Pindahkan scrollbar ke modal-body */
+    overflow-y: auto; 
     padding: 20px;
 }
 
 .modal-header, .modal-footer {
-    flex-shrink: 0; /* Mencegah header dan footer dari penyusutan */
+    flex-shrink: 0; 
 }
 
 
@@ -187,6 +187,6 @@ thead.thead-light th {
     }
 
     .modal-dialog {
-        max-width: 95%; /* Responsif untuk layar kecil */
+        max-width: 95%;
     }
 }
