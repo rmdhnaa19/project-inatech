@@ -35,7 +35,7 @@
                         @if ($errors->has('id_gudang'))
                             <span class="text-danger">{{ $errors->first('id_gudang') }}</span>
                         @endif
-                    </div>           
+                    </div>
 
                     <div class="form-group">
                         <label for="luas_lahan" class="form-label">Luas Lahan</label>
@@ -71,7 +71,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
 
                 {{-- tambahkan foto disini --}}
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -84,7 +84,6 @@
                                             style="height: 50px; font-size: 50px"></i>
                                         <p>Seret lalu letakkan file di sini</p>
                                     </div>
-                                    <input type="file" class="drop-zone__input" id="foto" name="foto">
                                 </div>
                             </div>
                             <div class="row mb-1">
@@ -92,7 +91,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-file">
-                                    <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
+                                    <input type="file" class="drop-zone__input" id="foto" name="foto">
                                     <label class="form-file-label" for="foto">
                                         <span class="form-file-text">Choose file...</span>
                                         <span class="form-file-button">Browse</span>
@@ -103,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-sm btn-danger"
                     onclick="window.location.href='{{ url('tambak') }}'"

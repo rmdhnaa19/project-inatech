@@ -56,7 +56,7 @@
         <div class="col-md-6">
             <div style="position: sticky; top: 20px;">
                 <img src="{{ asset('storage/' . $user->foto) }}" alt="Foto User" class="img-fluid"
-                    style="max-width: ; height: auto;">
+                    style="max-width: 30vh ; height: auto;">
             </div>
         </div>
         <div class="col-md-6">
