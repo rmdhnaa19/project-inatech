@@ -4,6 +4,15 @@
     <div class="card">
         <div class="card-header">Fase Kolam</div>
         <div class="card-body">
+            {{-- @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif --}}
             <table class="table" id="table_faseKolam">
                 <thead>
                     <tr class="text-center">
@@ -71,14 +80,13 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
                     <i class="bx bx-x d-block d-sm-none"></i>
                     <span class="d-none d-sm-block">Delete</span>
                 </button>
-                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal">
-                    <i class="bx bx-check d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">Update</span>
-                </button>
+                <button type="button" class="btn btn-warning ml-1" id="edit-fasekolam" data-id="">
+                    <span class="d-none d-sm-block">Edit</span>
+                </button>                    
             </div>
         </div>
     </div>
@@ -154,46 +162,49 @@
                         orderable: false,
                         searchable: false
                     },
-                    // {
-                    //     data: "densitas",
-                    //     className: "", // Jika tidak ada class, hapus baris ini
-                    //     orderable: false,
-                    //     searchable: true
-                    // },
-                    // {
-                    //     data: "jumlah_tebar",
-                    //     className: "", // Jika tidak ada class, hapus baris ini
-                    //     orderable: false,
-                    //     searchable: true
-                    // },
-                ],
-                pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
-                dom: 'frtip', // Mengatur layout DataTables
+                    ],
+                pagingType: "simple_numbers", 
+                dom: 'frtip', 
                 language: {
-                    search: "" // Menghilangkan teks "Search"
+                    search: "" 
                 }
             });
 
-             // Event listener untuk menampilkan detail tambak
-            $(document).on('click', '.view-user-details', function() {
-                var url = $(this).data('url'); // Ambil URL dari data-url
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        if (response.html) {
-                            $('#user-detail-content').html(response.html); // Muat konten ke modal
-                            $('#faseKolamDetailModal').modal('show'); // Tampilkan modal
-                        } else {
-                            alert('Gagal memuat detail fase kolam');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);
-                        alert('Gagal memuat detail fase kolam');
-        }
+            $(document).ready(function() {
+    // Event listener untuk menampilkan detail fase kolam
+    $(document).on('click', '.view-user-details', function() {
+        var url = $(this).data('url'); 
+        var id_fase_tambak = $(this).data('id'); // Dapatkan ID fase kolam dari tombol
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    $('#user-detail-content').html(response.html); 
+                    $('#edit-fasekolam').attr('data-id', id_fase_tambak); // Set data-id di tombol edit
+                    $('#faseKolamDetailModal').modal('show'); 
+                } else {
+                    alert('Gagal memuat detail fase kolam');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+                alert('Gagal memuat detail fase kolam');
+            }
+        });
     });
-});
+
+    // Event listener untuk tombol Edit di dalam modal
+    $(document).on('click', '#edit-fasekolam', function() {
+        var id = $(this).data('id'); // Ambil ID fase kolam dari tombol Edit
+        if (id) {
+            var url = '{{ route("fasekolam.edit", ":id") }}'; // Template URL route
+            url = url.replace(':id', id); // Ganti placeholder dengan ID yang sesuai
+            window.location.href = url; // Alihkan ke halaman edit
+            }
+        });
+    });
+
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_faseKolam_filter").append(

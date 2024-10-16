@@ -1,66 +1,77 @@
 @extends('layouts.template')
-@section('title', 'Manajemen Tambak')
+@section('title', 'Fase Kolam')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('tambak.update', $tambak->id_tambak) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('fasekolam.update', $fasekolam->id_fase_tambak) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="nama_tambak">Nama Tambak</label>
-                        <input type="text" name="nama_tambak" class="form-control @error('nama_tambak') is-invalid @enderror" value="{{ old('nama_tambak', $tambak->nama_tambak) }}" required>
-                        @error('nama_tambak')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <label for="kd_fase_tambak">Kode Fase Kolam</label>
+                        <input type="text" name="kd_fase_tambak" id="kd_fase_tambak"
+                            class="form-control @error('kd_fase_tambak') is-invalid @enderror"
+                            value="{{ old('kd_fase_tambak', $fasekolam->kd_fase_tambak) }}" required>
+                        @error('kd_fase_kolam')
+                        <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="id_gudang">Gudang</label>
-                        <select name="id_gudang" class="form-control @error('id_gudang') is-invalid @enderror" required>
-                            <option value="">-- Pilih Gudang --</option>
-                            @foreach($gudang as $item)
-                                <option value="{{ $item->id_gudang }}" {{ old('id_gudang', $tambak->id_gudang) == $item->id_gudang ? 'selected' : '' }}>
-                                    {{ $item->nama }}
+                        <label for="id_kolam">Kode Kolam</label>
+                        <select name="id_kolam" class="form-control @error('id_kolam') is-invalid @enderror" required>
+                            <option value="">-- Pilih Kode Kolam --</option>
+                            @foreach($kolam as $item) <!-- Kolam harus benar-benar diiterasi -->
+                                <option value="{{ $item->id_kolam }}" {{ old('id_kolam', $fasekolam ? $fasekolam->id_kolam : '') == $item->id_kolam ? 'selected' : '' }}>
+                                    {{ $item->kd_kolam }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('id_gudang')
+                        @error('id_kolam')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="tanggal_mulai">Tanggal Mulai</label>
+                        <input type="date" name="tanggal_mulai" class="form-control @error('tanggal_mulai') is-invalid @enderror" value="{{ old('tanggal_mulai', $fasekolam->tanggal_mulai) }}" required>
+                        @error('tanggal_mulai')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="luas_lahan">Luas Lahan (m²)</label>
-                        <input type="number" name="luas_lahan" class="form-control @error('luas_lahan') is-invalid @enderror" value="{{ old('luas_lahan', $tambak->luas_lahan) }}" required>
-                        @error('luas_lahan')
+                        <label for="tanggal_panen">Tanggal Panen</label>
+                        <input type="date" name="tanggal_panen" class="form-control @error('tanggal_panen') is-invalid @enderror" value="{{ old('tanggal_panen', $fasekolam->tanggal_panen) }}" required>
+                        @error('tanggal_panen')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="luas_tambak">Luas Tambak (m²)</label>
-                        <input type="number" name="luas_tambak" class="form-control @error('luas_tambak') is-invalid @enderror" value="{{ old('luas_tambak', $tambak->luas_tambak) }}" required>
-                        @error('luas_tambak')
+                        <label for="jumlah_tebar">Jumlah Tebar</label>
+                        <input type="number" name="jumlah_tebar" class="form-control @error('jumlah_tebar') is-invalid @enderror" value="{{ old('jumlah_tebar', $fasekolam->jumlah_tebar) }}" required>
+                        @error('jumlah_tebar')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label for="lokasi_tambak">Lokasi Tambak</label>
-                        <input type="text" name="lokasi_tambak" class="form-control @error('lokasi_tambak') is-invalid @enderror" value="{{ old('lokasi_tambak', $tambak->lokasi_tambak) }}" required>
-                        @error('lokasi_tambak')
+                        <label for="densitas">Densitas</label>
+                        <input type="number" name="densitas" class="form-control @error('densitas') is-invalid @enderror" value="{{ old('densitas', $fasekolam->densitas) }}" required>
+                        @error('densitas')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Foto Tambak Saat Ini -->
+                    <!-- Foto fase kolam Saat Ini yang tersimpan di database -->
                     <div class="form-group">
-                        <label for="current_foto">Foto Tambak Saat Ini</label>
-                        @if($tambak->foto)
+                        <label for="current_foto">Foto Fase Kolam Saat Ini</label>
+                        @if($fasekolam->foto)
                             <div class="current-photo-wrapper mt-2">
-                                <img id="current-foto" src="{{ asset('storage/' . $tambak->foto) }}" class="img-fluid rounded" width="500">
+                                <img id="current-foto" src="{{ asset('storage/' . $fasekolam->foto) }}" class="img-fluid rounded" width="500">
                             </div>
                         @else
                             <p>Belum ada foto.</p>
@@ -68,7 +79,7 @@
                     </div>
                 </div>
 
-                <!-- Right Side Drag and Drop -->
+                <!-- Drag and Drop -->
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
@@ -97,7 +108,7 @@
                 </div>
             </div>
 
-            <!-- Centered Submit Button -->
+            <!-- Submit Button -->
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">Simpan</button>

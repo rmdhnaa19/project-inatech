@@ -51,7 +51,7 @@
                             <span class="text-danger">{{ $errors->first('id_tambak') }}</span>
                         @endif
                     </div>                  
-                </div> <!-- Akhir div col-md-6 -->
+                </div> 
                 
                 {{-- Bagian kanan dengan form foto --}}
                 {{-- <div class="col-md-6 d-flex justify-content-center align-items-center">

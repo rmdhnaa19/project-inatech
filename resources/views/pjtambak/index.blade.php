@@ -22,7 +22,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
                 <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                    <h5 class="modal-title white" id="myModalLabel160">Detail Tambak</h5>
+                    <h5 class="modal-title white" id="myModalLabel160">Detail Penanggung Jawab Tambak</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -105,9 +105,9 @@
                         var url = '{{ route('pjTambak.show', ':id') }}';
                         url = url.replace(':id', row.id_user_tambak);
                         return '<a href="javascript:void(0);" data-id="' + row.id_user_tambak +
-                               '" class="view-user-details" data-url="' + url +
-                               '" data-toggle="modal" data-target="#pjTambakDetailModal">' + data +
-                               '</a>';
+                            '" class="view-user-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#pjTambakDetailModal">' + data +
+                            '</a>';
                     }
                 },
                 {
@@ -126,30 +126,41 @@
             }
         });
 
-       // js menampilkan modal detail
-$('#table_pjTambak').on('click', '.view-user-details', function() {
-    var url = $(this).data('url');
-    $.get(url, function(data) {
-        $('#user-detail-content').html(data.html); // Populate modal content
+        // Event listener untuk menampilkan detail tambak
+    $(document).on('click', '.view-user-details', function() {
+        var url = $(this).data('url');
+        var id_pjtambak = $(this).data('id'); // Ambil ID tambak dari elemen yang diklik
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    // Load konten detail ke modal
+                    $('#user-detail-content').html(response.html);
 
-        // Set the data-id attribute on the Edit button
-        var id = $(this).data('id'); // Get the ID of the selected row
-        $('#edit-pjtambak').data('id', id); // Set ID for the Edit button in the modal
-
-    }).fail(function() {
-        $('#user-detail-content').html('<p>Error loading data.</p>');
+                    // Set ID tambak ke tombol Edit
+                    $('#edit-pjtambak').data('id', id_pjtambak);
+                    $('#pjTambakDetailModal').modal('show');
+                } else {
+                    alert('Gagal memuat detail penanggung jawab tambak');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+                alert('Gagal memuat detail  penanggung jawab tambak');
+            }
+        });
     });
-});
 
-        // Event listener untuk tombol Edit di dalam modal
-$(document).on('click', '#edit-pjtambak', function() {
-    var id = $(this).data('id'); // Ambil ID pj tambak dari tombol Edit
-    if (id) {
-        var url = '{{ route("pjTambak.edit", ":id") }}';
-        url = url.replace(':id', id);
-        window.location.href = url; // Redirect to the edit page
-    }
-});
+    // Event listener untuk tombol Edit di dalam modal
+    $(document).on('click', '#edit-pjtambak', function() {
+        var id = $(this).data('id'); // Ambil ID tambak dari tombol Edit
+        if (id) {
+            var url = '{{ route("pjTambak.edit", ":id") }}';
+            url = url.replace(':id', id);
+            window.location.href = url;
+        }
+    });
 
 
         // Tambah tombol "Tambah" setelah kotak pencarian
