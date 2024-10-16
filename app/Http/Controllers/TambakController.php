@@ -8,7 +8,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TambakController extends Controller
 {
-
     public function index()
     {
         $breadcrumb = (object) [
