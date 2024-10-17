@@ -36,7 +36,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-5">
-                                <div style="position: sticky; top: 20px;">
+                                <div class="image-container text-center" style="position: sticky; top: 20px;">
                                     <img src="" alt="Foto User" class="img-fluid"
                                         style="width: 30vh; height: 30vh;">
                                 </div>
