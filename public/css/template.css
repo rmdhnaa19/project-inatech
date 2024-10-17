@@ -119,7 +119,7 @@ thead.thead-light th {
 }
 
 .modal-dialog {
-    width: 30%;
+    width: auto;
     margin: 5vh auto;
 }
 
