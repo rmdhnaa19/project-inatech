@@ -159,7 +159,7 @@ class UserController extends Controller
                 'posisi' => $request->posisi,
             ]);
         }else{
-            Storage::delete($request->oldImage);
+            Storage::disk('public')->delete($request->oldImage);
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
@@ -184,8 +184,10 @@ class UserController extends Controller
     }
 
     public function destroy($id) {
-        $user = UserModel::findOrFail($id);
-        Storage::delete($user->foto);
+        $user = UserModel::find($id);
+        if ($user->foto) {
+            Storage::disk('public')->delete($user->foto);
+        }
         UserModel::destroy($id);
         return redirect()->route('kelolaPengguna.index');
     }
