@@ -141,33 +141,45 @@ class UserController extends Controller
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->file('foto') != '') {
-            # code...
-        }
-        
-        $updateData = [
-            'username' => $request->username,
-            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-            'id_role' => $request->id_role,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
-            'gaji_pokok' => $request->gaji_pokok,
-            'komisi' => $request->komisi ?? 0,
-            'tunjangan' => $request->tunjangan ?? 0,
-            'potongan_gaji' => $request->potongan_gaji ?? 0,
-            'posisi' => $request->posisi
-        ];
-        
-        if ($request->filled('foto')) {
+        $user = UserModel::find($id);
+
+
+        if ($request->file('foto') == '') {
+            $user->update([
+                'username' => $request->username,
+                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                'id_role' => $request->id_role,
+                'nama' => $request->nama,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'gaji_pokok' => $request->gaji_pokok,
+                'komisi' => $request->komisi ?? 0,
+                'tunjangan' => $request->tunjangan ?? 0,
+                'potongan_gaji' => $request->potongan_gaji ?? 0,
+                'posisi' => $request->posisi,
+            ]);
+        }else{
             Storage::delete($request->oldImage);
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
-            $updateData['foto'] = $path;
+            $updateFoto['foto'] = $path;
+            
+            $user->update([
+                'username' => $request->username,
+                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                'id_role' => $request->id_role,
+                'nama' => $request->nama,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'gaji_pokok' => $request->gaji_pokok,
+                'komisi' => $request->komisi ?? 0,
+                'tunjangan' => $request->tunjangan ?? 0,
+                'potongan_gaji' => $request->potongan_gaji ?? 0,
+                'posisi' => $request->posisi,
+                'foto' => $updateFoto['foto']
+            ]);
         }
-
-        UserModel::find($id)->update($updateData);
         
         return redirect()->route('kelolaPengguna.index');
     }

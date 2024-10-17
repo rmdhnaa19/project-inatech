@@ -23,7 +23,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-                <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <div class="modal-header bg-primary">
                     <h5 class="modal-title white" id="myModalLabel17">Detail Pengguna</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
@@ -35,14 +35,14 @@
                             <h4 class="mb-4"></h4>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div style="position: sticky; top: 20px;">
                                     <img src="" alt="Foto User" class="img-fluid"
                                         style="width: auto; height: 30vh;">
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div style="max-height: 50vh; overflow-y: auto; padding-right: 15px;">
+                            <div class="col-md-7">
+                                <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px;">
                                     <p><strong>Posisi : </strong></p>
                                     <p><strong>Username : </strong></p>
                                     <p><strong>Role : </strong></p>

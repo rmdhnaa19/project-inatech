@@ -53,13 +53,13 @@
         <h4 class="mb-4">{{ $user->nama }}</h4>
     </div>
     <div class="row">
-        <div class="col-md-5 m-0">
+        <div class="col-md-5">
             <div style="position: sticky; top: 20px;">
                 <img src="{{ asset('storage/' . $user->foto) }}" alt="Foto User" class="img-fluid"
-                    style="width: auto; height: 30vh; margin-right: 10px;">
+                    style="width: auto; height: 30vh;">
             </div>
         </div>
-        <div class="col-md-7 m-0">
+        <div class="col-md-7">
             <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px; margin-left: -15px;">
                 <p><strong>Posisi : </strong> {{ $user->posisi ?? '-' }} </p>
                 <p><strong>Username : </strong> {{ $user->username ?? '-' }} </p>
