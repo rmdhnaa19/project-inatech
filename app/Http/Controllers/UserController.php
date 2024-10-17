@@ -180,7 +180,6 @@ class UserController extends Controller
                 'foto' => $updateFoto['foto']
             ]);
         }
-        
         return redirect()->route('kelolaPengguna.index');
     }
 

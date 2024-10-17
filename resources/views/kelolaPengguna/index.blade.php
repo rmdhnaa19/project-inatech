@@ -38,7 +38,7 @@
                             <div class="col-md-5">
                                 <div style="position: sticky; top: 20px;">
                                     <img src="" alt="Foto User" class="img-fluid"
-                                        style="width: auto; height: 30vh;">
+                                        style="width: 30vh; height: 30vh;">
                                 </div>
                             </div>
                             <div class="col-md-7">
