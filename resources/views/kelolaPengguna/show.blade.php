@@ -6,7 +6,7 @@
         <div class="col-md-5">
             <div class="image-container text-center" style="position: sticky; top: 20px;">
                 <img src="{{ asset('storage/' . $user->foto) }}" alt="Foto User" class="img-fluid"
-                    style="width: 30vh; height: 30vh;">
+                    style="width: auto; height: 30vh;">
             </div>
         </div>
         <div class="col-md-7">
