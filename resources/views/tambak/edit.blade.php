@@ -54,18 +54,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    <!-- Foto Tambak Saat Ini -->
-                    <div class="form-group">
-                        <label for="current_foto">Foto Tambak Saat Ini</label>
-                        @if($tambak->foto)
-                            <div class="current-photo-wrapper mt-2">
-                                <img id="current-foto" src="{{ asset('storage/' . $tambak->foto) }}" class="img-fluid rounded" width="500">
-                            </div>
-                        @else
-                            <p>Belum ada foto.</p>
-                        @endif
-                    </div>
                 </div>
 
                 <!-- Right Side Drag and Drop -->
@@ -106,101 +94,124 @@
         </form>
     </div>
 </div>
-
 @endsection
-
 @push('css')
-<style>
-    .drop-zone {
-        width: 100%; 
-        height: 200px;
-        border: 2px dashed #ddd;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 4px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-    }
-
-    .drop-zone img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 4px;
-        object-fit: cover;
-    }
-
-    .drop-zone__input {
-        display: none;
-    }
-
-    .drop-zone--over {
-        background-color: #eef;
-        border-color: #cde;
-    }
-
-    .current-photo-wrapper img {
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 5px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
-</style>
 @endpush
-
 @push('js')
 <script>
-    const dropZone = document.querySelector('.drop-zone');
-    const dropZoneInput = document.querySelector('.drop-zone__input');
-    const dropZonePreview = document.querySelector('#drop-zone-preview');
-    const browseInput = document.querySelector('#foto');
-    const fileNameLabel = document.querySelector('.form-file-text');
+    $(document).ready(function() {
+        // Pilih elemen-elemen yang dibutuhkan
+        const dropZone = document.querySelector('.drop-zone');
+        const dropZoneInput = document.querySelector('.drop-zone__input');
+        const browseInput = document.querySelector('#foto');
+        const fileNameLabel = document.querySelector('.form-file-text');
 
-    // Handle the file drop
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.classList.add('drop-zone--over');
-    });
+        // Fungsi untuk menangani event dragover
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone--over');
+        });
 
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('drop-zone--over');
-    });
+        // Fungsi untuk menangani event dragleave
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone--over');
+        });
 
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('drop-zone--over');
-        const files = e.dataTransfer.files;
-        dropZoneInput.files = files;
-        updateFileName(files[0].name);
-        previewFile(files[0]);
-    });
+        // Fungsi untuk menangani event drop
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone--over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                dropZoneInput.files = files;
+                updateFileName(files[0].name);
+                previewImage(files[0]);
+            }
+        });
 
-    // Handle the file browse
-    browseInput.addEventListener('change', function() {
-        dropZoneInput.files = browseInput.files; 
-        updateFileName(this.files[0].name);
-        previewFile(this.files[0]);
-    });
+        // Fungsi untuk menangani event change pada input file
+        browseInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                dropZoneInput.files = this.files; // Sync files dengan drop zone
+                updateFileName(this.files[0].name);
+                previewImage(this.files[0]);
+            }
+        });
 
-    // Update the filename in the label
-    function updateFileName(name) {
-        fileNameLabel.textContent = name;
-    }
-
-    // Preview the uploaded file
-    function previewFile(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            dropZonePreview.innerHTML = '';
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '100%';
-            img.style.objectFit = 'cover';
-            dropZonePreview.appendChild(img);
+        // Fungsi untuk mengupdate nama file pada label
+        function updateFileName(name) {
+            fileNameLabel.textContent = name;
         }
-        reader.readAsDataURL(file);
-    }
+
+        // Fungsi untuk preview gambar
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Buat elemen gambar
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '100%';
+                img.style.objectFit = 'contain';
+
+                // Hapus isi drop zone dan tambahkan gambar
+                dropZone.innerHTML = '';
+                dropZone.appendChild(img);
+
+                // Ubah style drop zone
+                dropZone.style.padding = '0';
+                dropZone.style.border = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // Fungsi untuk reset drop zone
+        function resetDropZone() {
+            dropZone.innerHTML = `
+                <div class="text-center">
+                <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                <p>Seret lalu letakkan file di sini</p>
+                </div>`;
+            dropZone.style.padding = ''; // Reset ke default
+            dropZone.style.border = ''; // Reset ke default
+            fileNameLabel.textContent = 'Pilih file...';
+        }
+
+        // Tambahkan event click pada preview gambar untuk mengganti gambar
+        dropZone.addEventListener('click', () => {
+            if (dropZone.querySelector('.preview-image')) {
+                if (confirm('Apakah Anda ingin mengganti gambar?')) {
+                    resetDropZone();
+                    browseInput.click();
+                }
+            }
+        });
+
+        // Ajax submit form
+        $('#tambakForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // Menggunakan jQuery untuk menyisipkan HTML ke dalam modal
+                    $('#tambakDetail').html(response.html);
+
+                    // Buka modal untuk menampilkan data yang baru diperbarui
+                    $('#tambakModal').modal('show');
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText); // Debugging jika ada error
+                }
+            });
+        });
+    });
 </script>
+
 @endpush

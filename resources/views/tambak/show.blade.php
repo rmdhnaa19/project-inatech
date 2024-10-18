@@ -36,8 +36,7 @@
     <div class="row">
         <div class="col-md-6">
             <div style="position: sticky; top: 20px;">
-                <img src="{{ asset('storage/' . $tambak->foto) }}" alt="Foto Tambak" class="img-fluid"
-                    style="max-width: ; height: auto;">
+                <img src="{{ $tambak->foto ? Storage::url($tambak->foto) : asset('default-image.jpg') }}" alt="Foto Tambak" class="img-fluid rounded mb-3">
             </div>
         </div>
         <div class="col-md-6">

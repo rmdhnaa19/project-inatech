@@ -68,28 +68,9 @@
         </div>
     </div>
     </div>
-    @endsection
-
+@endsection
 @push('css')
-<style>
-    .modal-dialog {
-        max-width: 40%;
-        margin: 5vh auto; 
-    }
-
-    .modal-content {
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        max-height: 70vh; 
-        overflow-y: auto; 
-    }
-
-    .table-borderless th, .table-borderless td {
-        padding: 0.5rem 0.5rem;
-    }
-</style>
 @endpush
-
 @push('js')
     <script>
         $(document).ready(function() {

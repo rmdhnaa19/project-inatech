@@ -10,9 +10,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PjTambakController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $breadcrumb = (object) [
@@ -76,7 +74,7 @@ class PjTambakController extends Controller
     {
         // Validasi input
         $validatedData = $request->validate([            
-            'kd_user_tambak' => 'required|string|unique:pj_tambak,kd_user_tambak',
+            'kd_user_tambak' => 'required|string|unique:user_tambak,kd_user_tambak',
             'id_user' => 'required|integer',
             'id_tambak' => 'required|integer',
         ]);
