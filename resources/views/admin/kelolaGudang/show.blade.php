@@ -4,11 +4,11 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-md-5">
                 <img src="{{ asset('storage/' . $gudang->gambar) }}" alt="Foto Gudang" class="img-fluid"
                     style="height: auto; width: 500px">
             </div>
-            <div class="col">
+            <div class="col-md-7">
                 <div class="row">
                     <p><strong>Panjang : </strong> {{ $gudang->panjang }} </p>
                 </div>
