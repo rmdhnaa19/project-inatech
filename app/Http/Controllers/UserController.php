@@ -41,7 +41,7 @@ class UserController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data pengguna yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('kelolaPengguna.index')],
+                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPengguna.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -117,7 +117,7 @@ class UserController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data pengguna yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('kelolaPengguna.index')],
+                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPengguna.index')],
                 ['label' => 'Edit'],
             ]
         ];
