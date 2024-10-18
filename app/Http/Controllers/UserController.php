@@ -22,7 +22,7 @@ class UserController extends Controller
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
         $user =  UserModel::all();
-        return view('kelolaPengguna.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role, 'user' => $user]);
+        return view('admin.kelolaPengguna.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role, 'user' => $user]);
     }
 
     public function list(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
-        return view('kelolaPengguna.create', [
+        return view('admin.kelolaPengguna.create', [
             'breadcrumb' => $breadcrumb, 
             'activeMenu' => $activeMenu, 
             'role' => $role
@@ -92,7 +92,7 @@ class UserController extends Controller
         UserModel::create($validatedData);
 
         // Redirect ke halaman kelola pengguna
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function show($id)
@@ -103,7 +103,7 @@ class UserController extends Controller
         }
 
         // Render view dengan data tambak
-        $view = view('kelolaPengguna.show', compact('user'))->render();
+        $view = view('admin.kelolaPengguna.show', compact('user'))->render();
         return response()->json(['html' => $view]);
     }
 
@@ -122,7 +122,7 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
 
-        return view('kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
+        return view('admin.kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
     }
 
     public function update(Request $request, string $id){
@@ -180,7 +180,7 @@ class UserController extends Controller
                 'foto' => $updateFoto['foto']
             ]);
         }
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data Berhasil Diubah!');
     }
 
     public function destroy($id) {
@@ -189,6 +189,6 @@ class UserController extends Controller
             Storage::disk('public')->delete($user->foto);
         }
         UserModel::destroy($id);
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data Berhasil Dihapus!');
     }
 }

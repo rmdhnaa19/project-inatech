@@ -4,6 +4,11 @@
     <div class="card">
         <div class="card-header">Data Pengguna</div>
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
                     <tr class="text-center">
@@ -21,7 +26,7 @@
     {{-- Modal --}}
     <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title white" id="myModalLabel17">Detail Pengguna</h5>
@@ -93,7 +98,7 @@
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
-                        var url = '{{ route('kelolaPengguna.show', ':id') }}';
+                        var url = '{{ route('admin.kelolaPengguna.show', ':id') }}';
                         url = url.replace(':id', row.id_user);
                         return '<a href="javascript:void(0);" data-id="' + row.id_user +
                             '" class="view-user-details" data-url="' + url +
@@ -154,7 +159,7 @@
 
             $(document).on('click', '#btn-edit-user', function() {
                 if (currentUserId) {
-                    var editUrl = '{{ route('kelolaPengguna.edit', ':id') }}'.replace(':id',
+                    var editUrl = '{{ route('admin.kelolaPengguna.edit', ':id') }}'.replace(':id',
                         currentUserId);
                     window.location.href = editUrl;
                 } else {
@@ -165,7 +170,7 @@
             $(document).on('click', '#btn-delete-user', function() {
                 if (currentUserId) {
                     if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
-                        var deleteUrl = '{{ route('kelolaPengguna.destroy', ':id') }}'.replace(':id',
+                        var deleteUrl = '{{ route('admin.kelolaPengguna.destroy', ':id') }}'.replace(':id',
                             currentUserId);
 
                         $.ajax({
