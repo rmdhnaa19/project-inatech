@@ -22,7 +22,7 @@ class UserController extends Controller
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
         $user =  UserModel::all();
-        return view('kelolaPengguna.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role, 'user' => $user]);
+        return view('admin.kelolaPengguna.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'role' => $role, 'user' => $user]);
     }
 
     public function list(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
         $role = RoleModel::all();
-        return view('kelolaPengguna.create', [
+        return view('admin.kelolaPengguna.create', [
             'breadcrumb' => $breadcrumb, 
             'activeMenu' => $activeMenu, 
             'role' => $role
@@ -93,7 +93,7 @@ class UserController extends Controller
         UserModel::create($validatedData);
 
         // Redirect ke halaman kelola pengguna
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function show($id)
@@ -104,7 +104,7 @@ class UserController extends Controller
         }
 
         // Render view dengan data tambak
-        $view = view('kelolaPengguna.show', compact('user'))->render();
+        $view = view('admin.kelolaPengguna.show', compact('user'))->render();
         return response()->json(['html' => $view]);
     }
 
@@ -123,7 +123,7 @@ class UserController extends Controller
         ];
         $activeMenu = 'kelolaPengguna';
 
-        return view('kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
+        return view('admin.kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
     }
 
     public function update(Request $request, string $id){
@@ -142,41 +142,54 @@ class UserController extends Controller
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->file('foto') != '') {
-            # code...
-        }
-        
-        $updateData = [
-            'username' => $request->username,
-            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-            'id_role' => $request->id_role,
-            'nama' => $request->nama,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
-            'gaji_pokok' => $request->gaji_pokok,
-            'komisi' => $request->komisi ?? 0,
-            'tunjangan' => $request->tunjangan ?? 0,
-            'potongan_gaji' => $request->potongan_gaji ?? 0,
-            'posisi' => $request->posisi
-        ];
-        
-        if ($request->filled('foto')) {
-            Storage::delete($request->oldImage);
+        $user = UserModel::find($id);
+
+
+        if ($request->file('foto') == '') {
+            $user->update([
+                'username' => $request->username,
+                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                'id_role' => $request->id_role,
+                'nama' => $request->nama,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'gaji_pokok' => $request->gaji_pokok,
+                'komisi' => $request->komisi ?? 0,
+                'tunjangan' => $request->tunjangan ?? 0,
+                'potongan_gaji' => $request->potongan_gaji ?? 0,
+                'posisi' => $request->posisi,
+            ]);
+        }else{
+            Storage::disk('public')->delete($request->oldImage);
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
-            $updateData['foto'] = $path;
+            $updateFoto['foto'] = $path;
+            
+            $user->update([
+                'username' => $request->username,
+                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                'id_role' => $request->id_role,
+                'nama' => $request->nama,
+                'no_hp' => $request->no_hp,
+                'alamat' => $request->alamat,
+                'gaji_pokok' => $request->gaji_pokok,
+                'komisi' => $request->komisi ?? 0,
+                'tunjangan' => $request->tunjangan ?? 0,
+                'potongan_gaji' => $request->potongan_gaji ?? 0,
+                'posisi' => $request->posisi,
+                'foto' => $updateFoto['foto']
+            ]);
         }
-
-        UserModel::find($id)->update($updateData);
-        
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data Berhasil Diubah!');
     }
 
     public function destroy($id) {
-        $user = UserModel::findOrFail($id);
-        Storage::delete($user->foto);
+        $user = UserModel::find($id);
+        if ($user->foto) {
+            Storage::disk('public')->delete($user->foto);
+        }
         UserModel::destroy($id);
-        return redirect()->route('kelolaPengguna.index');
+        return redirect()->route('admin.kelolaPengguna.index')->with('success', 'Data Berhasil Dihapus!');
     }
 }

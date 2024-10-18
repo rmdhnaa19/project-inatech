@@ -16,6 +16,7 @@ use App\Http\Controllers\PenangananController;
 use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
+use App\Http\Controllers\UserControllerAdmin;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,15 +36,16 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 
+// Interface Admin
 Route::group(['prefix' => 'kelolaPengguna'], function(){
-    Route::get('/', [UserController::class, 'index'])->name('kelolaPengguna.index')->middleware('auth');
-    Route::post('/list', [UserController::class, 'list'])->name('kelolaPengguna.list')->middleware('auth');
-    Route::get('/create', [UserController::class, 'create'])->name('kelolaPengguna.create')->middleware('auth');
-    Route::post('/', [UserController::class, 'store'])->name('kelolaPengguna.store')->middleware('auth');
-    Route::get('/{id}', [UserController::class, 'show'])->name('kelolaPengguna.show')->middleware('auth');
-    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('kelolaPengguna.edit')->middleware('auth');
-    Route::put('/{id}', [UserController::class, 'update'])->name('kelolaPengguna.update')->middleware('auth');
-    Route::delete('/{id}', [UserController::class, 'destroy'])->name('kelolaPengguna.destroy')->middleware('auth');
+    Route::get('/', [UserController::class, 'index'])->name('admin.kelolaPengguna.index')->middleware('auth');
+    Route::post('/list', [UserController::class, 'list'])->name('admin.kelolaPengguna.list')->middleware('auth');
+    Route::get('/create', [UserController::class, 'create'])->name('admin.kelolaPengguna.create')->middleware('auth');
+    Route::post('/', [UserController::class, 'store'])->name('admin.kelolaPengguna.store')->middleware('auth');
+    Route::get('/{id}', [UserController::class, 'show'])->name('admin.kelolaPengguna.show')->middleware('auth');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('admin.kelolaPengguna.edit')->middleware('auth');
+    Route::put('/{id}', [UserController::class, 'update'])->name('admin.kelolaPengguna.update')->middleware('auth');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.kelolaPengguna.destroy')->middleware('auth');
 });
 
 Route::group(['prefix' => 'kelolaGudang'], function(){

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
