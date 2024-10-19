@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Kelola Pengguna')
+@section('title', 'Tambah Pengguna')
 @section('content')
     <div class="card">
         <div class="card-body">
@@ -16,7 +16,7 @@
                 id="tambahPengguna">
                 @csrf
                 <div class=" form-group row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-3">
                         <div class="form-group">
                             <label for="username" class="form-label">Username</label>
                             <input type="text" class="form-control @error('username') is-invalid @enderror"
@@ -133,7 +133,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <div class="col-md-6 d-flex justify-content-center align-items-center mt-3">
                         <div class="form-group">
                             <div class="col">
                                 <div class="row mb-3">
@@ -276,6 +276,22 @@
                     resetDropZone();
                     browseInput.click();
                 }
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function(e) {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
             }
         });
     </script>
