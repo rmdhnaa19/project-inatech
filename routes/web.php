@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\CobaController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginController;
@@ -17,7 +15,6 @@ use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
 use App\Http\Controllers\PJGudangController;
-use App\Http\Controllers\UserControllerAdmin;
 use Illuminate\Support\Facades\Route;
 
 /*
