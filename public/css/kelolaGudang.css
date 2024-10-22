@@ -41,4 +41,8 @@
         width: 100%;
         margin-bottom: 10px;
     }
+
+    .modal-dialog {
+        max-width: 100%;
+    }
 }

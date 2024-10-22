@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\CobaController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginController;
@@ -16,7 +14,7 @@ use App\Http\Controllers\PenangananController;
 use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
-use App\Http\Controllers\UserControllerAdmin;
+use App\Http\Controllers\PJGudangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,14 +47,25 @@ Route::group(['prefix' => 'kelolaPengguna'], function(){
 });
 
 Route::group(['prefix' => 'kelolaGudang'], function(){
-    Route::get('/', [GudangController::class, 'index'])->name('kelolaGudang.index')->middleware('auth');
-    Route::post('/list', [GudangController::class, 'list'])->name('kelolaGudang.list')->middleware('auth');
-    Route::get('/create', [GudangController::class, 'create'])->name('kelolaGudang.create')->middleware('auth');
-    Route::post('/', [GudangController::class, 'store'])->name('kelolaGudang.store')->middleware('auth');
-    Route::get('/{id}', [GudangController::class, 'show'])->name('kelolaGudang.show')->middleware('auth');
-    Route::get('/{id}/edit', [GudangController::class, 'edit'])->name('kelolaGudang.edit')->middleware('auth');
-    Route::put('/{id}', [GudangController::class, 'update'])->name('kelolaGudang.update')->middleware('auth');
-    Route::delete('/{id}', [GudangController::class, 'destroy'])->name('kelolaGudang.destroy')->middleware('auth');
+    Route::get('/', [GudangController::class, 'index'])->name('admin.kelolaGudang.index')->middleware('auth');
+    Route::post('/list', [GudangController::class, 'list'])->name('admin.kelolaGudang.list')->middleware('auth');
+    Route::get('/create', [GudangController::class, 'create'])->name('admin.kelolaGudang.create')->middleware('auth');
+    Route::post('/', [GudangController::class, 'store'])->name('admin.kelolaGudang.store')->middleware('auth');
+    Route::get('/{id}', [GudangController::class, 'show'])->name('admin.kelolaGudang.show')->middleware('auth');
+    Route::get('/{id}/edit', [GudangController::class, 'edit'])->name('admin.kelolaGudang.edit')->middleware('auth');
+    Route::put('/{id}', [GudangController::class, 'update'])->name('admin.kelolaGudang.update')->middleware('auth');
+    Route::delete('/{id}', [GudangController::class, 'destroy'])->name('admin.kelolaGudang.destroy')->middleware('auth');
+});
+
+Route::group(['prefix' => 'kelolaPJGudang'], function(){
+    Route::get('/', [PJGudangController::class, 'index'])->name('admin.kelolaPJGudang.index')->middleware('auth');
+    Route::post('/list', [PJGudangController::class, 'list'])->name('admin.kelolaPJGudang.list')->middleware('auth');
+    Route::get('/create', [PJGudangController::class, 'create'])->name('admin.kelolaPJGudang.create')->middleware('auth');
+    Route::post('/', [PJGudangController::class, 'store'])->name('admin.kelolaPJGudang.store')->middleware('auth');
+    Route::get('/{id}', [PJGudangController::class, 'show'])->name('admin.kelolaPJGudang.show')->middleware('auth');
+    Route::get('/{id}/edit', [PJGudangController::class, 'edit'])->name('admin.kelolaPJGudang.edit')->middleware('auth');
+    Route::put('/{id}', [PJGudangController::class, 'update'])->name('admin.kelolaPJGudang.update')->middleware('auth');
+    Route::delete('/{id}', [PJGudangController::class, 'destroy'])->name('admin.kelolaPJGudang.destroy')->middleware('auth');
 });
 
 // manajemen tambak
