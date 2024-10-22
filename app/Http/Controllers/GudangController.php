@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\GudangModel;
-use App\Models\RoleModel;
-use App\Models\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,7 +20,7 @@ class GudangController extends Controller
             ]
         ];
         $activeMenu = 'kelolaGudang';
-        return view('kelolaGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
+        return view('admin.kelolaGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
     }
 
     public function list(Request $request)
@@ -37,12 +36,12 @@ class GudangController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Gudang', 'url' => route('kelolaGudang.index')],
+                ['label' => 'Kelola Gudang', 'url' => route('admin.kelolaGudang.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'kelolaGudang';
-        return view('kelolaGudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
+        return view('admin.kelolaGudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu]);
     }
 
     public function store(Request $request)
@@ -63,7 +62,7 @@ class GudangController extends Controller
         }
         GudangModel::create($validatedData);
         // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
-        return redirect()->route('kelolaGudang.index');
+        return redirect()->route('admin.kelolaGudang.index');
     }
 
     public function show($id)
@@ -74,7 +73,73 @@ class GudangController extends Controller
         }
 
         // Render view dengan data tambak
-        $view = view('kelolaGudang.show', compact('gudang'))->render();
+        $view = view('admin.kelolaGudang.show', compact('gudang'))->render();
         return response()->json(['html' => $view]);
+    }
+
+    public function edit(string $id){
+        $gudang = GudangModel::find($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Gudang',
+            'paragraph' => 'Berikut ini merupakan form edit data gudang yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Gudang', 'url' => route('admin.kelolaGudang.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaGudang';
+
+        return view('admin.kelolaGudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang]);
+    }
+
+    public function update(Request $request, string $id){
+        $request->validate([
+            'nama' => 'required|string|unique:gudang,nama,'.$id.',id_gudang',
+            'panjang' => 'required|numeric',
+            'lebar' => 'required|numeric',
+            'luas' => 'required|numeric',
+            'alamat' => 'required|string',
+            'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $gudang = GudangModel::find($id);
+
+
+        if ($request->file('gambar') == '') {
+            $gudang->update([
+                'nama' => $request->nama,
+                'panjang' => $request->panjang,
+                'lebar' => $request->lebar,
+                'luas' => $request->luas,
+                'alamat' => $request->alamat,
+            ]);
+        }else{
+            Storage::disk('public')->delete($request->oldImage);
+            $gambar = $request->file('gambar');
+            $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_gudang', $gambar, $namaGambar);
+            $updateGambar['gambar'] = $path;
+            
+            $gudang->update([
+                'nama' => $request->nama,
+                'panjang' => $request->panjang,
+                'lebar' => $request->lebar,
+                'luas' => $request->luas,
+                'alamat' => $request->alamat,
+                'gambar' => $updateGambar['gambar']
+            ]);
+        }
+        return redirect()->route('admin.kelolaGudang.index')->with('success', 'Data Berhasil Diubah!');
+    }
+
+    public function destroy($id) {
+        $gudang = GudangModel::find($id);
+        if ($gudang->foto) {
+            Storage::disk('public')->delete($gudang->foto);
+        }
+        GudangModel::destroy($id);
+        return redirect()->route('admin.kelolaGudang.index')->with('success', 'Data Berhasil Dihapus!');
     }
 }

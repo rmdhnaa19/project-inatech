@@ -18,53 +18,41 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="gudangDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    <div class="modal fade text-left" id="gudangDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
                 <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                    <h5 class="modal-title white" id="myModalLabel160">Detail Gudang</h5>
+                    <h5 class="modal-title white" id="myModalLabel17">Detail Gudang</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
-                <div class="modal-body" style="padding: 20px;">
-                    {{-- Modal Detail --}}
-                    <div id="gudang-detail-content" class="container">
+                <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
+                    <div id="gudang-detail-content" class="container-fluid">
+                        <div class="text-center mb-3">
+                            <h4 class="mb-4"></h4>
+                        </div>
                         <div class="row">
-                            <div class="col-md-4">
-                                <img id="gambar" class="img-fluid rounded mb-3" src="" alt="Foto Gudang"
-                                    style="max-width: 100%; height: auto;">
+                            <div class="col-md-5">
+                                <div class="image-container text-center" style="position: sticky; top: 20px;">
+                                    <img src="" alt="Foto Gudang" class="img-fluid"
+                                        style="width: auto; height: 30vh;">
+                                </div>
                             </div>
-                            <div class="col-md-8">
-                                <table class="table table-borderless">
-                                    <tr>
-                                        <th>Nama : </th>
-                                        <td id="nama"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Panjang : </th>
-                                        <td id="panjang"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Lebar : </th>
-                                        <td id="lebar"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Luas : </th>
-                                        <td id="luas"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Alamat : </th>
-                                        <td id="alamat"></td>
-                                    </tr>
-                                </table>
+                            <div class="col-md-7">
+                                <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px;">
+                                    <p><strong>Panjang : </strong></p>
+                                    <p><strong>Lebar : </strong></p>
+                                    <p><strong>Luas : </strong></p>
+                                    <p><strong>Alamat : </strong></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    {{-- <button type="button" class="btn btn-danger" id="btn-delete-gudang">Hapus</button> --}}
+                    <button type="button" class="btn btn-danger" id="btn-delete-gudang">Hapus</button>
                     <button type="button" class="btn btn-primary" id="btn-edit-gudang">Edit</button>
                 </div>
             </div>
@@ -95,7 +83,7 @@
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
-                        var url = '{{ route('kelolaGudang.show', ':id') }}';
+                        var url = '{{ route('admin.kelolaGudang.show', ':id') }}';
                         url = url.replace(':id', row.id_gudang);
                         return '<a href="javascript:void(0);" data-id="' + row.id_gudang +
                             '" class="view-gudang-details" data-url="' + url +
@@ -136,10 +124,10 @@
 
                             // Tambahkan tombol edit secara dinamis
                             var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>';
+                                '<button type="button" class="btn btn-primary" id="btn-edit-gudang">Edit</button>';
                             $('#gudang-detail-content').append(editButton);
                         } else {
-                            alert('Gagal memuat detail user');
+                            alert('Gagal memuat detail gudang');
                         }
                     },
                     error: function(xhr, status, error) {
@@ -152,7 +140,8 @@
             // Fungsi tombol edit gudang
             $(document).on('click', '#btn-edit-gudang', function() {
                 if (currentGudangId) {
-                    var editUrl = '{{ route('kelolaGudang.edit', ':id') }}'.replace(':id', currentGudangId);
+                    var editUrl = '{{ route('admin.kelolaGudang.edit', ':id') }}'.replace(':id',
+                        currentGudangId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID Gudang tidak ditemukan');
