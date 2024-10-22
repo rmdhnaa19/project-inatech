@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\GudangModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
@@ -23,9 +25,19 @@ class TambakController extends Controller
     }
     
 
+    // public function list(Request $request)
+    // {
+    //     $tambaks = TambakModel::select('id_tambak', 'nama_tambak', 'id_gudang','luas_lahan', 'luas_tambak', 'lokasi_tambak')->with('gudang'); 
+    //     return DataTables::of($tambaks)
+    //     ->make(true);
+    // }
+
     public function list(Request $request)
     {
-        $tambaks = TambakModel::select('id_tambak', 'nama_tambak', 'id_gudang','luas_lahan', 'luas_tambak', 'lokasi_tambak')->with('gudang'); 
+        $tambaks = TambakModel::select('id_tambak', 'nama_tambak', 'id_gudang','luas_lahan', 'luas_tambak', 'lokasi_tambak')->with('gudang');  
+        if ($request->id_tambak) {
+            $tambaks->where('id_tambak', $request->id_tambak);
+        }
         return DataTables::of($tambaks)
         ->make(true);
     }
@@ -82,10 +94,8 @@ class TambakController extends Controller
         return response()->json(['error' => 'Tambak tidak ditemukan.'], 404);
     }
 
-    // Render view sebagai string HTML
+    // Render view 
     $view = view('tambak.show', compact('tambak'))->render();
-
-    // Encode HTML agar JSON valid
     return response()->json(['html' => $view]);
 }
 
@@ -112,13 +122,13 @@ class TambakController extends Controller
         $activeMenu = 'manajemenTambak';
 
         return view('tambak.edit', compact('tambak', 'gudang', 'breadcrumb', 'activeMenu'));
+        // return view('tambak.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak, 'gudang' => $gudang]);
     }
 
-    public function update(Request $request, $id)
-{
-    // Validasi input
+
+    public function update(Request $request, string $id) {
     $request->validate([
-        'nama_tambak' => 'required|string|max:255',
+        'nama_tambak' => 'required|string|unique:tambak,nama_tambak,'.$id.',id_tambak',
         'id_gudang' => 'required',
         'luas_lahan' => 'required|numeric',
         'luas_tambak' => 'required|numeric',
@@ -126,31 +136,42 @@ class TambakController extends Controller
         'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
-    // Cari tambak berdasarkan ID
-    $tambak = TambakModel::findOrFail($id);
+    $tambak = TambakModel::find($id);
 
-    // Update data tambak
-    $tambak->nama_tambak = $request->nama_tambak;
-    $tambak->id_gudang = $request->id_gudang;
-    $tambak->luas_lahan = $request->luas_lahan;
-    $tambak->luas_tambak = $request->luas_tambak;
-    $tambak->lokasi_tambak = $request->lokasi_tambak;
+    if ($request->file('foto') == '') {
+        $tambak->update([
+            'nama_tambak' => $request->nama_tambak,
+            'id_gudang' => $request->id_gudang,
+            'luas_lahan' => $request->luas_lahan,
+            'luas_tambak' => $request->luas_tambak,
+            'lokasi_tambak' => $request->lokasi_tambak,
+    ]);
+    }else{
+        Storage::disk('public')->delete($request->oldImage);
+        $foto = $request->file('foto');
+        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('foto_tambak', $foto, $namaFoto);
+        $updateFoto['foto'] = $path;
 
-    // Jika ada file foto baru yang diupload
-    if ($request->hasFile('foto')) {
-        // Hapus foto lama jika ada
-        if ($tambak->foto && file_exists(storage_path('app/public/' . $tambak->foto))) {
-            unlink(storage_path('app/public/' . $tambak->foto));
-        }
-
-        // Simpan foto baru dan update field di database
-        $fotoPath = $request->file('foto')->store('foto_tambak', 'public');
-        $tambak->foto = $fotoPath;
+    $tambak->update([
+        'nama_tambak' => $request->nama_tambak,
+        'id_gudang' => $request->id_gudang,
+        'luas_lahan' => $request->luas_lahan,
+        'luas_tambak' => $request->luas_tambak,
+        'lokasi_tambak' => $request->lokasi_tambak,
+        'foto' => $updateFoto['foto']
+        ]);
+    }
+        return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diperbarui.');
     }
 
-    // Simpan data ke database
-    $tambak->save();
 
-    return redirect()->route('tambak.show', $tambak->id_tambak)->with('success', 'Data tambak berhasil diperbarui.');
-}
+    public function destroy($id) {
+        $tambak = TambakModel::find($id);
+        if ($tambak->foto) {
+            Storage::disk('public')->delete($tambak->foto);
+        }
+        TambakModel::destroy($id);
+        return redirect()->route('tambak.index')->with('success', 'Data Berhasil Dihapus!');
+    }
 }

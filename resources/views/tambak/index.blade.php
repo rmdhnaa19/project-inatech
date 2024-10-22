@@ -4,6 +4,11 @@
     <div class="card">
         <div class="card-header">Manajemen Tambak</div>
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <table class="table" id="table_manajemenTambak">
                 <thead>
                     <tr class="text-center">
