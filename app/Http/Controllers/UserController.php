@@ -53,6 +53,7 @@ class UserController extends Controller
             'role' => $role
         ]);
     }
+    
     public function store(Request $request)
     {
         // Validasi input
