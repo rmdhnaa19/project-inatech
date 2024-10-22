@@ -16,16 +16,17 @@
                 <span>Kelola Pengguna</span>
             </a>
         </li>
-        <li class="sidebar-item  {{ $activeMenu == 'kelolaGudang' ? 'active' : '' }} has-sub ">
+        <li
+            class="sidebar-item has-sub {{ in_array($activeMenu, ['kelolaGudang', 'kelolaPJGudang']) ? 'active' : '' }}">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Kelola Gudang</span>
             </a>
-            <ul class="submenu ">
-                <li>
+            <ul class="submenu {{ in_array($activeMenu, ['kelolaGudang', 'kelolaPJGudang']) ? 'active' : '' }}">
+                <li class="{{ $activeMenu == 'kelolaGudang' ? 'active' : '' }}">
                     <a href="{{ url('/kelolaGudang') }}">Gudang</a>
                 </li>
-                <li>
+                <li class="{{ $activeMenu == 'kelolaPJGudang' ? 'active' : '' }}">
                     <a href="{{ url('/kelolaPJGudang') }}">Penanggung Jawab Gudang</a>
                 </li>
             </ul>

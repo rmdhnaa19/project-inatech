@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -84,6 +86,14 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.has-sub > a').on('click', function(e) {
+                e.preventDefault();
+                $(this).parent().toggleClass('active');
+            });
         });
     </script>
     @stack('js')

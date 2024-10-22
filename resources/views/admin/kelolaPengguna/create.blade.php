@@ -43,7 +43,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label for="posisi" class="form-label">Role</label>
+                            <label for="role" class="form-label">Role</label>
                             <div class="form-group">
                                 <select class="choices form-select @error('id_role') is-invalid @enderror" name="id_role"
                                     id="id_role">

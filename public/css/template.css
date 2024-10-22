@@ -140,3 +140,11 @@ thead.thead-light th {
 .modal-header, .modal-footer {
     flex-shrink: 0; 
 }
+
+.submenu {
+    display: none;
+}
+
+.sidebar-item.active > .submenu {
+    display: block;
+}
