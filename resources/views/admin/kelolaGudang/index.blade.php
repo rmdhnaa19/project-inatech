@@ -8,9 +8,9 @@
                 <thead>
                     <tr class="text-center">
                         <th style="display: none">ID</th>
-                        <th>NAMA</th>
-                        <th>ALAMAT</th>
-                        <th>LUAS</th>
+                        <th class="text-center">NAMA</th>
+                        <th class="text-center">ALAMAT</th>
+                        <th class="text-center">LUAS</th>
                     </tr>
                 </thead>
             </table>
@@ -79,7 +79,7 @@
                     visible: false
                 }, {
                     data: "nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
@@ -92,14 +92,17 @@
                     }
                 }, {
                     data: "alamat",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
+                    className: "col-md-6", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
                     searchable: true
                 }, {
                     data: "luas",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
-                    searchable: false
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return data ? new Intl.NumberFormat('id-ID').format(data) + ' m²' : '-';
+                    }
                 }],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables

@@ -11,12 +11,12 @@
             @endif
             <table class="table mb-3" id="table_kelolaPengguna">
                 <thead>
-                    <tr class="text-center">
+                    <tr>
                         <th style="display: none">ID</th>
-                        <th>NAMA</th>
-                        <th>NO HP</th>
-                        <th>POSISI</th>
-                        <th>ROLE</th>
+                        <th class="text-center">NAMA</th>
+                        <th class="text-center">NO HP</th>
+                        <th class="text-center">POSISI</th>
+                        <th class="text-center">ROLE</th>
                     </tr>
                 </thead>
             </table>
@@ -94,7 +94,7 @@
                     visible: false
                 }, {
                     data: "nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-4", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
@@ -107,17 +107,17 @@
                     }
                 }, {
                     data: "no_hp",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
+                    className: "col-md-2 text-center", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
                     searchable: false
                 }, {
                     data: "posisi",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: true
                 }, {
                     data: "role.nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: false,
                     searchable: true
                 }],

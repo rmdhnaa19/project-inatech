@@ -52,20 +52,22 @@
             </ul>
         </li>
         <li class='sidebar-title'>MANAJEMEN INVENTORY</li>
-        <li class="sidebar-item  has-sub">
+        <li
+            class="sidebar-item has-sub {{ in_array($activeMenu, ['kelolaPakan', 'kelolaPakanGudang', 'kelolaTransaksiPakan']) ? 'active' : '' }}">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Manajemen Pakan</span>
             </a>
-            <ul class="submenu ">
-                <li>
-                    <a href="component-alert.html">Pakan</a>
+            <ul
+                class="submenu {{ in_array($activeMenu, ['kelolaPakan', 'kelolaPakanGudang', 'kelolaTransaksiPakan']) ? 'active' : '' }}">
+                <li class="{{ $activeMenu == 'kelolaPakan' ? 'active' : '' }}">
+                    <a href="{{ url('/kelolaPakan') }}">Pakan</a>
                 </li>
-                <li>
-                    <a href="component-badge.html">Pakan ke Gudang</a>
+                <li class="{{ $activeMenu == 'kelolaPakanGudang' ? 'active' : '' }}">
+                    <a href="{{ url('/kelolaPakanGudang') }}">Pakan ke Gudang</a>
                 </li>
-                <li>
-                    <a href="component-breadcrumb.html">Transaksi Pakan</a>
+                <li class="{{ $activeMenu == 'kelolaTransaksiPakan' ? 'active' : '' }}">
+                    <a href="{{ url('/kelolaTransaksiPakan') }}">Transaksi Pakan</a>
                 </li>
             </ul>
         </li>
