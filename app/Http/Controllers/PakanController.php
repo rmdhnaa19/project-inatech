@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PakanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class PakanController extends Controller
@@ -29,89 +30,112 @@ class PakanController extends Controller
         ->make(true);
     }
 
-    // public function show($id)
-    // {
-    //     $pjGudang = DetailUserModel::with(['gudang', 'user'])->find($id); // Ambil data tambak dengan relasi gudang
-    //     if (!$pjGudang) {
-    //         return response()->json(['error' => 'Penanggung jawab gudang tidak ditemukan.'], 404);
-    //     }
+    public function show($id)
+    {
+        $pakan = PakanModel::find($id); // Ambil data tambak dengan relasi gudang
+        if (!$pakan) {
+            return response()->json(['error' => 'Data pakan tidak ditemukan.'], 404);
+        }
 
-    //     // Render view dengan data tambak
-    //     $view = view('admin.kelolaPJGudang.show', compact('pjGudang'))->render();
-    //     return response()->json(['html' => $view]);
-    // }
+        // Render view dengan data tambak
+        $view = view('admin.kelolaPakan.show', compact('pakan'))->render();
+        return response()->json(['html' => $view]);
+    }
 
-    // public function create(){
-    //     $breadcrumb = (object) [
-    //         'title' => 'Tambah Data Penanggung Jawab Gudang',
-    //         'paragraph' => 'Berikut ini merupakan form tambah data penanggung jawab gudang yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPJGudang.index')],
-    //             ['label' => 'Tambah'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaPJGudang';
-    //     $gudang = GudangModel::all();
-    //     $user = UserModel::all();
-    //     return view('admin.kelolaPJGudang.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'user' => $user]);
-    // }
+    public function create(){
+        $breadcrumb = (object) [
+            'title' => 'Tambah Data Pakan',
+            'paragraph' => 'Berikut ini merupakan form tambah data pakan yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Tambah'],
+            ]
+        ];
+        $activeMenu = 'kelolaPakan';
+        return view('admin.kelolaPakan.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu]);
+    }
 
-    // public function store(Request $request)
-    // {
-    //     // Validasi input
-    //     $validatedData = $request->validate([
-    //         'kd_detail_user' => 'required|string|unique:detail_user,kd_detail_user',
-    //         'id_gudang' => 'required|integer',
-    //         'id_user' => 'required|integer'
-    //     ]);
+    public function store(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'nama' => 'required|string|unique:pakan,nama',
+            'harga_satuan' => 'required|integer',
+            'satuan' => 'required|string|max:50',
+            'deskripsi' => 'required|string',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
 
-    //     // Buat user baru
-    //     DetailUserModel::create($validatedData);
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
+            $validatedData['foto'] = $path;
+        }
 
-    //     // Redirect ke halaman kelola pengguna
-    //     return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data berhasil ditambahkan!');
-    // }
+        // Buat user baru
+        PakanModel::create($validatedData);
 
-    // public function edit(string $id){
-    //     $pjGudang = DetailUserModel::find($id);
-    //     $gudang = GudangModel::all();
-    //     $user = UserModel::all();
+        // Redirect ke halaman kelola pengguna
+        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data berhasil ditambahkan!');
+    }
 
-    //     $breadcrumb = (object) [
-    //         'title' => 'Edit Data Penanggung Jawab Gudang',
-    //         'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab gudang yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPJGudang.index')],
-    //             ['label' => 'Edit'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaPJGudang';
+    public function edit(string $id){
+        $pakan = PakanModel::find($id);
 
-    //     return view('admin.kelolaPJGudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pjGudang' => $pjGudang, 'gudang' => $gudang, 'user' => $user]);
-    // }
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Pakan',
+            'paragraph' => 'Berikut ini merupakan form edit data pakan yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaPakan';
 
-    // public function update(Request $request, string $id){
-    //     $request->validate([
-    //         'kd_detail_user' => 'required|string|unique:detail_user,kd_detail_user,'.$id.',id_detail_user',
-    //         'id_gudang' => 'required|integer',
-    //         'id_user' => 'required|integer',
-    //     ]);
+        return view('admin.kelolaPakan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakan' => $pakan]);
+    }
 
-    //     $pjGudang = DetailUserModel::find($id);
+    public function update(Request $request, string $id){
+        $request->validate([
+            'nama' => 'required|string|unique:pakan,nama,'.$id.',id_pakan',
+            'harga_satuan' => 'required|integer',
+            'satuan' => 'required|string|max:50',
+            'deskripsi' => 'required|string',
+            'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
 
-    //     $pjGudang->update([
-    //         'kd_detail_user' => $request->kd_detail_user,
-    //         'id_gudang' => $request->id_gudang,
-    //         'id_user' => $request->id_user,
-    //         ]);
+        $pakan = PakanModel::find($id);
 
-    //     return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data Berhasil Diubah!');
-    // }
+        if ($request->file('foto') == '') {
+            $pakan->update([
+                'nama' => $request->nama,
+                'harga_satuan' => $request->harga_satuan,
+                'satuan' => $request->satuan,
+                'deskripsi' => $request->deskripsi,
+            ]);
+        }else {
+            Storage::disk('public')->delete($request->oldImage);
+            $foto = $request->file('foto');
+            $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
+            $updateFoto['foto'] = $path;
 
-    // public function destroy($id) {
-    //     DetailUserModel::destroy($id);
-    //     return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data Berhasil Dihapus!');
-    // }
+            $pakan->update([
+                'nama' => $request->nama,
+                'harga_satuan' => $request->harga_satuan,
+                'satuan' => $request->satuan,
+                'deskripsi' => $request->deskripsi,
+                'foto' => $updateFoto['foto']
+            ]);
+        }
+        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Diubah!');
+    }
+
+    public function destroy($id) {
+        PakanModel::destroy($id);
+        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Dihapus!');
+    }
 }

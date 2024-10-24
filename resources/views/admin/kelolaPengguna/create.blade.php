@@ -20,8 +20,9 @@
                         <div class="form-group">
                             <label for="username" class="form-label">Username</label>
                             <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                id="username" name="username" placeholder="Masukkan Username" value="{{ old('username') }}"
-                                required autofocus>
+                                id="username" name="username" placeholder="Masukkan Username Pengguna"
+                                value="{{ old('username') }}" required autofocus>
+                            <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('username'))
                                 <span class="text-danger">{{ $errors->first('username') }}</span>
                             @endif
@@ -30,7 +31,7 @@
                             <label for="password" class="form-label">Password</label>
                             <div class="input-group">
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    id="password" name="password" placeholder="Masukkan Password" required>
+                                    id="password" name="password" placeholder="Masukkan Password Pengguna" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text" id="toggle-password"
                                         style="cursor: pointer; padding: 0.7rem 0.6rem;">
@@ -38,6 +39,7 @@
                                     </span>
                                 </div>
                             </div>
+                            <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('password'))
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                             @endif
@@ -46,12 +48,13 @@
                             <label for="role" class="form-label">Role</label>
                             <div class="form-group">
                                 <select class="choices form-select @error('id_role') is-invalid @enderror" name="id_role"
-                                    id="id_role">
+                                    id="id_role" required>
                                     <option value="">- Pilih Role -</option>
                                     @foreach ($role as $item)
                                         <option value="{{ $item->id_role }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
+                                <p><small class="text-muted">Wajib Diisi!</small></p>
                             </div>
                             @if ($errors->has('id_role'))
                                 <span class="text-danger">{{ $errors->first('id_role') }}</span>
@@ -60,7 +63,8 @@
                         <div class="form-group">
                             <label for="nama" class="form-label">Nama</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
-                                name="nama" placeholder="Masukkan Nama" value="{{ old('nama') }}" required>
+                                name="nama" placeholder="Masukkan Nama Pengguna" value="{{ old('nama') }}" required>
+                            <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('nama'))
                                 <span class="text-danger">{{ $errors->first('nama') }}</span>
                             @endif
@@ -68,7 +72,8 @@
                         <div class="form-group">
                             <label for="no_hp" class="form-label">Nomor Handphone</label>
                             <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
-                                name="no_hp" placeholder="Masukkan No Hp" value="{{ old('no_hp') }}" required>
+                                name="no_hp" placeholder="Masukkan No Hp Pengguna" value="{{ old('no_hp') }}">
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('no_hp'))
                                 <span class="text-danger">{{ $errors->first('no_hp') }}</span>
                             @endif
@@ -76,7 +81,8 @@
                         <div class="form-group">
                             <label for="alamat" class="form-label">Alamat</label>
                             <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
-                                placeholder="Masukkan Alamat">{{ old('alamat') }}</textarea>
+                                placeholder="Masukkan Alamat Pengguna">{{ old('alamat') }}</textarea>
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif
@@ -84,8 +90,9 @@
                         <div class="form-group">
                             <label for="gaji_pokok" class="form-label">Gaji Pokok</label>
                             <input type="number" class="form-control @error('gaji_pokok') is-invalid @enderror"
-                                id="gaji_pokok" name="gaji_pokok" placeholder="Masukkan Gaji Pokok"
+                                id="gaji_pokok" name="gaji_pokok" placeholder="Masukkan Gaji Pokok Pengguna"
                                 value="{{ old('gaji_pokok') }}" required>
+                            <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('gaji_pokok'))
                                 <span class="text-danger">{{ $errors->first('gaji_pokok') }}</span>
                             @endif
@@ -93,7 +100,8 @@
                         <div class="form-group">
                             <label for="komisi" class="form-label">Komisi</label>
                             <input type="number" class="form-control @error('komisi') is-invalid @enderror" id="komisi"
-                                name="komisi" placeholder="Masukkan Komisi" value="{{ old('komisi') }}">
+                                name="komisi" placeholder="Masukkan Komisi Pengguna" value="{{ old('komisi') }}">
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('komisi'))
                                 <span class="text-danger">{{ $errors->first('komisi') }}</span>
                             @endif
@@ -101,8 +109,9 @@
                         <div class="form-group">
                             <label for="tunjangan" class="form-label">Tunjangan</label>
                             <input type="number" class="form-control @error('tunjangan') is-invalid @enderror"
-                                id="tunjangan" name="tunjangan" placeholder="Masukkan Tunjangan"
+                                id="tunjangan" name="tunjangan" placeholder="Masukkan Tunjangan Pengguna"
                                 value="{{ old('tunjangan') }}">
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('tunjangan'))
                                 <span class="text-danger">{{ $errors->first('tunjangan') }}</span>
                             @endif
@@ -110,8 +119,9 @@
                         <div class="form-group">
                             <label for="potongan_gaji" class="form-label">Potongan Gaji</label>
                             <input type="number" class="form-control @error('potongan_gaji') is-invalid @enderror"
-                                id="potongan_gaji" name="potongan_gaji" placeholder="Masukkan Potongan Gaji"
+                                id="potongan_gaji" name="potongan_gaji" placeholder="Masukkan Potongan Gaji Pengguna"
                                 value="{{ old('potongan_gaji') }}">
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('potongan_gaji'))
                                 <span class="text-danger">{{ $errors->first('potongan_gaji') }}</span>
                             @endif
@@ -120,13 +130,14 @@
                             <label for="posisi" class="form-label">Posisi</label>
                             <div class="form-group">
                                 <select class="choices form-select @error('posisi') is-invalid @enderror" name="posisi"
-                                    id="posisi">
+                                    id="posisi" required>
                                     <option value="">- Pilih Posisi -</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Teknisi">Teknisi</option>
                                     <option value="Analis Tambak">Analis Tambak</option>
                                     <option value="Pemilik Tambak">Pemilik Tambak</option>
                                 </select>
+                                <p><small class="text-muted">Wajib Diisi!</small></p>
                             </div>
                             @if ($errors->has('posisi'))
                                 <span class="text-danger">{{ $errors->first('posisi') }}</span>

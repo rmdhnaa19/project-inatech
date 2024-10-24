@@ -16,7 +16,8 @@ class PJGudangController extends Controller
             'paragraph' => 'Berikut ini merupakan data penaggung jawab gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola PJ Gudang'],
+                ['label' => 'Kelola Gudang', 'url' => route('admin.kelolaGudang.index')],
+                ['label' => 'Kelola Penanggung Jawab Gudang'],
             ]
         ];
         $activeMenu = 'kelolaPJGudang';
@@ -54,7 +55,8 @@ class PJGudangController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data penanggung jawab gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPJGudang.index')],
+                ['label' => 'Kelola Gudang', 'url' => route('admin.kelolaGudang.index')],
+                ['label' => 'Kelola Penanggung Jawab Gudang', 'url' => route('admin.kelolaPJGudang.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -90,7 +92,8 @@ class PJGudangController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPJGudang.index')],
+                ['label' => 'Kelola Gudang', 'url' => route('admin.kelolaGudang.index')],
+                ['label' => 'Kelola Penanggung Jawab Gudang', 'url' => route('admin.kelolaPJGudang.index')],
                 ['label' => 'Edit'],
             ]
         ];

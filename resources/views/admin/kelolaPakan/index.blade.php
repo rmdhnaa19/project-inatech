@@ -90,15 +90,15 @@
                     searchable: true,
                     render: function(data, type, row) {
                         var url = '{{ route('admin.kelolaPakan.show', ':id') }}';
-                        url = url.replace(':id', row.id_detail_user);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_detail_user +
+                        url = url.replace(':id', row.id_pakan);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_pakan +
                             '" class="view-Pakan-details" data-url="' + url +
                             '" data-toggle="modal" data-target="#PakanDetailModal">' + data +
                             '</a>';
                     }
                 }, {
                     data: "harga_satuan",
-                    className: "col-md-3", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: false,
                     render: function(data, type, row) {
@@ -106,7 +106,7 @@
                     }
                 }, {
                     data: "satuan",
-                    className: "col-md-3", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: false
                 }],

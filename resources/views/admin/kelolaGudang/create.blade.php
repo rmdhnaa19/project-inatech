@@ -20,7 +20,9 @@
                         <div class="form-group">
                             <label for="nama" class="form-label">Nama</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" id="username"
-                                name="nama" placeholder="Masukkan Nama" value="{{ old('nama') }}" required autofocus>
+                                name="nama" placeholder="Masukkan Nama Gudang" value="{{ old('nama') }}" required
+                                autofocus>
+                            <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('nama'))
                                 <span class="text-danger">{{ $errors->first('nama') }}</span>
                             @endif
@@ -32,7 +34,7 @@
                                     <input type="number" class="form-control @error('panjang') is-invalid @enderror"
                                         id="panjang" name="panjang" placeholder="Masukkan Panjang Gudang"
                                         value="{{ old('panjang') }}" step="0.01" required oninput="calculateLuas()">
-                                    <p><small class="text-muted">Masukkan ukuran dalam meter.</small></p>
+                                    <p><small class="text-muted">Wajib Diisi dan Masukkan Ukuran Dalam Meter!</small></p>
                                     @if ($errors->has('panjang'))
                                         <span class="text-danger">{{ $errors->first('panjang') }}</span>
                                     @endif
@@ -44,7 +46,7 @@
                                     <input type="number" class="form-control @error('lebar') is-invalid @enderror"
                                         id="lebar" name="lebar" placeholder="Masukkan Lebar Gudang"
                                         value="{{ old('lebar') }}" step="0.01" required oninput="calculateLuas()">
-                                    <p><small class="text-muted">Masukkan ukuran dalam meter.</small></p>
+                                    <p><small class="text-muted">Wajib Diisi Dan Masukkan Ukuran Dalam Meter!</small></p>
                                     @if ($errors->has('lebar'))
                                         <span class="text-danger">{{ $errors->first('lebar') }}</span>
                                     @endif
@@ -55,7 +57,7 @@
                             <label for="luas" class="form-label">Luas</label>
                             <input type="number" class="form-control @error('luas') is-invalid @enderror" id="luas"
                                 name="luas" value="{{ old('luas') }}" step="0.01" readonly>
-                            <p><small class="text-muted">Hasil Hitung dalam meter<sup>2</sup>.</small></p>
+                            <p><small class="text-muted">Hasil Hitung Dalam Meter<sup>2</sup>.</small></p>
                             @if ($errors->has('luas'))
                                 <span class="text-danger">{{ $errors->first('luas') }}</span>
                             @endif
@@ -63,7 +65,8 @@
                         <div class="form-group">
                             <label for="alamat" class="form-label">Alamat</label>
                             <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
-                                placeholder="Masukkan Alamat">{{ old('alamat') }}</textarea>
+                                placeholder="Masukkan Alamat Gudang">{{ old('alamat') }}</textarea>
+                            <p><small class="text-muted">Boleh Dikosongi.</small></p>
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif

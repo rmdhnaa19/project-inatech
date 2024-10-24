@@ -12,10 +12,9 @@ class PakanModel extends Model
     protected $table = 'pakan';
     protected $primaryKey = 'id_pakan';
 
-    protected $fillable = ['gambar', 'nama', 'harga_satuan', 'satuan' , 'deskripsi', 'created_at', 'updated_at'];
+    protected $fillable = ['nama', 'harga_satuan', 'satuan' , 'foto','deskripsi', 'created_at', 'updated_at'];
 
-public function pakan_harians() 
-    {
+    public function pakan_harians(){
         return $this->hasMany(PakanHarianModel::class,'id_detail_pakan');
     }
 

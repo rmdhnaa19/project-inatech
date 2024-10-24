@@ -52,7 +52,7 @@ class GudangController extends Controller
             'panjang' => 'required|numeric',
             'lebar' => 'required|numeric',
             'luas' => 'required|numeric',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -100,7 +100,7 @@ class GudangController extends Controller
             'panjang' => 'required|numeric',
             'lebar' => 'required|numeric',
             'luas' => 'required|numeric',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 

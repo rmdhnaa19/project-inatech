@@ -18,7 +18,9 @@
                             <div class="form-group">
                                 <label for="nama" class="form-label">Nama</label>
                                 <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
-                                    name="nama" value="{{ old('nama', $gudang->nama) }}" required autofocus>
+                                    name="nama" value="{{ old('nama', $gudang->nama) }}" placeholder="Masukkan Nama Gudang"
+                                    required autofocus>
+                                <p><small class="text-muted">Wajib Diisi!</small></p>
                                 @if ($errors->has('nama'))
                                     <span class="text-danger">{{ $errors->first('nama') }}</span>
                                 @endif
@@ -29,8 +31,9 @@
                                         <label for="panjang" class="form-label">Panjang</label>
                                         <input type="number" class="form-control @error('panjang') is-invalid @enderror"
                                             id="panjang" name="panjang" value="{{ old('panjang', $gudang->panjang) }}"
-                                            step="0.01" oninput="calculateLuas()" required>
-                                        <p><small class="text-muted">Masukkan ukuran dalam meter.</small></p>
+                                            step="0.01" oninput="calculateLuas()" placeholder="Masukkan panjang gudang"
+                                            required>
+                                        <p><small class="text-muted">Wajib Diisi Dan Masukkan Ukuran Dalam Meter!</small></p>
                                         @if ($errors->has('panjang'))
                                             <span class="text-danger">{{ $errors->first('panjang') }}</span>
                                         @endif
@@ -41,7 +44,9 @@
                                         <label for="lebar" class="form-label">Lebar</label>
                                         <input type="number" class="form-control @error('lebar') is-invalid @enderror"
                                             id="lebar" name="lebar" value="{{ old('lebar', $gudang->lebar) }}"
-                                            step="0.01" oninput="calculateLuas()" required>
+                                            step="0.01" oninput="calculateLuas()" placeholder="Masukkan lebar gudang"
+                                            required>
+                                        <p><small class="text-muted">Wajib Diisi Dan Masukkan Ukuran Dalam Meter!</small></p>
                                         @if ($errors->has('lebar'))
                                             <span class="text-danger">{{ $errors->first('lebar') }}</span>
                                         @endif
@@ -52,14 +57,16 @@
                                 <label for="luas" class="form-label">Luas</label>
                                 <input type="number" class="form-control @error('luas') is-invalid @enderror" id="luas"
                                     name="luas" value="{{ old('luas', $gudang->luas) }}" step="0.01" readonly>
-                                <p><small class="text-muted">Hasil Hitung dalam meter<sup>2</sup>.</small></p>
+                                <p><small class="text-muted">Hasil Hitung Dalam Meter<sup>2</sup>.</small></p>
                                 @if ($errors->has('luas'))
                                     <span class="text-danger">{{ $errors->first('luas') }}</span>
                                 @endif
                             </div>
                             <div class="form-group">
                                 <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3">{{ old('alamat', $gudang->alamat) }}</textarea>
+                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
+                                    placeholder="Masukkan alamat gudang">{{ old('alamat', $gudang->alamat) }}</textarea>
+                                <p><small class="text-muted">Boleh Dikosongi.</small></p>
                                 @if ($errors->has('alamat'))
                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                 @endif
