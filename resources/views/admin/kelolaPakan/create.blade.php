@@ -22,7 +22,7 @@
                             <label for="harga_satuan" class="form-label">Harga Satuan</label>
                             <input type="number" class="form-control @error('harga_satuan') is-invalid @enderror"
                                 id="harga_satuan" name="harga_satuan" placeholder="Masukkan Harga Satuan Pakan"
-                                value="{{ old('harga_satuan') }}" required autofocus>
+                                value="{{ old('harga_satuan') }}" required>
                             <p><small class="text-muted">Wajib Diisi!</small></p>
                             @if ($errors->has('harga_satuan'))
                                 <span class="text-danger">{{ $errors->first('harga_satuan') }}</span>

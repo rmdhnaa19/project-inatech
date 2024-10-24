@@ -19,8 +19,10 @@
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -31,7 +33,6 @@
     <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     @stack('css')
 </head>
 
