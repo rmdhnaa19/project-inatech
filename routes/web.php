@@ -83,7 +83,7 @@ Route::group(['prefix' => 'kelolaPakan'], function(){
 
 Route::group(['prefix' => 'kelolaPakanGudang'], function(){
     Route::get('/', [PakanGudangController::class, 'index'])->name('admin.kelolaPakanGudang.index')->middleware('auth');
-    Route::post('/list', [PakanGudangController::class, 'list'])->name('admin.kelolaPakanGudang.index')->middleware('auth');
+    Route::post('/list', [PakanGudangController::class, 'list'])->name('admin.kelolaPakanGudang.list')->middleware('auth');
     Route::get('/create', [PakanGudangController::class, 'create'])->name('admin.kelolaPakanGudang.create')->middleware('auth');
     Route::post('/', [PakanGudangController::class, 'store'])->name('admin.kelolaPakanGudang.store')->middleware('auth');
     Route::get('/{id}', [PakanGudangController::class, 'show'])->name('admin.kelolaPakanGudang.show')->middleware('auth');

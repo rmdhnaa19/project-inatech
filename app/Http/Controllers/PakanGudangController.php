@@ -17,7 +17,7 @@ class PakanGudangController extends Controller
             'paragraph' => 'Berikut ini merupakan data pakan ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
                 ['label' => 'Kelola Pakan ke Gudang'],
             ]
         ];
@@ -57,7 +57,7 @@ class PakanGudangController extends Controller
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
-                ['label' => 'kelola Pakan', 'url' => route('admin.kelolaPakanGudang.index')],
+                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -72,7 +72,19 @@ class PakanGudangController extends Controller
         // Validasi input
         $validatedData = $request->validate([
             'kd_detail_pakan' => 'required|string|unique:detail_pakan,kd_detail_pakan',
-            'id_pakan' => 'required|integer',
+            'id_pakan' => [
+                'required',
+                'exists:pakan,id_pakan',
+                function ($attribute, $value, $fail) use ($request) {
+                    // Cek apakah kombinasi id_gudang dan id_pakan sudah ada di database
+                    $exists = DetailPakanModel::where('id_gudang', $request->id_gudang)
+                                                ->where('id_pakan', $value)
+                                                ->exists();
+                    if ($exists) {
+                        $fail('Data pakan yang anda masukkan sudah di dalam gudang tersebut.');
+                    }
+                },
+            ],
             'id_gudang' => 'required|integer',
         ]);
 
@@ -85,61 +97,60 @@ class PakanGudangController extends Controller
         return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
-    // public function edit(string $id){
-    //     $pakan = PakanModel::find($id);
+    public function edit(string $id){
+        $pakanGudang = DetailPakanModel::find($id);
+        $pakan = PakanModel::all();
+        $gudang = GudangModel::all();
 
-    //     $breadcrumb = (object) [
-    //         'title' => 'Edit Data Pakan',
-    //         'paragraph' => 'Berikut ini merupakan form edit data pakan yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPakan.index')],
-    //             ['label' => 'Edit'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaPakan';
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Pakan ke Gudang',
+            'paragraph' => 'Berikut ini merupakan form edit data pakan ke gudang yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaPakanGudang';
 
-    //     return view('admin.kelolaPakan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakan' => $pakan]);
-    // }
+        return view('admin.kelolaPakanGudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'pakan' => $pakan, 'gudang' => $gudang]);
+    }
 
-    // public function update(Request $request, string $id){
-    //     $request->validate([
-    //         'nama' => 'required|string|unique:pakan,nama,'.$id.',id_pakan',
-    //         'harga_satuan' => 'required|integer',
-    //         'satuan' => 'required|string|max:50',
-    //         'deskripsi' => 'required|string',
-    //         'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048'
-    //     ]);
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'kd_detail_pakan' => 'required|string|unique:detail_pakan,kd_detail_pakan,' . $id . ',id_detail_pakan',
+            'id_pakan' => [
+                'required',
+                'exists:pakan,id_pakan',
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Cek apakah kombinasi sudah ada kecuali untuk data yang sedang di-update
+                    $exists = DetailPakanModel::where('id_gudang', $request->id_gudang)
+                                               ->where('id_pakan', $value)
+                                               ->where('id_detail_pakan', '!=', $id)
+                                               ->exists();
+                    if ($exists) {
+                        $fail('Data pakan yang ada di dalam gudang tersebut sudah ada.');
+                    }
+                },
+            ],
+            'id_gudang' => 'required|integer',
+        ]);
 
-    //     $pakan = PakanModel::find($id);
+        $pakanGudang = DetailPakanModel::find($id);
 
-    //     if ($request->file('foto') == '') {
-    //         $pakan->update([
-    //             'nama' => $request->nama,
-    //             'harga_satuan' => $request->harga_satuan,
-    //             'satuan' => $request->satuan,
-    //             'deskripsi' => $request->deskripsi,
-    //         ]);
-    //     }else {
-    //         Storage::disk('public')->delete($request->oldImage);
-    //         $foto = $request->file('foto');
-    //         $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-    //         $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
-    //         $updateFoto['foto'] = $path;
+        $pakanGudang->update([
+            'kd_detail_pakan' => $request->kd_detail_pakan,
+            'id_pakan' => $request->id_pakan,
+            'id_gudang' => $request->id_gudang,
+        ]);
 
-    //         $pakan->update([
-    //             'nama' => $request->nama,
-    //             'harga_satuan' => $request->harga_satuan,
-    //             'satuan' => $request->satuan,
-    //             'deskripsi' => $request->deskripsi,
-    //             'foto' => $updateFoto['foto']
-    //         ]);
-    //     }
-    //     return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Diubah!');
-    // }
+        return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data Berhasil Diubah!');
+    }
 
-    // public function destroy($id) {
-    //     PakanModel::destroy($id);
-    //     return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Dihapus!');
-    // }
+    public function destroy($id) {
+        DetailPakanModel::destroy($id);
+        return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data Berhasil Dihapus!');
+    }
 }
