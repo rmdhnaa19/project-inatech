@@ -5,7 +5,7 @@
         <div class="card-header">Data Gudang</div>
         <div class="card-body">
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success" id="success-alert">
                     {{ session('success') }}
                 </div>
             @endif

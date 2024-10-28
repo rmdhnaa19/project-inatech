@@ -101,6 +101,19 @@
             });
         });
     </script>
+    <script>
+        // Menghilangkan notifikasi dengan efek fade out setelah 3 detik
+        setTimeout(function() {
+            let alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.style.opacity = '0'; // Mengurangi opacity untuk efek fade out
+                // Menghapus elemen setelah efek fade out selesai (1 detik)
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 1000); // 1000 ms sesuai dengan durasi transisi di CSS
+            }
+        }, 3000); // 3000 ms = 3 detik
+    </script>
     @stack('js')
 </body>
 

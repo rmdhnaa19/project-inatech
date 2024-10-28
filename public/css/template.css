@@ -178,3 +178,7 @@ thead.thead-light th {
 .choices {
     margin-bottom: 0px !important;
 }
+
+#success-alert {
+    transition: opacity 1s ease-out;
+}
