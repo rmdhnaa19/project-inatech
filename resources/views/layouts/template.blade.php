@@ -38,6 +38,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <div id="app">
         <div id="sidebar" class='active'>
             <div class="sidebar-wrapper active">
