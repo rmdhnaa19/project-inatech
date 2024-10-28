@@ -129,11 +129,6 @@
                             // Load konten detail ke modal
                             $('#PJGudang-detail-content').html(response.html);
                             $('#PJGudangDetailModal').modal('show');
-
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-PJGudang">Edit</button>';
-                            $('#PJGudang-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail penanggung jawab gudang');
                         }

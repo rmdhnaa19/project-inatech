@@ -1,15 +1,15 @@
 @extends('layouts.template')
-@section('title', 'Kelola Pakan')
+@section('title', 'Kelola Alat')
 @section('content')
     <div class="card">
-        <div class="card-header">Data Pakan</div>
+        <div class="card-header">Data Alat</div>
         <div class="card-body">
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-            <table class="table mb-3" id="table_kelolaPakan">
+            <table class="table mb-3" id="table_kelolaAlat">
                 <thead>
                     <tr class="text-center">
                         <th style="display: none">ID</th>
@@ -23,25 +23,25 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="PakanDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
+    <div class="modal fade text-left" id="alatDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
                 <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                    <h5 class="modal-title white" id="myModalLabel17">Detail Pakan</h5>
+                    <h5 class="modal-title white" id="myModalLabel17">Detail Alat</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
                 </div>
                 <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
-                    <div id="Pakan-detail-content" class="container-fluid">
+                    <div id="alat-detail-content" class="container-fluid">
                         <div class="text-center mb-3">
                             <h4 class="mb-4"></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="image-container text-center" style="position: sticky; top: 20px;">
-                                    <img src="" alt="Foto Pakan" class="img-fluid"
+                                    <img src="" alt="Foto Alat" class="img-fluid"
                                         style="width: auto; height: 30vh;">
                                 </div>
                             </div>
@@ -56,8 +56,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <button type="button" class="btn btn-danger" id="btn-delete-Pakan">Hapus</button>
-                    <button type="button" class="btn btn-primary" id="btn-edit-Pakan">Edit</button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-alat">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-alat">Edit</button>
                 </div>
             </div>
         </div>
@@ -67,12 +67,12 @@
 @endpush
 @push('js')
     <script>
-        var currentPakanId;
+        var currentAlatId;
         $(document).ready(function() {
-            var dataKelolaPakan = $('#table_kelolaPakan').DataTable({
+            var dataKelolaAlat = $('#table_kelolaAlat').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('kelolaPakan/list') }}",
+                    "url": "{{ url('kelolaAlat/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -80,7 +80,7 @@
                     }
                 },
                 columns: [{
-                    data: "id_pakan",
+                    data: "id_alat",
                     visible: false
                 }, {
                     data: "nama",
@@ -88,11 +88,11 @@
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
-                        var url = '{{ route('admin.kelolaPakan.show', ':id') }}';
-                        url = url.replace(':id', row.id_pakan);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_pakan +
-                            '" class="view-Pakan-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#PakanDetailModal">' + data +
+                        var url = '{{ route('admin.kelolaAlat.show', ':id') }}';
+                        url = url.replace(':id', row.id_alat);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_alat +
+                            '" class="view-alat-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#alatDetailModal">' + data +
                             '</a>';
                     }
                 }, {
@@ -117,9 +117,9 @@
             });
 
             // Event listener untuk menampilkan detail tambak
-            $(document).on('click', '.view-Pakan-details', function() {
+            $(document).on('click', '.view-alat-details', function() {
                 var url = $(this).data('url');
-                currentPakanId = $(this).data('id');
+                currentAlatId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -127,34 +127,34 @@
                     success: function(response) {
                         if (response.html) {
                             // Load konten detail ke modal
-                            $('#Pakan-detail-content').html(response.html);
-                            $('#PakanDetailModal').modal('show');
+                            $('#alat-detail-content').html(response.html);
+                            $('#alatDetailModal').modal('show');
                         } else {
-                            alert('Gagal memuat detail penanggung jawab gudang');
+                            alert('Gagal memuat detail alat');
                         }
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText);
-                        alert('Gagal memuat detail penanggung jawab gudang');
+                        alert('Gagal memuat detail alat');
                     }
                 });
             });
 
-            $(document).on('click', '#btn-edit-Pakan', function() {
-                if (currentPakanId) {
-                    var editUrl = '{{ route('admin.kelolaPakan.edit', ':id') }}'.replace(':id',
-                        currentPakanId);
+            $(document).on('click', '#btn-edit-alat', function() {
+                if (currentAlatId) {
+                    var editUrl = '{{ route('admin.kelolaAlat.edit', ':id') }}'.replace(':id',
+                        currentAlatId);
                     window.location.href = editUrl;
                 } else {
-                    alert('ID penanggung jawab gudang tidak ditemukan');
+                    alert('ID alat tidak ditemukan');
                 }
             });
 
-            $(document).on('click', '#btn-delete-Pakan', function() {
-                if (currentPakanId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus pakan ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaPakan.destroy', ':id') }}'.replace(':id',
-                            currentPakanId);
+            $(document).on('click', '#btn-delete-alat', function() {
+                if (currentAlatId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus alat ini?')) {
+                        var deleteUrl = '{{ route('admin.kelolaAlat.destroy', ':id') }}'.replace(':id',
+                            currentAlatId);
 
                         $.ajax({
                             url: deleteUrl,
@@ -163,34 +163,34 @@
                                 "_token": "{{ csrf_token() }}",
                             },
                             success: function(response) {
-                                $('#PakanDetailModal').modal('hide');
+                                $('#alatDetailModal').modal('hide');
                                 // Reload DataTable
-                                $('#table_kelolaPakan').DataTable().ajax.reload();
-                                alert('Penanggung jawab gudang berhasil dihapus');
+                                $('#table_kelolaAlat').DataTable().ajax.reload();
+                                alert('Alat berhasil dihapus');
                             },
                             error: function(xhr) {
-                                alert('Gagal menghapus penanggung jawab gudang: ' + xhr
+                                alert('Gagal menghapus alat: ' + xhr
                                     .responseText);
                             }
                         });
                     }
                 } else {
-                    alert('ID penanggung jawab gudang tidak ditemukan');
+                    alert('ID alat tidak ditemukan');
                 }
             });
 
-            $("#table_kelolaPakan_filter").append(
+            $("#table_kelolaAlat_filter").append(
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
             );
 
             // Tambahkan event listener untuk tombol
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                    "{{ url('kelolaPakan/create') }}"; // Arahkan ke halaman tambah pengguna
+                    "{{ url('kelolaAlat/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data pakan...');
+            $('input[type="search"]').attr('placeholder', 'Cari data alat...');
         });
     </script>
 @endpush

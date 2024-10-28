@@ -71,20 +71,22 @@
                 </li>
             </ul>
         </li>
-        <li class="sidebar-item  has-sub">
+        <li
+            class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaAlat', 'kelolaAlatGudang', 'kelolaTransaksiAlat']) ? 'active' : '' }}">
             <a href="#" class='sidebar-link'>
                 <i data-feather="briefcase" width="20"></i>
                 <span>Manajemen Alat</span>
             </a>
-            <ul class="submenu ">
+            <ul
+                class="submenu {{ in_array($activeMenu, ['kelolaAlat', 'kelolaAlatGudang', 'kelolaTransaksiAlat']) ? 'active' : '' }}">
                 <li>
-                    <a href="component-extra-avatar.html">Alat</a>
+                    <a href="{{ url('/kelolaAlat') }}">Alat</a>
                 </li>
                 <li>
-                    <a href="component-extra-divider.html">Alat ke Gudang</a>
+                    <a href="{{ url('/kelolaAlatGudang') }}">Alat ke Gudang</a>
                 </li>
                 <li>
-                    <a href="component-extra-avatar.html">Transaksi Alat</a>
+                    <a href="{{ url('/kelolaTransaksiAlat') }}">Transaksi Alat</a>
                 </li>
             </ul>
         </li>

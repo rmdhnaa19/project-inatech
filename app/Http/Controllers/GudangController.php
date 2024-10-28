@@ -136,10 +136,14 @@ class GudangController extends Controller
 
     public function destroy($id) {
         $gudang = GudangModel::find($id);
-        if ($gudang->foto) {
-            Storage::disk('public')->delete($gudang->foto);
+        if ($gudang) {
+            if ($gudang->gambar) {
+                Storage::disk('public')->delete($gudang->gambar);
+            }
+            $gudang->delete();
+            return response()->json(['success' => true, 'message' => 'Data Berhasil Dihapus!']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Gudang tidak ditemukan'], 404);
         }
-        GudangModel::destroy($id);
-        return redirect()->route('admin.kelolaGudang.index')->with('success', 'Data Berhasil Dihapus!');
     }
 }

@@ -136,11 +136,6 @@
                             // Load konten detail ke modal
                             $('#PakanGudang-detail-content').html(response.html);
                             $('#PakanGudangDetailModal').modal('show');
-
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-PakanGudang">Edit</button>';
-                            $('#PakanGudang-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail pakan ke gudang');
                         }

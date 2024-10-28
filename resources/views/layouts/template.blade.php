@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -79,6 +80,8 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
+    <!-- Bootstrap JS (versi yang sesuai) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- SweetAlert2 -->
     {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}

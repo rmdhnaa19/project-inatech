@@ -141,11 +141,6 @@
                             // Load konten detail ke modal
                             $('#user-detail-content').html(response.html);
                             $('#userDetailModal').modal('show');
-
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>';
-                            $('#user-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail user');
                         }

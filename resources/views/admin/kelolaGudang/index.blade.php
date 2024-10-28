@@ -124,11 +124,6 @@
                             // Load konten detail ke modal
                             $('#gudang-detail-content').html(response.html);
                             $('#gudangDetailModal').modal('show');
-
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-gudang">Edit</button>';
-                            $('#gudang-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail gudang');
                         }
@@ -150,6 +145,47 @@
                     alert('ID Gudang tidak ditemukan');
                 }
             });
+
+            $(document).ready(function() {
+                $(document).on('click', '#btn-delete-gudang', function() {
+                    if (typeof currentGudangId !== 'undefined' && currentGudangId) {
+                        if (confirm('Apakah Anda yakin ingin menghapus gudang ini?')) {
+                            var deleteUrl = '{{ route('admin.kelolaGudang.destroy', ':id') }}'
+                                .replace(':id',
+                                    currentGudangId);
+
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'DELETE',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $('#GudangDetailModal').modal('hide');
+                                        $('#table_kelolaGudang').DataTable().ajax
+                                            .reload(); // Reload DataTable
+                                        alert(response.message);
+                                    } else {
+                                        alert('Gagal menghapus gudang: ' + response
+                                            .message);
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus gudang.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    alert(errorMsg);
+                                }
+                            });
+                        }
+                    } else {
+                        alert('ID gudang tidak ditemukan');
+                    }
+                });
+            })
+
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kelolaGudang_filter").append(
