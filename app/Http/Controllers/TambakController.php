@@ -49,7 +49,7 @@ class TambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data tambak yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('tambak.index')],
+                ['label' => 'Kelola Tambak', 'url' => route('tambak.index')],
                 ['label' => 'Tambah'],
             ]
         ];
