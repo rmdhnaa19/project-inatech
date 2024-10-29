@@ -19,6 +19,11 @@
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPengguna.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -33,6 +38,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <div id="app">
         <div id="sidebar" class='active'>
             <div class="sidebar-wrapper active">
@@ -75,6 +81,8 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
+    <!-- Bootstrap JS (versi yang sesuai) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- SweetAlert2 -->
     {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
@@ -85,6 +93,27 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.has-sub > a').on('click', function(e) {
+                e.preventDefault();
+                $(this).parent().toggleClass('active');
+            });
+        });
+    </script>
+    <script>
+        // Menghilangkan notifikasi dengan efek fade out setelah 3 detik
+        setTimeout(function() {
+            let alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.style.opacity = '0'; // Mengurangi opacity untuk efek fade out
+                // Menghapus elemen setelah efek fade out selesai (1 detik)
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 1000); // 1000 ms sesuai dengan durasi transisi di CSS
+            }
+        }, 3000); // 3000 ms = 3 detik
     </script>
     @stack('js')
 </body>

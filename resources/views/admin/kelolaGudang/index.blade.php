@@ -4,13 +4,18 @@
     <div class="card">
         <div class="card-header">Data Gudang</div>
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success" id="success-alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <table class="table mb-3" id="table_kelolaGudang">
                 <thead>
                     <tr class="text-center">
                         <th style="display: none">ID</th>
-                        <th>NAMA</th>
-                        <th>ALAMAT</th>
-                        <th>LUAS</th>
+                        <th class="text-center">NAMA</th>
+                        <th class="text-center">ALAMAT</th>
+                        <th class="text-center">LUAS</th>
                     </tr>
                 </thead>
             </table>
@@ -79,7 +84,7 @@
                     visible: false
                 }, {
                     data: "nama",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
@@ -92,14 +97,17 @@
                     }
                 }, {
                     data: "alamat",
-                    className: "", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
+                    className: "col-md-6", // Jika tidak ada class, hapus baris ini
+                    orderable: true,
                     searchable: true
                 }, {
                     data: "luas",
-                    className: "", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
-                    searchable: false
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return data ? new Intl.NumberFormat('id-ID').format(data) + ' m²' : '-';
+                    }
                 }],
                 pagingType: "simple_numbers", // Tambahkan ini untuk menampilkan angka pagination
                 dom: 'frtip', // Mengatur layout DataTables
@@ -121,11 +129,6 @@
                             // Load konten detail ke modal
                             $('#gudang-detail-content').html(response.html);
                             $('#gudangDetailModal').modal('show');
-
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-gudang">Edit</button>';
-                            $('#gudang-detail-content').append(editButton);
                         } else {
                             alert('Gagal memuat detail gudang');
                         }
@@ -147,6 +150,47 @@
                     alert('ID Gudang tidak ditemukan');
                 }
             });
+
+            $(document).ready(function() {
+                $(document).on('click', '#btn-delete-gudang', function() {
+                    if (typeof currentGudangId !== 'undefined' && currentGudangId) {
+                        if (confirm('Apakah Anda yakin ingin menghapus gudang ini?')) {
+                            var deleteUrl = '{{ route('admin.kelolaGudang.destroy', ':id') }}'
+                                .replace(':id',
+                                    currentGudangId);
+
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'DELETE',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        $('#GudangDetailModal').modal('hide');
+                                        $('#table_kelolaGudang').DataTable().ajax
+                                            .reload(); // Reload DataTable
+                                        alert(response.message);
+                                    } else {
+                                        alert('Gagal menghapus gudang: ' + response
+                                            .message);
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus gudang.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    alert(errorMsg);
+                                }
+                            });
+                        }
+                    } else {
+                        alert('ID gudang tidak ditemukan');
+                    }
+                });
+            })
+
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kelolaGudang_filter").append(

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\LoginController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\PenangananController;
 use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
+use App\Http\Controllers\PakanController;
+use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +69,39 @@ Route::group(['prefix' => 'kelolaPJGudang'], function(){
     Route::get('/{id}/edit', [PJGudangController::class, 'edit'])->name('admin.kelolaPJGudang.edit')->middleware('auth');
     Route::put('/{id}', [PJGudangController::class, 'update'])->name('admin.kelolaPJGudang.update')->middleware('auth');
     Route::delete('/{id}', [PJGudangController::class, 'destroy'])->name('admin.kelolaPJGudang.destroy')->middleware('auth');
+});
+
+Route::group(['prefix' => 'kelolaPakan'], function(){
+    Route::get('/', [PakanController::class, 'index'])->name('admin.kelolaPakan.index')->middleware('auth');
+    Route::post('/list', [PakanController::class, 'list'])->name('admin.kelolaPakan.list')->middleware('auth');
+    Route::get('/create', [PakanController::class, 'create'])->name('admin.kelolaPakan.create')->middleware('auth');
+    Route::post('/', [PakanController::class, 'store'])->name('admin.kelolaPakan.store')->middleware('auth');
+    Route::get('/{id}', [PakanController::class, 'show'])->name('admin.kelolaPakan.show')->middleware('auth');
+    Route::get('/{id}/edit', [PakanController::class, 'edit'])->name('admin.kelolaPakan.edit')->middleware('auth');
+    Route::put('/{id}', [PakanController::class, 'update'])->name('admin.kelolaPakan.update')->middleware('auth');
+    Route::delete('/{id}', [PakanController::class, 'destroy'])->name('admin.kelolaPakan.destroy')->middleware('auth');
+});
+
+Route::group(['prefix' => 'kelolaPakanGudang'], function(){
+    Route::get('/', [PakanGudangController::class, 'index'])->name('admin.kelolaPakanGudang.index')->middleware('auth');
+    Route::post('/list', [PakanGudangController::class, 'list'])->name('admin.kelolaPakanGudang.list')->middleware('auth');
+    Route::get('/create', [PakanGudangController::class, 'create'])->name('admin.kelolaPakanGudang.create')->middleware('auth');
+    Route::post('/', [PakanGudangController::class, 'store'])->name('admin.kelolaPakanGudang.store')->middleware('auth');
+    Route::get('/{id}', [PakanGudangController::class, 'show'])->name('admin.kelolaPakanGudang.show')->middleware('auth');
+    Route::get('/{id}/edit', [PakanGudangController::class, 'edit'])->name('admin.kelolaPakanGudang.edit')->middleware('auth');
+    Route::put('/{id}', [PakanGudangController::class, 'update'])->name('admin.kelolaPakanGudang.update')->middleware('auth');
+    Route::delete('/{id}', [PakanGudangController::class, 'destroy'])->name('admin.kelolaPakanGudang.destroy')->middleware('auth');
+});
+
+Route::group(['prefix' => 'kelolaAlat'], function(){
+    Route::get('/', [AlatController::class, 'index'])->name('admin.kelolaAlat.index')->middleware('auth');
+    Route::post('/list', [AlatController::class, 'list'])->name('admin.kelolaAlat.list')->middleware('auth');
+    Route::get('/create', [AlatController::class, 'create'])->name('admin.kelolaAlat.create')->middleware('auth');
+    Route::post('/', [AlatController::class, 'store'])->name('admin.kelolaAlat.store')->middleware('auth');
+    Route::get('/{id}', [AlatController::class, 'show'])->name('admin.kelolaAlat.show')->middleware('auth');
+    Route::get('/{id}/edit', [AlatController::class, 'edit'])->name('admin.kelolaAlat.edit')->middleware('auth');
+    Route::put('/{id}', [AlatController::class, 'update'])->name('admin.kelolaAlat.update')->middleware('auth');
+    Route::delete('/{id}', [AlatController::class, 'destroy'])->name('admin.kelolaAlat.destroy')->middleware('auth');
 });
 
 // manajemen tambak

@@ -1,78 +1,73 @@
 @extends('layouts.template')
-@section('title', 'Edit Gudang')
+@section('title', 'Edit Pakan')
 @section('content')
     <div class="card">
         <div class="card-body">
-            @empty($gudang)
+            @empty($pakan)
                 <div class="alert alert-danger alert-dismissible">
-                    <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5> Data yang Anda cari tidak ditemukan.
+                    <h5><i class="icon fas fa-ban white"></i> Kesalahan!</h5> Data yang Anda cari tidak ditemukan.
                 </div>
-                <button type="button" class="btn btn-sm btn-danger" onclick="window.location.href='{{ url('kelolaGudang') }}'"
+                <button type="button" class="btn btn-sm btn-danger" onclick="window.location.href='{{ url('kelolaPakan') }}'"
                     style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
             @else
-                <form method="POST" action="{{ url('/kelolaGudang/' . $gudang->id_gudang) }}" class="form-horizontal"
-                    enctype="multipart/form-data" id="editGudang">
+                <form method="POST" action="{{ url('/kelolaPakan/' . $pakan->id_pakan) }}" class="form-horizontal"
+                    enctype="multipart/form-data" id="editPakan">
                     @csrf {!! method_field('PUT') !!}
                     <div class=" form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mt-3">
                             <div class="form-group">
                                 <label for="nama" class="form-label">Nama</label>
                                 <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
-                                    name="nama" value="{{ old('nama', $gudang->nama) }}" placeholder="Masukkan Nama Gudang"
+                                    name="nama" value="{{ old('nama', $pakan->nama) }}" placeholder="Masukkan Nama Pakan"
                                     required autofocus>
                                 <p><small class="text-muted">Wajib Diisi!</small></p>
                                 @if ($errors->has('nama'))
                                     <span class="text-danger">{{ $errors->first('nama') }}</span>
                                 @endif
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="panjang" class="form-label">Panjang</label>
-                                        <input type="number" class="form-control @error('panjang') is-invalid @enderror"
-                                            id="panjang" name="panjang" value="{{ old('panjang', $gudang->panjang) }}"
-                                            step="0.01" oninput="calculateLuas()" placeholder="Masukkan panjang gudang"
-                                            required>
-                                        <p><small class="text-muted">Wajib Diisi Dan Masukkan Ukuran Dalam Meter!</small></p>
-                                        @if ($errors->has('panjang'))
-                                            <span class="text-danger">{{ $errors->first('panjang') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="lebar" class="form-label">Lebar</label>
-                                        <input type="number" class="form-control @error('lebar') is-invalid @enderror"
-                                            id="lebar" name="lebar" value="{{ old('lebar', $gudang->lebar) }}"
-                                            step="0.01" oninput="calculateLuas()" placeholder="Masukkan lebar gudang"
-                                            required>
-                                        <p><small class="text-muted">Wajib Diisi Dan Masukkan Ukuran Dalam Meter!</small></p>
-                                        @if ($errors->has('lebar'))
-                                            <span class="text-danger">{{ $errors->first('lebar') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group">
-                                <label for="luas" class="form-label">Luas</label>
-                                <input type="number" class="form-control @error('luas') is-invalid @enderror" id="luas"
-                                    name="luas" value="{{ old('luas', $gudang->luas) }}" step="0.01" readonly>
-                                <p><small class="text-muted">Hasil Hitung Dalam Meter<sup>2</sup>.</small></p>
-                                @if ($errors->has('luas'))
-                                    <span class="text-danger">{{ $errors->first('luas') }}</span>
+                                <label for="harga_satuan" class="form-label">Harga Satuan</label>
+                                <input type="number" class="form-control @error('harga_satuan') is-invalid @enderror"
+                                    id="harga_satuan" name="harga_satuan"
+                                    value="{{ old('harga_satuan', $pakan->harga_satuan) }}"
+                                    placeholder="Masukkan Harga Satuan Pakan" required>
+                                <p><small class="text-muted">Wajib Diisi!</small></p>
+                                @if ($errors->has('nama'))
+                                    <span class="text-danger">{{ $errors->first('nama') }}</span>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3"
-                                    placeholder="Masukkan alamat gudang">{{ old('alamat', $gudang->alamat) }}</textarea>
+                                <label for="satuan" class="form-label">Satuan Berat</label>
+                                <div class="form-group">
+                                    <select class="choices form-select @error('satuan') is-invalid @enderror" name="satuan"
+                                        id="satuan" required>
+                                        <option value="">- Pilih Satuan Berat -</option>
+                                        <option value="Ton" {{ old('satuan', $pakan->satuan) == 'Ton' ? 'selected' : '' }}>
+                                            Ton</option>
+                                        <option value="Kwintal"
+                                            {{ old('satuan', $pakan->satuan) == 'Kwintal' ? 'selected' : '' }}>Kwintal</option>
+                                        <option value="Kilogram"
+                                            {{ old('satuan', $pakan->satuan) == 'Kilogram' ? 'selected' : '' }}>Kilogram
+                                        </option>
+                                        <option value="Gram" {{ old('satuan', $pakan->satuan) == 'Gram' ? 'selected' : '' }}>
+                                            Gram</option>
+                                    </select>
+                                    <p><small class="text-muted">Wajib Diisi!</small></p>
+                                </div>
+                                @if ($errors->has('satuan'))
+                                    <span class="text-danger">{{ $errors->first('satuan') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group">
+                                <label for="deskripsi" class="form-label">Deskripsi</label>
+                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3">{{ old('deskripis', $pakan->deskripsi) }}</textarea>
                                 <p><small class="text-muted">Boleh Dikosongi.</small></p>
-                                @if ($errors->has('alamat'))
-                                    <span class="text-danger">{{ $errors->first('alamat') }}</span>
+                                @if ($errors->has('deskripsi'))
+                                    <span class="text-danger">{{ $errors->first('deskripsi') }}</span>
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6 d-flex justify-content-center align-items-center">
+                        <div class="col-md-6 d-flex justify-content-center align-items-center mt-3">
                             <div class="form-group">
                                 <div class="col">
                                     <div class="row mb-3">
@@ -89,18 +84,18 @@
                                     </div>
                                     <div class="row mb-5">
                                         <div class="form-file">
-                                            <label class="form-file-label" for="gambar">
+                                            <label class="form-file-label" for="foto">
                                                 <span class="form-file-text">Abaikan jika tidak mengganti</span>
                                                 <span class="form-file-button">Browse</span>
                                                 <input type="hidden" id="oldImage" name="oldImage"
-                                                    value="{{ $gudang->gambar }}">
-                                                <input type="file" class="drop-zone__input" id="gambar" name="gambar">
+                                                    value="{{ $pakan->foto }}">
+                                                <input type="file" class="drop-zone__input" id="foto" name="foto">
                                             </label>
                                         </div>
                                     </div>
-                                    @if ($errors->has('gambar'))
+                                    @if ($errors->has('foto'))
                                         <div class="row alert alert-danger">
-                                            <span class="text-center">{{ $errors->first('gambar') }}</span>
+                                            <span class="text-center">{{ $errors->first('foto') }}</span>
                                         </div>
                                     @endif
                                 </div>
@@ -109,7 +104,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-sm btn-danger"
-                            onclick="window.location.href='{{ url('kelolaGudang') }}'"
+                            onclick="window.location.href='{{ url('kelolaPakan') }}'"
                             style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                         <button type="submit" class="btn btn-primary btn-sm"
                             style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
@@ -126,7 +121,7 @@
         // Pilih elemen-elemen yang dibutuhkan
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');
-        const browseInput = document.querySelector('#gambar');
+        const browseInput = document.querySelector('#foto');
         const fileNameLabel = document.querySelector('.form-file-text');
 
         // Fungsi untuk menangani event dragover
@@ -218,13 +213,5 @@
                 }
             }
         });
-    </script>
-    <script>
-        function calculateLuas() {
-            let panjang = parseFloat(document.getElementById('panjang').value) || 0;
-            let lebar = parseFloat(document.getElementById('lebar').value) || 0;
-            let luas = panjang * lebar;
-            document.getElementById('luas').value = luas;
-        }
     </script>
 @endpush

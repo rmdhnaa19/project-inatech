@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GudangModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Yajra\DataTables\Contracts\DataTable;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class GudangController extends Controller
@@ -52,7 +52,7 @@ class GudangController extends Controller
             'panjang' => 'required|numeric',
             'lebar' => 'required|numeric',
             'luas' => 'required|numeric',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -61,7 +61,7 @@ class GudangController extends Controller
             $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
         }
         GudangModel::create($validatedData);
-        // Alert::toast('Data administrasi berhasil ditambahkan', 'success');
+        Alert::toast('Data Gudang berhasil ditambahkan', 'success');
         return redirect()->route('admin.kelolaGudang.index');
     }
 
@@ -100,7 +100,7 @@ class GudangController extends Controller
             'panjang' => 'required|numeric',
             'lebar' => 'required|numeric',
             'luas' => 'required|numeric',
-            'alamat' => 'required|string',
+            'alamat' => 'nullable|string',
             'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -131,15 +131,39 @@ class GudangController extends Controller
                 'gambar' => $updateGambar['gambar']
             ]);
         }
-        return redirect()->route('admin.kelolaGudang.index')->with('success', 'Data Berhasil Diubah!');
+        Alert::toast('Data Gudang berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaGudang.index');
     }
 
-    public function destroy($id) {
-        $gudang = GudangModel::find($id);
-        if ($gudang->foto) {
-            Storage::disk('public')->delete($gudang->foto);
+    // public function destroy($id) {
+    //     $gudang = GudangModel::find($id);
+    //     if ($gudang) {
+    //         if ($gudang->gambar) {
+    //             Storage::disk('public')->delete($gudang->gambar);
+    //         }
+    //         $gudang->delete();
+    //         return response()->json(['success' => true, 'message' => 'Data Berhasil Dihapus!']);
+    //     } else {
+    //         return response()->json(['success' => false, 'message' => 'Gudang tidak ditemukan'], 404);
+    //     }
+    // }
+
+    public function destroy($id)
+    {
+        $check = GudangModel::find($id);
+        if (!$check) {
+            Alert::toast('Data gudang tidak ditemukan', 'error');
+            return redirect('/kelolaGudang');
         }
-        GudangModel::destroy($id);
-        return redirect()->route('admin.kelolaGudang.index')->with('success', 'Data Berhasil Dihapus!');
+        try{
+            $kelolaGudang = GudangModel::find($id);
+            Storage::delete($kelolaGudang->foto);
+            GudangModel::destroy($id);
+            Alert::toast('Data gudang berhasil dihapus', 'success');
+            return redirect('/kelolaGudang');
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data gudang gagal dihapus', 'error');
+            return redirect('/kelolaGudang');
+        }
     }
 }
