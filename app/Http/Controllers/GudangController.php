@@ -57,8 +57,12 @@ class GudangController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('foto_gudang', 'public'); // Simpan ke storage
-            $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
+            // $path = $request->file('gambar')->store('foto_gudang', 'public'); // Simpan ke storage
+            // $validatedData['gambar'] = $path; // Tambahkan path foto ke validated data
+            $gambar = $request->file('gambar');
+            $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_gudang', $gambar, $namaGambar);
+            $validatedData['gambar'] = $path;
         }
         GudangModel::create($validatedData);
         Alert::toast('Data Gudang berhasil ditambahkan', 'success');
@@ -157,7 +161,7 @@ class GudangController extends Controller
         }
         try{
             $kelolaGudang = GudangModel::find($id);
-            Storage::delete($kelolaGudang->foto);
+            Storage::disk('public')->delete($kelolaGudang->gambar);
             GudangModel::destroy($id);
             Alert::toast('Data gudang berhasil dihapus', 'success');
             return redirect('/kelolaGudang');

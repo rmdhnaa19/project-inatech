@@ -6,6 +6,7 @@ use App\Models\DetailUserModel;
 use App\Models\GudangModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class PJGudangController extends Controller
@@ -61,8 +62,14 @@ class PJGudangController extends Controller
             ]
         ];
         $activeMenu = 'kelolaPJGudang';
-        $gudang = GudangModel::all();
-        $user = UserModel::all();
+        $usedGudangId = DetailUserModel::pluck('id_gudang')->toArray();
+        $gudang = GudangModel::whereNotIn('id_gudang', $usedGudangId)
+                ->get();
+
+        $usedUserId = DetailUserModel::pluck('id_user')->toArray();
+        $user = UserModel::where('id_role', 2)
+                ->whereNotIn('id_user', $usedUserId)
+                ->get();
         return view('admin.kelolaPJGudang.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'user' => $user]);
     }
 
@@ -72,20 +79,35 @@ class PJGudangController extends Controller
         $validatedData = $request->validate([
             'kd_detail_user' => 'required|string|unique:detail_user,kd_detail_user',
             'id_gudang' => 'required|integer',
-            'id_user' => 'required|integer'
+            'id_user' => [
+                'required',
+                'exists:user,id_user',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (DetailUserModel::where('id_gudang', $request->id_gudang)
+                                    ->where('id_user', $value)
+                                    ->exists()) {
+                        $fail('Data penanggung jawab yang ada di dalam gudang tersebut sudah ada.');
+                    }
+                },
+            ],
         ]);
 
-        // Buat user baru
         DetailUserModel::create($validatedData);
-
-        // Redirect ke halaman kelola pengguna
-        return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data berhasil ditambahkan!');
+        Alert::toast('Data penanggung jawab berhasil ditambah', 'success');
+        return redirect()->route('admin.kelolaPJGudang.index');
     }
 
     public function edit(string $id){
         $pjGudang = DetailUserModel::find($id);
-        $gudang = GudangModel::all();
-        $user = UserModel::all();
+
+        $usedGudangId = DetailUserModel::pluck('id_gudang')->toArray();
+        $gudang = GudangModel::whereNotIn('id_gudang', $usedGudangId)
+                ->get();
+
+        $usedUserId = DetailUserModel::pluck('id_user')->toArray();
+        $user = UserModel::where('id_role', 2)
+                ->whereNotIn('id_user', $usedUserId)
+                ->get();
 
         $breadcrumb = (object) [
             'title' => 'Edit Data Penanggung Jawab Gudang',
@@ -106,7 +128,20 @@ class PJGudangController extends Controller
         $request->validate([
             'kd_detail_user' => 'required|string|unique:detail_user,kd_detail_user,'.$id.',id_detail_user',
             'id_gudang' => 'required|integer',
-            'id_user' => 'required|integer',
+            'id_user' => [
+                'required',
+                'exists:user,id_user',
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Cek apakah kombinasi sudah ada kecuali untuk data yang sedang di-update
+                    $exists = DetailUserModel::where('id_gudang', $request->id_gudang)
+                                                ->where('id_user', $value)
+                                                ->where('id_detail_user', '!=', $id)
+                                                ->exists();
+                    if ($exists) {
+                        $fail('Data penanggung jawab yang ada di dalam gudang tersebut sudah ada.');
+                    }
+                },
+            ],
         ]);
 
         $pjGudang = DetailUserModel::find($id);
@@ -115,13 +150,25 @@ class PJGudangController extends Controller
             'kd_detail_user' => $request->kd_detail_user,
             'id_gudang' => $request->id_gudang,
             'id_user' => $request->id_user,
-            ]);
-
-        return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data Berhasil Diubah!');
+        ]);
+        
+        Alert::toast('Data penanggung jawab berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaPJGudang.index');
     }
 
     public function destroy($id) {
-        DetailUserModel::destroy($id);
-        return redirect()->route('admin.kelolaPJGudang.index')->with('success', 'Data Berhasil Dihapus!');
+        $check = DetailUserModel::find($id);
+        if (!$check) {
+            Alert::toast('Data penanggung jawab tidak ditemukan', 'error');
+            return redirect('/kelolaPJGudang');
+        }
+        try{
+            DetailUserModel::destroy($id);
+            Alert::toast('Data penanggung jawab berhasil dihapus', 'success');
+            return redirect('/kelolaPJGudang');
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data penanggung jawab gagal dihapus', 'error');
+            return redirect('/kelolaPJGudang');
+        }
     }
 }

@@ -91,6 +91,7 @@ Route::group(['prefix' => 'kelolaPakanGudang'], function(){
     Route::get('/{id}/edit', [PakanGudangController::class, 'edit'])->name('admin.kelolaPakanGudang.edit')->middleware('auth');
     Route::put('/{id}', [PakanGudangController::class, 'update'])->name('admin.kelolaPakanGudang.update')->middleware('auth');
     Route::delete('/{id}', [PakanGudangController::class, 'destroy'])->name('admin.kelolaPakanGudang.destroy')->middleware('auth');
+    Route::get('/get-available-gudang/{pakanId}', [PakanGudangController::class, 'getAvailableGudang']);
 });
 
 Route::group(['prefix' => 'kelolaAlat'], function(){

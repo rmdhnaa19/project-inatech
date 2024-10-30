@@ -115,6 +115,27 @@
             }
         }, 3000); // 3000 ms = 3 detik
     </script>
+    <script>
+        // Ambil elemen toggle dan menu
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Tambahkan event listener ke elemen toggle
+        dropdownToggle.addEventListener('click', function(event) {
+            // Mencegah tindakan default link
+            event.preventDefault();
+
+            // Toggle kelas 'show' pada dropdown menu
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Menutup dropdown jika klik di luar
+        document.addEventListener('click', function(event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    </script>
     @stack('js')
 </body>
 
