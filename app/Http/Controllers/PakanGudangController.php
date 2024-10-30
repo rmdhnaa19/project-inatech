@@ -51,18 +51,6 @@ class PakanGudangController extends Controller
         return response()->json(['html' => $view]);
     }
 
-    public function getAvailableGudang($pakanId)
-    {
-        // Ambil ID gudang yang sudah digunakan untuk pakan ini
-        $usedGudangIds = DetailPakanModel::where('id_pakan', $pakanId)->pluck('id_gudang');
-
-        // Ambil gudang yang tidak termasuk dalam daftar ID yang sudah digunakan
-        $availableGudang = GudangModel::whereNotIn('id_gudang', $usedGudangIds)->get();
-
-        // Kembalikan dalam bentuk JSON
-        return response()->json($availableGudang);
-    }
-
     public function create(){
         $breadcrumb = (object) [
             'title' => 'Tambah Data Pakan ke Gudang',
