@@ -12,5 +12,5 @@ class AlatModel extends Model
     protected $table = 'alat';
     protected $primaryKey = 'id_alat';
 
-    protected $fillable = ['gambar', 'nama', 'harga_satuan', 'satuan', 'deskripsi', 'created_at', 'updated_at'];
+    protected $fillable = ['nama', 'harga_satuan', 'satuan', 'deskripsi', 'foto','created_at', 'updated_at'];
 }
