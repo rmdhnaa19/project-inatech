@@ -85,6 +85,11 @@
     <script src="{{ asset('voler-master/dist/assets/js/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('voler-master/src/assets/js/app.js') }}"></script>
     <script src="{{ asset('voler-master/src/assets/js/main.js') }}"></script>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
 </body>
 
 </html>

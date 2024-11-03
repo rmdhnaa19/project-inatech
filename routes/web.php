@@ -18,6 +18,7 @@ use App\Http\Controllers\KematianUdangController;
 use App\Http\Controllers\PakanController;
 use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,11 +32,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
+Route::get('/login', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
-Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
+// Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 
 // Interface Admin
 Route::group(['prefix' => 'kelolaPengguna'], function(){
