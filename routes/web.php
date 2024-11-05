@@ -36,10 +36,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate')->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
-// Route::post('/logout', function () {
-//     Auth::logout();
-//     return redirect('/');
-// })->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 

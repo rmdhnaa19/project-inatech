@@ -14,7 +14,7 @@ class AlatGudangController extends Controller
     public function index(){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merupakan data alat ke gudang yang terinput ke dalam sistem',
+            'paragraph' => 'Berikut ini merualat data alat ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
@@ -41,7 +41,7 @@ class AlatGudangController extends Controller
     public function create(){
         $breadcrumb = (object) [
             'title' => 'Tambah Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merupakan form tambah data alat ke gudang yang terinput ke dalam sistem',
+            'paragraph' => 'Berikut ini merualat form tambah data alat ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
@@ -65,7 +65,7 @@ class AlatGudangController extends Controller
                 'required',
                 'exists:alat,id_alat',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Cek apakah kombinasi id_gudang dan id_pakan sudah ada di database
+                    // Cek apakah kombinasi id_gudang dan id_alat sudah ada di database
                     $exists = DetailAlatModel::where('id_gudang', $request->id_gudang)
                                                 ->where('id_alat', $value)
                                                 ->exists();
@@ -100,71 +100,71 @@ class AlatGudangController extends Controller
     }
 
 
-    // public function edit(string $id){
-    //     $alatGudang = DetailAlatModel::find($id);
-    //     $alat = AlatModel::all();
-    //     $gudang = GudangModel::all();
+    public function edit(string $id){
+        $alatGudang = DetailAlatModel::find($id);
+        $alat = AlatModel::all();
+        $gudang = GudangModel::all();
 
-    //     $breadcrumb = (object) [
-    //         'title' => 'Edit Data Alat ke Gudang',
-    //         'paragraph' => 'Berikut ini merupakan form edit data alat ke gudang yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
-    //             ['label' => 'kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-    //             ['label' => 'Edit'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaAlatGudang';
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Alat ke Gudang',
+            'paragraph' => 'Berikut ini merualat form edit data alat ke gudang yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaAlatGudang';
 
-    //     return view('admin.kelolaAlatGudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'alat' => $alat, 'gudang' => $gudang]);
-    // }
+        return view('admin.kelolaAlatGudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'alat' => $alat, 'gudang' => $gudang]);
+    }
 
-    // public function update(Request $request, string $id)
-    // {
-    //     $request->validate([
-    //         'kd_detail_pakan' => 'required|string|unique:detail_pakan,kd_detail_pakan,' . $id . ',id_detail_pakan',
-    //         'id_pakan' => [
-    //             'required',
-    //             'exists:alat,id_pakan',
-    //             function ($attribute, $value, $fail) use ($request, $id) {
-    //                 // Cek apakah kombinasi sudah ada kecuali untuk data yang sedang di-update
-    //                 $exists = DetailAlatModel::where('id_gudang', $request->id_gudang)
-    //                                            ->where('id_pakan', $value)
-    //                                            ->where('id_detail_pakan', '!=', $id)
-    //                                            ->exists();
-    //                 if ($exists) {
-    //                     $fail('Data alat yang ada di dalam gudang tersebut sudah ada.');
-    //                 }
-    //             },
-    //         ],
-    //         'id_gudang' => 'required|integer',
-    //     ]);
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'kd_detail_alat' => 'required|string|unique:detail_alat,kd_detail_alat,' . $id . ',id_detail_alat',
+            'id_alat' => [
+                'required',
+                'exists:alat,id_alat',
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Cek apakah kombinasi sudah ada kecuali untuk data yang sedang di-update
+                    $exists = DetailAlatModel::where('id_gudang', $request->id_gudang)
+                                               ->where('id_alat', $value)
+                                               ->where('id_detail_alat', '!=', $id)
+                                               ->exists();
+                    if ($exists) {
+                        $fail('Data alat yang ada di dalam gudang tersebut sudah ada.');
+                    }
+                },
+            ],
+            'id_gudang' => 'required|integer',
+        ]);
 
-    //     $alatGudang = DetailAlatModel::find($id);
+        $alatGudang = DetailAlatModel::find($id);
 
-    //     $alatGudang->update([
-    //         'kd_detail_pakan' => $request->kd_detail_pakan,
-    //         'id_pakan' => $request->id_pakan,
-    //         'id_gudang' => $request->id_gudang,
-    //     ]);
-    //     Alert::toast('Data alat ke gudang berhasil diubah', 'success');
-    //     return redirect()->route('admin.kelolaAlatGudang.index');
-    // }
+        $alatGudang->update([
+            'kd_detail_alat' => $request->kd_detail_alat,
+            'id_alat' => $request->id_alat,
+            'id_gudang' => $request->id_gudang,
+        ]);
+        Alert::toast('Data alat ke gudang berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaAlatGudang.index');
+    }
 
-    // public function destroy($id) {
-    //     $check = DetailAlatModel::find($id);
-    //     if (!$check) {
-    //         Alert::toast('Data alat ke gudang tidak ditemukan', 'error');
-    //         return redirect('/kelolaAlatGudang');
-    //     }
-    //     try{
-    //         DetailAlatModel::destroy($id);
-    //         Alert::toast('Data alat ke gudang berhasil dihapus', 'success');
-    //         return redirect('/kelolaAlatGudang');
-    //     }catch(\Illuminate\Database\QueryException $e){
-    //         Alert::toast('Data alat ke gudang gagal dihapus', 'error');
-    //         return redirect('/kelolaAlatGudang');
-    //     }
-    // }
+    public function destroy($id) {
+        $check = DetailAlatModel::find($id);
+        if (!$check) {
+            Alert::toast('Data alat ke gudang tidak ditemukan', 'error');
+            return redirect('/kelolaAlatGudang');
+        }
+        try{
+            DetailAlatModel::destroy($id);
+            Alert::toast('Data alat ke gudang berhasil dihapus', 'success');
+            return redirect('/kelolaAlatGudang');
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data alat ke gudang gagal dihapus', 'error');
+            return redirect('/kelolaAlatGudang');
+        }
+    }
 }
