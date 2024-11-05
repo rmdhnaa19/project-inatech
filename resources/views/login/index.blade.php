@@ -67,7 +67,8 @@
 
                                 <div class='form-check clearfix my-4'>
                                     <div class="checkbox float-left">
-                                        <input type="checkbox" id="checkbox1" class='form-check-input'>
+                                        <input type="checkbox" id="checkbox1" class='form-check-input' name="remember"
+                                            id="remember">
                                         <label for="checkbox1">Remember me</label>
                                     </div>
                                 </div>

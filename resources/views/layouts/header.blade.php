@@ -55,7 +55,7 @@
                     <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
                     <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
                     <div class="dropdown-divider"></div>
-                    <form action="{{ route('logout') }}" method="POST">
+                    <form action="{{ route('login.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout</button>
                     </form>
