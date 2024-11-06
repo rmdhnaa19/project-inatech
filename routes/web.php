@@ -17,6 +17,7 @@ use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
 use App\Http\Controllers\ObatController;
+use App\Http\Controllers\ObatGudangController;
 use App\Http\Controllers\PakanController;
 use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
@@ -128,6 +129,17 @@ Route::group(['prefix' => 'kelolaObat'], function(){
     Route::get('/{id}/edit', [ObatController::class, 'edit'])->name('admin.kelolaObat.edit')->middleware(['auth', 'no-back']);
     Route::put('/{id}', [ObatController::class, 'update'])->name('admin.kelolaObat.update')->middleware(['auth', 'no-back']);
     Route::delete('/{id}', [ObatController::class, 'destroy'])->name('admin.kelolaObat.destroy')->middleware(['auth', 'no-back']);
+});
+
+Route::group(['prefix' => 'kelolaObatGudang'], function(){
+    Route::get('/', [ObatGudangController::class, 'index'])->name('admin.kelolaObatGudang.index')->middleware(['auth', 'no-back']);
+    Route::post('/list', [ObatGudangController::class, 'list'])->name('admin.kelolaObatGudang.list')->middleware(['auth', 'no-back']);
+    Route::get('/create', [ObatGudangController::class, 'create'])->name('admin.kelolaObatGudang.create')->middleware(['auth', 'no-back']);
+    Route::post('/', [ObatGudangController::class, 'store'])->name('admin.kelolaObatGudang.store')->middleware(['auth', 'no-back']);
+    Route::get('/{id}', [ObatGudangController::class, 'show'])->name('admin.kelolaObatGudang.show')->middleware(['auth', 'no-back']);
+    Route::get('/{id}/edit', [ObatGudangController::class, 'edit'])->name('admin.kelolaObatGudang.edit')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [ObatGudangController::class, 'update'])->name('admin.kelolaObatGudang.update')->middleware(['auth', 'no-back']);
+    Route::delete('/{id}', [ObatGudangController::class, 'destroy'])->name('admin.kelolaObatGudang.destroy')->middleware(['auth', 'no-back']);
 });
 
 // manajemen tambak
