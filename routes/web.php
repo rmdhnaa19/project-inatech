@@ -16,6 +16,7 @@ use App\Http\Controllers\PenangananController;
 use App\Http\Controllers\SamplingController;
 use App\Http\Controllers\PakanHarianController;
 use App\Http\Controllers\KematianUdangController;
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PakanController;
 use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate')->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
+Route::get('/{id}/edit', [UserController::class, 'edit'])->name('admin.kelolaPengguna.edit')->middleware(['auth', 'no-back']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 
@@ -115,6 +117,17 @@ Route::group(['prefix' => 'kelolaAlatGudang'], function(){
     Route::get('/{id}/edit', [AlatGudangController::class, 'edit'])->name('admin.kelolaAlatGudang.edit')->middleware(['auth', 'no-back']);
     Route::put('/{id}', [AlatGudangController::class, 'update'])->name('admin.kelolaAlatGudang.update')->middleware(['auth', 'no-back']);
     Route::delete('/{id}', [AlatGudangController::class, 'destroy'])->name('admin.kelolaAlatGudang.destroy')->middleware(['auth', 'no-back']);
+});
+
+Route::group(['prefix' => 'kelolaObat'], function(){
+    Route::get('/', [ObatController::class, 'index'])->name('admin.kelolaObat.index')->middleware(['auth', 'no-back']);
+    Route::post('/list', [ObatController::class, 'list'])->name('admin.kelolaObat.list')->middleware(['auth', 'no-back']);
+    Route::get('/create', [ObatController::class, 'create'])->name('admin.kelolaObat.create')->middleware(['auth', 'no-back']);
+    Route::post('/', [ObatController::class, 'store'])->name('admin.kelolaObat.store')->middleware(['auth', 'no-back']);
+    Route::get('/{id}', [ObatController::class, 'show'])->name('admin.kelolaObat.show')->middleware(['auth', 'no-back']);
+    Route::get('/{id}/edit', [ObatController::class, 'edit'])->name('admin.kelolaObat.edit')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [ObatController::class, 'update'])->name('admin.kelolaObat.update')->middleware(['auth', 'no-back']);
+    Route::delete('/{id}', [ObatController::class, 'destroy'])->name('admin.kelolaObat.destroy')->middleware(['auth', 'no-back']);
 });
 
 // manajemen tambak

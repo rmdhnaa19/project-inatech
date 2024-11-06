@@ -2,54 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AlatModel;
+use App\Models\ObatModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
-class AlatController extends Controller
+class ObatController extends Controller
 {
     public function index(){
         $breadcrumb = (object) [
-            'title' => 'Kelola Data Alat',
-            'paragraph' => 'Berikut ini merupakan data alat yang terinput ke dalam sistem',
+            'title' => 'Kelola Data Obat',
+            'paragraph' => 'Berikut ini merupakan data obat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Alat'],
+                ['label' => 'Kelola Obat'],
             ]
         ];
-        $activeMenu = 'kelolaAlat';
-        $alat = AlatModel::all();
-        return view('admin.kelolaAlat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alat' => $alat]);
+        $activeMenu = 'kelolaObat';
+        $obat = ObatModel::all();
+        return view('admin.kelolaObat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obat' => $obat]);
     }
 
     public function list()
     {
-        $alats = AlatModel::select('id_alat', 'nama', 'harga_satuan', 'satuan'); 
-        return DataTables::of($alats)
+        $obats = ObatModel::select('id_obat', 'nama', 'harga_satuan', 'satuan'); 
+        return DataTables::of($obats)
         ->make(true);
     }
 
     public function create(){
         $breadcrumb = (object) [
-            'title' => 'Tambah Data Alat',
-            'paragraph' => 'Berikut ini merupakan form tambah data alat yang terinput ke dalam sistem',
+            'title' => 'Tambah Data Obat',
+            'paragraph' => 'Berikut ini merupakan form tambah data obat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaObat.index')],
                 ['label' => 'Tambah'],
             ]
         ];
-        $activeMenu = 'kelolaAlat';
-        return view('admin.kelolaAlat.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu]);
+        $activeMenu = 'kelolaObat';
+        return view('admin.kelolaObat.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu]);
     }
 
     public function store(Request $request)
     {
         // Validasi input
         $validatedData = $request->validate([
-            'nama' => 'required|string|unique:alat,nama',
+            'nama' => 'required|string|unique:obat,nama',
             'harga_satuan' => 'required|integer',
             'satuan' => 'required|string|max:50',
             'deskripsi' => 'required|string',
@@ -59,60 +59,60 @@ class AlatController extends Controller
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-            $path = Storage::disk('public')->putFileAs('foto_alat', $foto, $namaFoto);
+            $path = Storage::disk('public')->putFileAs('foto_obat', $foto, $namaFoto);
             $validatedData['foto'] = $path;
         }
 
-        AlatModel::create($validatedData);
-        Alert::toast('Data alat berhasil ditambahkan', 'success');
+        ObatModel::create($validatedData);
+        Alert::toast('Data obat berhasil ditambahkan', 'success');
 
         // Redirect ke halaman kelola pengguna
-        return redirect()->route('admin.kelolaAlat.index');
+        return redirect()->route('admin.kelolaObat.index');
     }
 
     public function show($id)
     {
-        $alat = AlatModel::find($id); // Ambil data tambak dengan relasi gudang
-        if (!$alat) {
-            return response()->json(['error' => 'Data alat tidak ditemukan.'], 404);
+        $obat = ObatModel::find($id); // Ambil data tambak dengan relasi gudang
+        if (!$obat) {
+            return response()->json(['error' => 'Data obat tidak ditemukan.'], 404);
         }
 
         // Render view dengan data tambak
-        $view = view('admin.kelolaAlat.show', compact('alat'))->render();
+        $view = view('admin.kelolaObat.show', compact('obat'))->render();
         return response()->json(['html' => $view]);
     }
 
     public function edit(string $id){
-        $alat = AlatModel::find($id);
+        $obat = ObatModel::find($id);
 
         $breadcrumb = (object) [
-            'title' => 'Edit Data Alat',
-            'paragraph' => 'Berikut ini merupakan form edit data alat yang terinput ke dalam sistem',
+            'title' => 'Edit Data Obat',
+            'paragraph' => 'Berikut ini merupakan form edit data obat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
                 ['label' => 'Edit'],
             ]
         ];
-        $activeMenu = 'kelolaAlat';
+        $activeMenu = 'kelolaObat';
 
-        return view('admin.kelolaAlat.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'alat' => $alat]);
+        return view('admin.kelolaObat.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'obat' => $obat]);
     }
 
     public function update(Request $request, string $id){
         $request->validate([
-            'nama' => 'required|string|unique:alat,nama,'.$id.',id_alat',
+            'nama' => 'required|string|unique:obat,nama,'.$id.',id_obat',
             'harga_satuan' => 'required|integer',
             'satuan' => 'required|string|max:50',
             'deskripsi' => 'required|string',
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        $alat = AlatModel::find($id);
+        $obat = ObatModel::find($id);
 
-        if ($request->oldImage != '') {
+        if($request->oldImage != ''){
             if ($request->file('foto') == '') {
-                $alat->update([
+                $obat->update([
                     'nama' => $request->nama,
                     'harga_satuan' => $request->harga_satuan,
                     'satuan' => $request->satuan,
@@ -122,10 +122,10 @@ class AlatController extends Controller
                 Storage::disk('public')->delete($request->oldImage);
                 $foto = $request->file('foto');
                 $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-                $path = Storage::disk('public')->putFileAs('foto_alat', $foto, $namaFoto);
+                $path = Storage::disk('public')->putFileAs('foto_obat', $foto, $namaFoto);
                 $updateFoto['foto'] = $path;
     
-                $alat->update([
+                $obat->update([
                     'nama' => $request->nama,
                     'harga_satuan' => $request->harga_satuan,
                     'satuan' => $request->satuan,
@@ -133,39 +133,45 @@ class AlatController extends Controller
                     'foto' => $updateFoto['foto']
                 ]);
             }
-            Alert::toast('Data alat berhasil diubah', 'success');
-            return redirect()->route('admin.kelolaAlat.index');
-        }else {
+
+            Alert::toast('Data obat berhasil diubah', 'success');
+            return redirect()->route('admin.kelolaObat.index');
+        }else{
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-            $path = Storage::disk('public')->putFileAs('foto_alat', $foto, $namaFoto);
+            $path = Storage::disk('public')->putFileAs('foto_obat', $foto, $namaFoto);
             $updateFoto['foto'] = $path;
-    
-            $alat->update([
+
+            $obat->update([
                 'nama' => $request->nama,
                 'harga_satuan' => $request->harga_satuan,
                 'satuan' => $request->satuan,
                 'deskripsi' => $request->deskripsi,
                 'foto' => $updateFoto['foto']
             ]);
+
+            Alert::toast('Data obat berhasil diubah', 'success');
+            return redirect()->route('admin.kelolaObat.index');
         }
+
+        
     }
 
     public function destroy($id) {
-        $check = AlatModel::find($id);
+        $check = ObatModel::find($id);
         if (!$check) {
-            Alert::toast('Data alat tidak ditemukan', 'error');
-            return redirect('/kelolaAlat');
+            Alert::toast('Data obat tidak ditemukan', 'error');
+            return redirect('/kelolaObat');
         }
         try{
-            $kelolaAlat = AlatModel::find($id);
-            Storage::disk('public')->delete($kelolaAlat->foto);
-            AlatModel::destroy($id);
-            Alert::toast('Data alat berhasil dihapus', 'success');
-            return redirect('/kelolaAlat');
+            $kelolaObat = ObatModel::find($id);
+            Storage::disk('public')->delete($kelolaObat->foto);
+            ObatModel::destroy($id);
+            Alert::toast('Data obat berhasil dihapus', 'success');
+            return redirect('/kelolaObat');
         }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data alat gagal dihapus', 'error');
-            return redirect('/kelolaAlat');
+            Alert::toast('Data obat gagal dihapus', 'error');
+            return redirect('/kelolaObat');
         }
     }
 }

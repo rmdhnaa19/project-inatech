@@ -90,20 +90,22 @@
                 </li>
             </ul>
         </li>
-        <li class="sidebar-item  has-sub">
+        <li
+            class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaObat', 'kelolaObatGudang', 'kelolaTransaksiObat']) ? 'active' : '' }}">
             <a href="#" class='sidebar-link'>
                 <i data-feather="triangle" width="20"></i>
                 <span>Manajemen Obat</span>
             </a>
-            <ul class="submenu ">
+            <ul
+                class="submenu {{ in_array($activeMenu, ['kelolaObat', 'kelolaObatGudang', 'kelolaTransaksiObat']) ? 'active' : '' }}">
                 <li>
-                    <a href="component-alert.html">Obat</a>
+                    <a href="{{ url('/kelolaObat') }}">Obat</a>
                 </li>
                 <li>
-                    <a href="component-badge.html">Obat ke Gudang</a>
+                    <a href="{{ url('/kelolaObatGudang') }}">Obat ke Gudang</a>
                 </li>
                 <li>
-                    <a href="component-breadcrumb.html">Transaksi Obat</a>
+                    <a href="{{ url('/kelolaTransaksiObat') }}">Transaksi Obat</a>
                 </li>
             </ul>
         </li>
