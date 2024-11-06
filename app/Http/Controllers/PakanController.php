@@ -111,15 +111,30 @@ class PakanController extends Controller
 
         $pakan = PakanModel::find($id);
 
-        if ($request->file('foto') == '') {
-            $pakan->update([
-                'nama' => $request->nama,
-                'harga_satuan' => $request->harga_satuan,
-                'satuan' => $request->satuan,
-                'deskripsi' => $request->deskripsi,
-            ]);
-        }else {
-            Storage::disk('public')->delete($request->oldImage);
+        if ($request->oldImage != '') {
+            if ($request->file('foto') == '') {
+                $pakan->update([
+                    'nama' => $request->nama,
+                    'harga_satuan' => $request->harga_satuan,
+                    'satuan' => $request->satuan,
+                    'deskripsi' => $request->deskripsi,
+                ]);
+            }else {
+                Storage::disk('public')->delete($request->oldImage);
+                $foto = $request->file('foto');
+                $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+                $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
+                $updateFoto['foto'] = $path;
+    
+                $pakan->update([
+                    'nama' => $request->nama,
+                    'harga_satuan' => $request->harga_satuan,
+                    'satuan' => $request->satuan,
+                    'deskripsi' => $request->deskripsi,
+                    'foto' => $updateFoto['foto']
+                ]);
+            }
+        } else {
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
@@ -145,8 +160,12 @@ class PakanController extends Controller
         }
         try{
             $kelolaPakan = PakanModel::find($id);
-            Storage::disk('public')->delete($kelolaPakan->foto);
-            PakanModel::destroy($id);
+            if ($kelolaPakan->foto != '') {
+                Storage::disk('public')->delete($kelolaPakan->foto);
+                PakanModel::destroy($id);
+            } else {
+                PakanModel::destroy($id);
+            }
             Alert::toast('Data pakan berhasil dihapus', 'success');
             return redirect('/kelolaPakan');
         }catch(\Illuminate\Database\QueryException $e){

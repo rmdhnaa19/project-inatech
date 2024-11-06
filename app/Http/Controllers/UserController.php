@@ -147,28 +147,49 @@ class UserController extends Controller
 
         $user = UserModel::find($id);
 
-
-        if ($request->file('foto') == '') {
-            $user->update([
-                'username' => $request->username,
-                'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-                'id_role' => $request->id_role,
-                'nama' => $request->nama,
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'gaji_pokok' => $request->gaji_pokok,
-                'komisi' => $request->komisi ?? 0,
-                'tunjangan' => $request->tunjangan ?? 0,
-                'potongan_gaji' => $request->potongan_gaji ?? 0,
-                'posisi' => $request->posisi,
-            ]);
-        }else{
-            Storage::disk('public')->delete($request->oldImage);
+        if ($request->oldImage != '') {
+            if ($request->file('foto') == '') {
+                $user->update([
+                    'username' => $request->username,
+                    'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                    'id_role' => $request->id_role,
+                    'nama' => $request->nama,
+                    'no_hp' => $request->no_hp,
+                    'alamat' => $request->alamat,
+                    'gaji_pokok' => $request->gaji_pokok,
+                    'komisi' => $request->komisi ?? 0,
+                    'tunjangan' => $request->tunjangan ?? 0,
+                    'potongan_gaji' => $request->potongan_gaji ?? 0,
+                    'posisi' => $request->posisi,
+                ]);
+            }else{
+                Storage::disk('public')->delete($request->oldImage);
+                $foto = $request->file('foto');
+                $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+                $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
+                $updateFoto['foto'] = $path;
+                
+                $user->update([
+                    'username' => $request->username,
+                    'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                    'id_role' => $request->id_role,
+                    'nama' => $request->nama,
+                    'no_hp' => $request->no_hp,
+                    'alamat' => $request->alamat,
+                    'gaji_pokok' => $request->gaji_pokok,
+                    'komisi' => $request->komisi ?? 0,
+                    'tunjangan' => $request->tunjangan ?? 0,
+                    'potongan_gaji' => $request->potongan_gaji ?? 0,
+                    'posisi' => $request->posisi,
+                    'foto' => $updateFoto['foto']
+                ]);
+            }
+        } else {
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
             $updateFoto['foto'] = $path;
-            
+                
             $user->update([
                 'username' => $request->username,
                 'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
@@ -196,8 +217,12 @@ class UserController extends Controller
         }
         try{
             $kelolaPengguna = UserModel::find($id);
-            Storage::disk('public')->delete($kelolaPengguna->foto);
-            UserModel::destroy($id);
+            if ($kelolaPengguna->foto != '') {
+                Storage::disk('public')->delete($kelolaPengguna->foto);
+                UserModel::destroy($id);
+            } else {
+                UserModel::destroy($id);
+            }
             Alert::toast('Data pengguna berhasil dihapus', 'success');
             return redirect('/kelolaPengguna');
         }catch(\Illuminate\Database\QueryException $e){

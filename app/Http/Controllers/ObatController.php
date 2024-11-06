@@ -133,9 +133,6 @@ class ObatController extends Controller
                     'foto' => $updateFoto['foto']
                 ]);
             }
-
-            Alert::toast('Data obat berhasil diubah', 'success');
-            return redirect()->route('admin.kelolaObat.index');
         }else{
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
@@ -149,12 +146,9 @@ class ObatController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'foto' => $updateFoto['foto']
             ]);
-
-            Alert::toast('Data obat berhasil diubah', 'success');
-            return redirect()->route('admin.kelolaObat.index');
         }
-
-        
+        Alert::toast('Data obat berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaObat.index');
     }
 
     public function destroy($id) {
@@ -165,8 +159,12 @@ class ObatController extends Controller
         }
         try{
             $kelolaObat = ObatModel::find($id);
-            Storage::disk('public')->delete($kelolaObat->foto);
-            ObatModel::destroy($id);
+            if ($kelolaObat->foto != '') {
+                Storage::disk('public')->delete($kelolaObat->foto);
+                ObatModel::destroy($id);
+            } else {
+                ObatModel::destroy($id);
+            }
             Alert::toast('Data obat berhasil dihapus', 'success');
             return redirect('/kelolaObat');
         }catch(\Illuminate\Database\QueryException $e){

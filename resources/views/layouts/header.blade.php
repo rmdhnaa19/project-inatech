@@ -47,7 +47,11 @@
             <li class="dropdown">
                 <a href="#" id="dropdownToggle" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                     <div class="avatar mr-1">
-                        <img src="{{ Storage::url(auth()->user()->foto) }}" alt="foto">
+                        @if (auth()->user()->foto != '')
+                            <img src="{{ Storage::url(auth()->user()->foto) }}" alt="foto">
+                        @else
+                            <img src="{{ asset('storage/asset_web/No Image Profile.png') }}" alt="foto">
+                        @endif
                     </div>
                     <div class="d-none d-md-block d-lg-inline-block">Selamat Datang, {{ auth()->user()->nama }}</div>
                 </a>

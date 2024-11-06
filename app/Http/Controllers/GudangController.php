@@ -110,47 +110,37 @@ class GudangController extends Controller
 
         $gudang = GudangModel::find($id);
 
-
-        if ($request->file('gambar') == '') {
-            $gudang->update([
-                'nama' => $request->nama,
-                'panjang' => $request->panjang,
-                'lebar' => $request->lebar,
-                'luas' => $request->luas,
-                'alamat' => $request->alamat,
-            ]);
-        }else{
-            Storage::disk('public')->delete($request->oldImage);
-            $gambar = $request->file('gambar');
-            $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
-            $path = Storage::disk('public')->putFileAs('foto_gudang', $gambar, $namaGambar);
-            $updateGambar['gambar'] = $path;
+        if ($request->oldImage != '') {
+            if ($request->file('gambar') == '') {
+                $gudang->update([
+                    'nama' => $request->nama,
+                    'panjang' => $request->panjang,
+                    'lebar' => $request->lebar,
+                    'luas' => $request->luas,
+                    'alamat' => $request->alamat,
+                ]);
+            }else{
+                Storage::disk('public')->delete($request->oldImage);
+                $gambar = $request->file('gambar');
+                $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
+                $path = Storage::disk('public')->putFileAs('foto_gudang', $gambar, $namaGambar);
+                $updateGambar['gambar'] = $path;
+                
+                $gudang->update([
+                    'nama' => $request->nama,
+                    'panjang' => $request->panjang,
+                    'lebar' => $request->lebar,
+                    'luas' => $request->luas,
+                    'alamat' => $request->alamat,
+                    'gambar' => $updateGambar['gambar']
+                ]);
+            }
+            Alert::toast('Data Gudang berhasil diubah', 'success');
+            return redirect()->route('admin.kelolaGudang.index');
+        }else {
             
-            $gudang->update([
-                'nama' => $request->nama,
-                'panjang' => $request->panjang,
-                'lebar' => $request->lebar,
-                'luas' => $request->luas,
-                'alamat' => $request->alamat,
-                'gambar' => $updateGambar['gambar']
-            ]);
         }
-        Alert::toast('Data Gudang berhasil diubah', 'success');
-        return redirect()->route('admin.kelolaGudang.index');
     }
-
-    // public function destroy($id) {
-    //     $gudang = GudangModel::find($id);
-    //     if ($gudang) {
-    //         if ($gudang->gambar) {
-    //             Storage::disk('public')->delete($gudang->gambar);
-    //         }
-    //         $gudang->delete();
-    //         return response()->json(['success' => true, 'message' => 'Data Berhasil Dihapus!']);
-    //     } else {
-    //         return response()->json(['success' => false, 'message' => 'Gudang tidak ditemukan'], 404);
-    //     }
-    // }
 
     public function destroy($id)
     {
@@ -161,8 +151,12 @@ class GudangController extends Controller
         }
         try{
             $kelolaGudang = GudangModel::find($id);
-            Storage::disk('public')->delete($kelolaGudang->gambar);
-            GudangModel::destroy($id);
+            if ($kelolaGudang->gambar != '') {
+                Storage::disk('public')->delete($kelolaGudang->gambar);
+                GudangModel::destroy($id);
+            }else{
+                GudangModel::destroy($id);
+            }
             Alert::toast('Data gudang berhasil dihapus', 'success');
             return redirect('/kelolaGudang');
         }catch(\Illuminate\Database\QueryException $e){

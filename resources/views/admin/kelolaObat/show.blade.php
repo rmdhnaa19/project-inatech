@@ -5,8 +5,13 @@
     <div class="row">
         <div class="col-md-5">
             <div class="image-container text-center" style="position: sticky; top: 20px;">
-                <img src="{{ asset('storage/' . $obat->foto) }}" alt="Foto Alat" class="img-fluid"
-                    style="width: auto; height: 30vh;">
+                @if ($obat->foto != '')
+                    <img src="{{ asset('storage/' . $obat->foto) }}" alt="Foto Alat" class="img-fluid"
+                        style="width: auto; height: 30vh;">
+                @else
+                    <img src="{{ asset('storage/asset_web/No Image Available.png') }}" alt="Foto Alat" class="img-fluid"
+                        style="width: auto; height: 30vh;">
+                @endif
             </div>
         </div>
         <div class="col-md-7">

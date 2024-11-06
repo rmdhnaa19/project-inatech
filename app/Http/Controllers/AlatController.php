@@ -159,8 +159,12 @@ class AlatController extends Controller
         }
         try{
             $kelolaAlat = AlatModel::find($id);
-            Storage::disk('public')->delete($kelolaAlat->foto);
-            AlatModel::destroy($id);
+            if ($kelolaAlat->foto != '') {
+                Storage::disk('public')->delete($kelolaAlat->foto);
+                AlatModel::destroy($id);
+            }else {
+                AlatModel::destroy($id);
+            }
             Alert::toast('Data alat berhasil dihapus', 'success');
             return redirect('/kelolaAlat');
         }catch(\Illuminate\Database\QueryException $e){
