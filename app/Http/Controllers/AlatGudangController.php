@@ -14,7 +14,7 @@ class AlatGudangController extends Controller
     public function index(){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merualat data alat ke gudang yang terinput ke dalam sistem',
+            'paragraph' => 'Berikut ini merupakan data alat ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
@@ -41,7 +41,7 @@ class AlatGudangController extends Controller
     public function create(){
         $breadcrumb = (object) [
             'title' => 'Tambah Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merualat form tambah data alat ke gudang yang terinput ke dalam sistem',
+            'paragraph' => 'Berikut ini merupakan form tambah data alat ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
@@ -107,7 +107,7 @@ class AlatGudangController extends Controller
 
         $breadcrumb = (object) [
             'title' => 'Edit Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merualat form edit data alat ke gudang yang terinput ke dalam sistem',
+            'paragraph' => 'Berikut ini merupakan form edit data alat ke gudang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
                 ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
