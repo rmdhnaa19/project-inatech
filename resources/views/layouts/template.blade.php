@@ -23,10 +23,13 @@
     <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlatGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObatGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
