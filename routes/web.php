@@ -21,6 +21,7 @@ use App\Http\Controllers\ObatGudangController;
 use App\Http\Controllers\PakanController;
 use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
+use App\Http\Controllers\TransaksiPakanController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -96,6 +97,17 @@ Route::group(['prefix' => 'kelolaPakanGudang'], function(){
     Route::get('/{id}/edit', [PakanGudangController::class, 'edit'])->name('admin.kelolaPakanGudang.edit')->middleware(['auth', 'no-back']);
     Route::put('/{id}', [PakanGudangController::class, 'update'])->name('admin.kelolaPakanGudang.update')->middleware(['auth', 'no-back']);
     Route::delete('/{id}', [PakanGudangController::class, 'destroy'])->name('admin.kelolaPakanGudang.destroy')->middleware(['auth', 'no-back']);
+});
+
+Route::group(['prefix' => 'kelolaTransaksiPakan'], function(){
+    Route::get('/', [TransaksiPakanController::class, 'index'])->name('admin.kelolaTransaksiPakan.index')->middleware(['auth', 'no-back']);
+    Route::post('/list', [TransaksiPakanController::class, 'list'])->name('admin.kelolaTransaksiPakan.list')->middleware(['auth', 'no-back']);
+    Route::get('/create', [TransaksiPakanController::class, 'create'])->name('admin.kelolaTransaksiPakan.create')->middleware(['auth', 'no-back']);
+    Route::post('/', [TransaksiPakanController::class, 'store'])->name('admin.kelolaTransaksiPakan.store')->middleware(['auth', 'no-back']);
+    Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('admin.kelolaTransaksiPakan.show')->middleware(['auth', 'no-back']);
+    Route::get('/{id}/edit', [TransaksiPakanController::class, 'edit'])->name('admin.kelolaTransaksiPakan.edit')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [TransaksiPakanController::class, 'update'])->name('admin.kelolaTransaksiPakan.update')->middleware(['auth', 'no-back']);
+    Route::delete('/{id}', [TransaksiPakanController::class, 'destroy'])->name('admin.kelolaTransaksiPakan.destroy')->middleware(['auth', 'no-back']);
 });
 
 Route::group(['prefix' => 'kelolaAlat'], function(){
