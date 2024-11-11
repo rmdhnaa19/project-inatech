@@ -8,6 +8,7 @@ use App\Models\PakanModel;
 use App\Models\TransaksiPakanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class TransaksiPakanController extends Controller
@@ -25,10 +26,7 @@ class TransaksiPakanController extends Controller
         ];
         $activeMenu = 'kelolaTransaksiPakan';
         $pakanGudang = DetailPakanModel::all();
-        $transaksiPakan =  TransaksiPakanModel::all();
-        $gudang = GudangModel::all();
-        $pakan = PakanModel::all();
-        return view('admin.kelolaTransaksiPakan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'transaksiPakan' => $transaksiPakan, 'gudang' => $gudang, 'pakan' => $pakan]);
+        return view('admin.kelolaTransaksiPakan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang]);
     }
 
     public function list(Request $request)
@@ -43,68 +41,74 @@ class TransaksiPakanController extends Controller
             ->make(true);
     }
 
-    // public function create(){
-    //     $breadcrumb = (object) [
-    //         'title' => 'Tambah Data Pengguna',
-    //         'paragraph' => 'Berikut ini merupakan form tambah data pengguna yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPengguna.index')],
-    //             ['label' => 'Tambah'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaPengguna';
-    //     $role = RoleModel::all();
-    //     return view('admin.kelolaPengguna.create', [
-    //         'breadcrumb' => $breadcrumb, 
-    //         'activeMenu' => $activeMenu, 
-    //         'role' => $role
-    //     ]);
-    // }
+    public function create(){
+        $breadcrumb = (object) [
+            'title' => 'Tambah Data Transaksi Pakan',
+            'paragraph' => 'Berikut ini merupakan form tambah data transaksi pakan yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
+                ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiPakan.index')],
+                ['label' => 'Tambah'],
+            ]
+        ];
+        $activeMenu = 'kelolaTransaksiPakan';
+        $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
+        return view('admin.kelolaTransaksiPakan.create', [
+            'breadcrumb' => $breadcrumb, 
+            'activeMenu' => $activeMenu, 
+            'pakanGudang' => $pakanGudang
+        ]);
+    }
     
-    // public function store(Request $request)
-    // {
-    //     // Validasi input
-    //     $validatedData = $request->validate([
-    //         'username' => 'required|string|unique:user,username',
-    //         'password' => 'required|string|min:8',
-    //         'id_role' => 'required|integer',
-    //         'nama' => 'required|string|unique:user,nama',
-    //         'no_hp' => 'nullable|string|min:11|max:12',
-    //         'alamat' => 'nullable|string',
-    //         'gaji_pokok' => 'required|integer',
-    //         'komisi' => 'nullable|integer',
-    //         'tunjangan' => 'nullable|integer',
-    //         'potongan_gaji' => 'nullable|integer',
-    //         'posisi' => 'required|string',
-    //         'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
-    //     ]);
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'kd_transaksi_pakan' => 'required|string|unique:transaksi_pakan,kd_transaksi_pakan',
+            'tipe_transaksi' => 'required|string',
+            'quantity' => 'required|integer',
+            'id_detail_pakan' => 'required|integer'
+        ]);
 
-    //     // Jika ada file foto, simpan file tersebut dan tambahkan path ke validatedData
-    //     if ($request->hasFile('foto')) {
-    //         $foto = $request->file('foto');
-    //         $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-    //         $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
-    //         $validatedData['foto'] = $path;
-    //     }
-        
-    //     // Jika komisi, tunjangan, atau potongan gaji kosong, isi dengan nilai 0
-    //     $validatedData['potongan_gaji'] = $request->potongan_gaji ?? 0;
-    //     $validatedData['komisi'] = $request->komisi ?? 0;
-    //     $validatedData['tunjangan'] = $request->tunjangan ?? 0;
-        
+        $id_pakanGudang = $request->id_detail_pakan;
+        $qty = $request->quantity;
+        $qty_old = DetailPakanModel::find($id_pakanGudang)->stok_pakan;
+        $tipe_transaki = $request->tipe_transaksi;
 
-    //     // Enkripsi password
-    //     $validatedData['password'] = bcrypt($validatedData['password']);
+        if ($tipe_transaki == 'Masuk') {
+            TransaksiPakanModel::create([
+                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                'tipe_transaksi' => $tipe_transaki,
+                'quantity' => $qty,
+                'id_detail_pakan' => $id_pakanGudang
+            ]);
+            DetailPakanModel::find($id_pakanGudang)->update([
+                'stok_pakan' => $qty_old + $qty
+            ]);
+        }elseif ($tipe_transaki == 'Keluar' || $tipe_transaki == 'Kadaluarsa' || $tipe_transaki == 'Rusak') {
+            if ($qty_old < $qty) {
+                Alert::toast('Data transaksi keluar gagal ditambahkan karena stok kurang', 'error');
+                return redirect()->back();
+            }else {
+                TransaksiPakanModel::create([
+                    'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                    'tipe_transaksi' => $tipe_transaki,
+                    'quantity' => $qty,
+                    'id_detail_pakan' => $id_pakanGudang
+                ]);
+                DetailPakanModel::find($id_pakanGudang)->update([
+                    'stok_pakan' => $qty_old - $qty
+                ]);
+            }
+        }
 
-    //     // Buat user baru
-    //     UserModel::create($validatedData);
+        Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
 
-    //     Alert::toast('Data pengguna berhasil ditambah', 'success');
-
-    //     // Redirect ke halaman kelola pengguna
-    //     return redirect()->route('admin.kelolaPengguna.index');
-    // }
+        // Redirect ke halaman kelola pengguna
+        return redirect()->route('admin.kelolaTransaksiPakan.index');
+    }
 
     // public function show($id)
     // {
