@@ -110,17 +110,17 @@ class TransaksiPakanController extends Controller
         return redirect()->route('admin.kelolaTransaksiPakan.index');
     }
 
-    // public function show($id)
-    // {
-    //     $user = UserModel::with('role')->find($id); // Ambil data tambak dengan relasi gudang
-    //     if (!$user) {
-    //         return response()->json(['error' => 'User tidak ditemukan.'], 404);
-    //     }
+    public function show($id)
+    {
+        $transaksiPakan = TransaksiPakanModel::with('detailPakan')->find($id); // Ambil data tambak dengan relasi gudang
+        if (!$transaksiPakan) {
+            return response()->json(['error' => 'Transaksi pakan tidak ditemukan.'], 404);
+        }
 
-    //     // Render view dengan data tambak
-    //     $view = view('admin.kelolaPengguna.show', compact('user'))->render();
-    //     return response()->json(['html' => $view]);
-    // }
+        // Render view dengan data tambak
+        $view = view('admin.kelolaTransaksiPakan.show', compact('transaksiPakan'))->render();
+        return response()->json(['html' => $view]);
+    }
 
     // public function edit(string $id){
     //     $user = UserModel::find($id);
