@@ -16,12 +16,19 @@ class NoBackAfterLogout
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
-            return $next($request);
+        if (!Auth::check()) {
+            return response()
+                ->view('login.index')
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
         }
-        return redirect()->route('login.index');
-        // return $response->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
-        //                 ->header('Pragma', 'no-cache')
-        //                 ->header('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
+    
+        $response = $next($request);
+    
+        // Set header cache control untuk mencegah pengguna kembali ke halaman login
+        return $response->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                        ->header('Pragma', 'no-cache')
+                        ->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
     }
 }
