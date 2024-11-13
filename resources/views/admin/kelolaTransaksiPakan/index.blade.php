@@ -102,11 +102,11 @@
                     data: "pakan_gudang",
                     className: "col-md-5", // Jika tidak ada class, hapus baris ini
                     orderable: false,
-                    searchable: false
+                    searchable: true
                 }, {
                     data: "tipe_transaksi",
                     className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
-                    orderable: false,
+                    orderable: true,
                     searchable: true
                 }, {
                     data: "quantity",

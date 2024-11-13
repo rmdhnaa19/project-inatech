@@ -11,7 +11,7 @@
                         <label for="kd_transaksi_pakan" class="form-label">Kode Transaksi</label>
                         <input type="text" class="form-control @error('kd_transaksi_pakan') is-invalid @enderror"
                             id="kd_transaksi_pakan" name="kd_transaksi_pakan" placeholder="Masukkan Kode Transaksi Pakan"
-                            value="{{ old('username') }}" required autofocus>
+                            value="{{ old('kd_transaksi_pakan') }}" required autofocus>
                         <p><small class="text-muted">Wajib Diisi!</small></p>
                         @if ($errors->has('kd_transaksi_pakan'))
                             <span class="text-danger">{{ $errors->first('kd_transaksi_pakan') }}</span>

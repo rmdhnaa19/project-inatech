@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailPakanModel;
-use App\Models\GudangModel;
-use App\Models\PakanModel;
 use App\Models\TransaksiPakanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,11 +30,17 @@ class TransaksiPakanController extends Controller
     public function list(Request $request)
     {
         $transaksiPakans = TransaksiPakanModel::with(['detailPakan.gudang', 'detailPakan.pakan'])
-            ->select('id_transaksi_pakan', 'kd_transaksi_pakan', 'tipe_transaksi', 'quantity', 'id_detail_pakan');
+            ->select('transaksi_pakan.*', 'pakan.nama as nama_pakan', 'gudang.nama as nama_gudang')
+            ->join('detail_pakan', 'transaksi_pakan.id_detail_pakan', '=', 'detail_pakan.id_detail_pakan')
+            ->join('pakan', 'detail_pakan.id_pakan', '=', 'pakan.id_pakan')
+            ->join('gudang', 'detail_pakan.id_gudang', '=', 'gudang.id_gudang');
 
         return DataTables::of($transaksiPakans)
             ->addColumn('pakan_gudang', function ($transaksi) {
-                return $transaksi->detailPakan->pakan->nama . ' - ' . $transaksi->detailPakan->gudang->nama;
+                return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
+            })
+            ->filterColumn('pakan_gudang', function($query, $keyword) {
+                $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
             })
             ->make(true);
     }
@@ -122,103 +126,251 @@ class TransaksiPakanController extends Controller
         return response()->json(['html' => $view]);
     }
 
-    // public function edit(string $id){
-    //     $user = UserModel::find($id);
-    //     $role = RoleModel::all();
+    public function edit(string $id){
+        $transaksiPakan = TransaksiPakanModel::find($id);
+        $pakanGudang = DetailPakanModel::all();
 
-    //     $breadcrumb = (object) [
-    //         'title' => 'Edit Data Pengguna',
-    //         'paragraph' => 'Berikut ini merupakan form edit data pengguna yang terinput ke dalam sistem',
-    //         'list' => [
-    //             ['label' => 'Home', 'url' => route('dashboard.index')],
-    //             ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPengguna.index')],
-    //             ['label' => 'Edit'],
-    //         ]
-    //     ];
-    //     $activeMenu = 'kelolaPengguna';
+        $breadcrumb = (object) [
+            'title' => 'Edit Data Transaksi Pakan',
+            'paragraph' => 'Berikut ini merupakan form edit data transaksi pakan yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
+                ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiPakan.index')],
+                ['label' => 'Edit'],
+            ]
+        ];
+        $activeMenu = 'kelolaTransaksiPakan';
 
-    //     return view('admin.kelolaPengguna.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'user' => $user, 'role' => $role]);
-    // }
+        return view('admin.kelolaTransaksiPakan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'transaksiPakan' => $transaksiPakan, 'pakanGudang' => $pakanGudang]);
+    }
 
-    // public function update(Request $request, string $id){
-    //     $request->validate([
-    //         'username' => 'required|string|unique:user,username,'.$id.',id_user',
-    //         'password' => 'nullable|string|min:8',
-    //         'id_role' => 'required|integer',
-    //         'nama' => 'required|string|unique:user,nama,'.$id.',id_user',
-    //         'no_hp' => 'nullable|string|min:11|max:12',
-    //         'alamat' => 'nullable|string',
-    //         'gaji_pokok' => 'required|integer',
-    //         'komisi' => 'nullable|integer',
-    //         'tunjangan' => 'nullable|integer',
-    //         'potongan_gaji' => 'nullable|integer',
-    //         'posisi' => 'required|string',
-    //         'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
-    //     ]);
+    public function update(Request $request, string $id){
+        $request->validate([
+            'kd_transaksi_pakan' => 'required|string|unique:transaksi_pakan,kd_transaksi_pakan,'.$id.',id_transaksi_pakan',
+            'tipe_transaksi' => 'required|string',
+            'quantity' => 'required|integer',
+            'id_detail_pakan' => 'required|integer'
+        ]);
 
-    //     $user = UserModel::find($id);
+        $transaksiPakan = TransaksiPakanModel::find($id);
+        
+        $qty_new = $request->quantity;
+        $qty_old = $transaksiPakan->quantity;
+        $tipeTransaksi_new = $request->tipe_transaksi;
+        $tipeTransaksi_old = $transaksiPakan->tipe_transaksi;
+        $idDetailPakan_new = $request->id_detail_pakan;
+        $idDetailPakan_old = $transaksiPakan->id_detail_pakan;
+        
+        $detailPakan_old = DetailPakanModel::find($idDetailPakan_old);
+        $detailPakan_new = DetailPakanModel::find($idDetailPakan_new);
 
-    //     if ($request->oldImage != '') {
-    //         if ($request->file('foto') == '') {
-    //             $user->update([
-    //                 'username' => $request->username,
-    //                 'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-    //                 'id_role' => $request->id_role,
-    //                 'nama' => $request->nama,
-    //                 'no_hp' => $request->no_hp,
-    //                 'alamat' => $request->alamat,
-    //                 'gaji_pokok' => $request->gaji_pokok,
-    //                 'komisi' => $request->komisi ?? 0,
-    //                 'tunjangan' => $request->tunjangan ?? 0,
-    //                 'potongan_gaji' => $request->potongan_gaji ?? 0,
-    //                 'posisi' => $request->posisi,
-    //             ]);
-    //         }else{
-    //             Storage::disk('public')->delete($request->oldImage);
-    //             $foto = $request->file('foto');
-    //             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-    //             $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
-    //             $updateFoto['foto'] = $path;
-                
-    //             $user->update([
-    //                 'username' => $request->username,
-    //                 'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-    //                 'id_role' => $request->id_role,
-    //                 'nama' => $request->nama,
-    //                 'no_hp' => $request->no_hp,
-    //                 'alamat' => $request->alamat,
-    //                 'gaji_pokok' => $request->gaji_pokok,
-    //                 'komisi' => $request->komisi ?? 0,
-    //                 'tunjangan' => $request->tunjangan ?? 0,
-    //                 'potongan_gaji' => $request->potongan_gaji ?? 0,
-    //                 'posisi' => $request->posisi,
-    //                 'foto' => $updateFoto['foto']
-    //             ]);
-    //         }
-    //     } else {
-    //         $foto = $request->file('foto');
-    //         $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
-    //         $path = Storage::disk('public')->putFileAs('foto_user', $foto, $namaFoto);
-    //         $updateFoto['foto'] = $path;
-                
-    //         $user->update([
-    //             'username' => $request->username,
-    //             'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
-    //             'id_role' => $request->id_role,
-    //             'nama' => $request->nama,
-    //             'no_hp' => $request->no_hp,
-    //             'alamat' => $request->alamat,
-    //             'gaji_pokok' => $request->gaji_pokok,
-    //             'komisi' => $request->komisi ?? 0,
-    //             'tunjangan' => $request->tunjangan ?? 0,
-    //             'potongan_gaji' => $request->potongan_gaji ?? 0,
-    //             'posisi' => $request->posisi,
-    //             'foto' => $updateFoto['foto']
-    //         ]);
-    //     }
-    //     Alert::toast('Data pengguna berhasil diubah', 'success');
-    //     return redirect()->route('admin.kelolaPengguna.index');
-    // }
+        $stok_old = $detailPakan_old->stok;
+        $stok_new = $detailPakan_new->stok;
+
+        if ($idDetailPakan_new != $idDetailPakan_old) {
+            if ($tipeTransaksi_new != $tipeTransaksi_old) {
+                if ($tipeTransaksi_new == 'Masuk') {
+                    if ($stok_old < $qty_old) {
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        $transaksiPakan->update([
+                            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                            'tipe_transaksi' => $tipeTransaksi_new,
+                            'quantity' => $qty_new,
+                            'id_detail_pakan' => $idDetailPakan_new,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_old)->update([
+                            'stok' => $stok_old - $qty_old,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_new)->update([
+                            'stok' => $stok_new + $qty_new,
+                        ]);
+
+                        Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                        return redirect()->route('admin.kelolaTransaksiPakan.index');
+                    }
+                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
+                    if ($stok_old < $qty_old){
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        if ($stok_new < $qty_new) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                            return redirect()->back();
+                        }else{
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_old)->update([
+                                'stok' => $stok_old - $qty_old,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_new)->update([
+                                'stok' => $stok_new - $qty_new,
+                            ]);
+
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
+                        }
+                    }
+                }
+            }else{
+                if ($tipeTransaksi_new == 'Masuk') {
+                    if ($stok_old < $qty_old) {
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        $transaksiPakan->update([
+                            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                            'tipe_transaksi' => $tipeTransaksi_new,
+                            'quantity' => $qty_new,
+                            'id_detail_pakan' => $idDetailPakan_new,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_old)->update([
+                            'stok' => $stok_old - $qty_old,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_new)->update([
+                            'stok' => $stok_new + $qty_new,
+                        ]);
+
+                        Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                        return redirect()->route('admin.kelolaTransaksiPakan.index');
+                    }
+                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
+                    if ($stok_old < $qty_old){
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        if ($stok_new < $qty_new) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                            return redirect()->back();
+                        }else{
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_old)->update([
+                                'stok' => $stok_old - $qty_old,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_new)->update([
+                                'stok' => $stok_new - $qty_new,
+                            ]);
+
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
+                        }
+                    }
+                }
+            }
+        }else{
+            if ($tipeTransaksi_new != $tipeTransaksi_old) {
+                if ($tipeTransaksi_new == 'Masuk') {
+                    if ($stok_old < $qty_old) {
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        $transaksiPakan->update([
+                            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                            'tipe_transaksi' => $tipeTransaksi_new,
+                            'quantity' => $qty_new,
+                            'id_detail_pakan' => $idDetailPakan_new,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_old)->update([
+                            'stok' => $stok_old - $qty_old,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_new)->update([
+                            'stok' => $stok_new + $qty_new,
+                        ]);
+
+                        Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                        return redirect()->route('admin.kelolaTransaksiPakan.index');
+                    }
+                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
+                    if ($stok_old < $qty_old){
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        if ($stok_new < $qty_new) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                            return redirect()->back();
+                        }else{
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_old)->update([
+                                'stok' => $stok_old - $qty_old,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_new)->update([
+                                'stok' => $stok_new - $qty_new,
+                            ]);
+
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
+                        }
+                    }
+                }
+            }else{
+                if ($tipeTransaksi_new == 'Masuk') {
+                    if ($stok_old < $qty_old) {
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        $transaksiPakan->update([
+                            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                            'tipe_transaksi' => $tipeTransaksi_new,
+                            'quantity' => $qty_new,
+                            'id_detail_pakan' => $idDetailPakan_new,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_old)->update([
+                            'stok' => $stok_old - $qty_old,
+                        ]);
+                        DetailPakanModel::find($idDetailPakan_new)->update([
+                            'stok' => $stok_new + $qty_new,
+                        ]);
+
+                        Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                        return redirect()->route('admin.kelolaTransaksiPakan.index');
+                    }
+                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
+                    if ($stok_old < $qty_old){
+                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                        return redirect()->back();
+                    }else{
+                        if ($stok_new < $qty_new) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
+                            return redirect()->back();
+                        }else{
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_old)->update([
+                                'stok' => $stok_old - $qty_old,
+                            ]);
+                            DetailPakanModel::find($idDetailPakan_new)->update([
+                                'stok' => $stok_new - $qty_new,
+                            ]);
+
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // public function destroy($id) {
     //     $check = UserModel::find($id);
