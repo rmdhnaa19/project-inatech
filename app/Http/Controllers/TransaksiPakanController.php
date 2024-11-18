@@ -168,6 +168,10 @@ class TransaksiPakanController extends Controller
         $stok_old = $detailPakan_old->stok_pakan;
         $stok_new = $detailPakan_new->stok_pakan;
 
+        $stokQty_old = $stok_old+$qty_old;
+        $totalQty = $qty_new + $qty_old;
+        $stokOld_qtyNew = $stok_old + $qty_new;
+
         if ($idDetailPakan_new != $idDetailPakan_old) {
             if ($tipeTransaksi_new != $tipeTransaksi_old) {
                 if ($tipeTransaksi_new == 'Masuk') {
@@ -186,17 +190,42 @@ class TransaksiPakanController extends Controller
                        
                     Alert::toast('Data transaksi pakan berhasil diubah', 'success');
                     return redirect()->route('admin.kelolaTransaksiPakan.index');
-                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
-                    if ($stok_old < $qty_old){
-                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas lama', 'error');
-                        return redirect()->back();
-                    }elseif ($stok_old >= $qty_old){
+                }elseif (in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa', 'Rusak'])) {
+                    if ($tipeTransaksi_old == 'Masuk' && in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa', 'Rusak'])) {
+                        if ($stok_old < $qty_old){
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas lama', 'error');
+                            return redirect()->back();
+                        }elseif ($stok_old >= $qty_old){
+                            if ($stok_new < $qty_new) {
+                                Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
+                                return redirect()->back();
+                            }elseif ($stok_new >= $qty_new){
+                                $detailPakan_old->update([
+                                    'stok_pakan' => $stok_old - $qty_old,
+                                ]);
+                                $transaksiPakan->update([
+                                    'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                    'tipe_transaksi' => $tipeTransaksi_new,
+                                    'quantity' => $qty_new,
+                                    'id_detail_pakan' => $idDetailPakan_new,
+                                ]);
+                                $detailPakan_new->update([
+                                    'stok_pakan' => $stok_new - $qty_new,
+                                ]);
+    
+                                Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                                return redirect()->route('admin.kelolaTransaksiPakan.index');
+                            }
+                        }
+                    }else if(($tipeTransaksi_old == 'Keluar' && in_array($tipeTransaksi_new, ['Kadaluarsa', 'Rusak'])) || 
+                    ($tipeTransaksi_old == 'Kadaluarsa' && in_array($tipeTransaksi_new, ['Keluar', 'Rusak'])) || 
+                    ($tipeTransaksi_old == 'Rusak' && in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa']))){
                         if ($stok_new < $qty_new) {
                             Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
                             return redirect()->back();
                         }elseif ($stok_new >= $qty_new){
                             $detailPakan_old->update([
-                                'stok_pakan' => $stok_old - $qty_old,
+                                'stok_pakan' => $stok_old + $qty_old,
                             ]);
                             $transaksiPakan->update([
                                 'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
@@ -235,7 +264,7 @@ class TransaksiPakanController extends Controller
                         Alert::toast('Data transaksi pakan berhasil diubah', 'success');
                         return redirect()->route('admin.kelolaTransaksiPakan.index');
                     }
-                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
+                }elseif (in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa', 'Rusak'])) {
                     if ($stok_new < $qty_new) {
                         Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
                         return redirect()->back();
@@ -273,30 +302,49 @@ class TransaksiPakanController extends Controller
 
                         Alert::toast('Data transaksi pakan berhasil diubah', 'success');
                         return redirect()->route('admin.kelolaTransaksiPakan.index');
+                }elseif (in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa', 'Rusak'])) {
+                    if ($tipeTransaksi_old == 'Masuk' && in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa', 'Rusak'])) {
+                        if ($stok_old < $totalQty) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru dan lama', 'error');
+                            return redirect()->back();
+                        }elseif ($stok_old >= $totalQty){
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            $detailPakan_new->update([
+                                'stok_pakan' => $stok_old - $totalQty,
+                            ]);
 
-                }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
-                    $totalQty = $qty_new + $qty_old;
-                    if ($stok_old < $totalQty) {
-                        Alert::toast('Data transaksi pakan gagal ditambahkan karena stok lama kurang dari kuantitas lama', 'error');
-                        return redirect()->back();
-                    }elseif ($stok_new >= $qty_new){
-                        $transaksiPakan->update([
-                            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
-                            'tipe_transaksi' => $tipeTransaksi_new,
-                            'quantity' => $qty_new,
-                            'id_detail_pakan' => $idDetailPakan_new,
-                        ]);
-                        $detailPakan_new->update([
-                            'stok_pakan' => $stok_old - $qty_old - $qty_new,
-                        ]);
-
-                        Alert::toast('Data transaksi pakan berhasil diubah', 'success');
-                        return redirect()->route('admin.kelolaTransaksiPakan.index');
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
                         }
+                    }elseif (($tipeTransaksi_old == 'Keluar' && in_array($tipeTransaksi_new, ['Kadaluarsa', 'Rusak'])) || 
+                    ($tipeTransaksi_old == 'Kadaluarsa' && in_array($tipeTransaksi_new, ['Keluar', 'Rusak'])) || 
+                    ($tipeTransaksi_old == 'Rusak' && in_array($tipeTransaksi_new, ['Keluar', 'Kadaluarsa']))) {
+                        if ($stokQty_old < $qty_new) {
+                            Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
+                            return redirect()->back();
+                        }elseif ($stokQty_old >= $qty_new) {
+                            $transaksiPakan->update([
+                                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+                                'tipe_transaksi' => $tipeTransaksi_new,
+                                'quantity' => $qty_new,
+                                'id_detail_pakan' => $idDetailPakan_new,
+                            ]);
+                            $detailPakan_new->update([
+                                'stok_pakan' => $stokQty_old - $qty_new,
+                            ]);
+    
+                            Alert::toast('Data transaksi pakan berhasil diubah', 'success');
+                            return redirect()->route('admin.kelolaTransaksiPakan.index');
+                        }
+                    }
                 }
             }elseif ($tipeTransaksi_new == $tipeTransaksi_old){
                 if ($tipeTransaksi_new == 'Masuk') {
-                    $stokOld_qtyNew = $stok_old + $qty_new;
                     if ($stokOld_qtyNew < $qty_old) {
                         Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
                         return redirect()->back();
@@ -308,14 +356,13 @@ class TransaksiPakanController extends Controller
                             'id_detail_pakan' => $idDetailPakan_new,
                         ]);
                         $detailPakan_new->update([
-                            'stok_pakan' => $stok_old + $qty_new - $qty_old,
+                            'stok_pakan' =>$stokOld_qtyNew - $qty_old,
                         ]);
     
                         Alert::toast('Data transaksi pakan berhasil diubah', 'success');
                         return redirect()->route('admin.kelolaTransaksiPakan.index');
                     }
                 }elseif ($tipeTransaksi_new == 'Keluar' || $tipeTransaksi_new == 'Kadaluarsa' || $tipeTransaksi_new == 'Rusak') {
-                    $stokQty_old = $stok_old+$qty_old;
                     if ($stokQty_old < $qty_new) {
                         Alert::toast('Data transaksi pakan gagal ditambahkan karena stok kurang dari kuantitas baru', 'error');
                         return redirect()->back();
@@ -327,7 +374,7 @@ class TransaksiPakanController extends Controller
                             'id_detail_pakan' => $idDetailPakan_new,
                         ]);
                         $detailPakan_new->update([
-                            'stok_pakan' => $stok_old + $qty_old - $qty_new,
+                            'stok_pakan' => $stokQty_old - $qty_new,
                         ]);
     
                         Alert::toast('Data transaksi pakan berhasil diubah', 'success');
