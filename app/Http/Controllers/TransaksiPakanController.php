@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DetailPakanModel;
 use App\Models\TransaksiPakanModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -37,6 +38,9 @@ class TransaksiPakanController extends Controller
         return DataTables::of($transaksiPakans)
             ->addColumn('pakan_gudang', function ($transaksi) {
                 return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
+            })
+            ->addColumn('created_at_formatted', function ($transaksi) {
+                return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
             })
             ->filterColumn('pakan_gudang', function($query, $keyword) {
                 $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);

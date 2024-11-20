@@ -14,6 +14,7 @@
                     <tr>
                         <th style="display: none">ID</th>
                         <th class="text-center">KODE</th>
+                        <th class="text-center">TANGGAL</th>
                         <th class="text-center">NAMA PAKAN</th>
                         <th class="text-center">TIPE TRANSAKSI</th>
                         <th class="text-center">QUANTITY</th>
@@ -99,13 +100,18 @@
                             data + '</a>';
                     }
                 }, {
+                    data: "created_at_formatted",
+                    className: "col-md-2 text-center",
+                    orderable: true,
+                    searchable: false,
+                }, {
                     data: "pakan_gudang",
-                    className: "col-md-5", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-4", // Jika tidak ada class, hapus baris ini
                     orderable: false,
                     searchable: true
                 }, {
                     data: "tipe_transaksi",
-                    className: "col-md-3 text-center", // Jika tidak ada class, hapus baris ini
+                    className: "col-md-2 text-center", // Jika tidak ada class, hapus baris ini
                     orderable: true,
                     searchable: true
                 }, {

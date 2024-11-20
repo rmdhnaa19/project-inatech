@@ -23,6 +23,9 @@
                 <p><strong>Tipe Transaksi : </strong> {{ $transaksiPakan->tipe_transaksi ?? '-' }} </p>
                 <p><strong>Kuantitas : </strong> {{ number_format($transaksiPakan->quantity, 0, ',', '.') }}
                     {{ $transaksiPakan->detailPakan->pakan->satuan }}</p>
+                <p><strong>Tanggal :
+                    </strong>{{ \Carbon\Carbon::parse($transaksiPakan->created_at)->translatedFormat('l, j F Y') }}
+                </p>
             </div>
         </div>
     </div>
