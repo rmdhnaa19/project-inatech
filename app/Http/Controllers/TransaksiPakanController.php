@@ -389,25 +389,42 @@ class TransaksiPakanController extends Controller
         }
     }
 
-    // public function destroy($id) {
-    //     $check = UserModel::find($id);
-    //     if (!$check) {
-    //         Alert::toast('Data pengguna tidak ditemukan', 'error');
-    //         return redirect('/kelolaPengguna');
-    //     }
-    //     try{
-    //         $kelolaPengguna = UserModel::find($id);
-    //         if ($kelolaPengguna->foto != '') {
-    //             Storage::disk('public')->delete($kelolaPengguna->foto);
-    //             UserModel::destroy($id);
-    //         } else {
-    //             UserModel::destroy($id);
-    //         }
-    //         Alert::toast('Data pengguna berhasil dihapus', 'success');
-    //         return redirect('/kelolaPengguna');
-    //     }catch(\Illuminate\Database\QueryException $e){
-    //         Alert::toast('Data pengguna gagal dihapus', 'error');
-    //         return redirect('/kelolaPengguna');
-    //     }
-    // }
+    public function destroy($id) {
+        $check = TransaksiPakanModel::find($id);
+        if (!$check) {
+            Alert::toast('Data transaksi pakan tidak ditemukan', 'error');
+            return redirect('/kelolaTransaksiPakan');
+        }
+        try{
+            $transaksiPakan = TransaksiPakanModel::find($id);
+            $qty = $transaksiPakan->quantity;
+            $idDetailPakan = $transaksiPakan->id_detail_pakan;
+            $detailPakan = DetailPakanModel::find($idDetailPakan);
+            $stok = $detailPakan->stok_pakan;
+            $tipeTransaki = $transaksiPakan->tipe_transaksi;
+            if ($tipeTransaki == 'Masuk') {
+                if($stok < $qty){
+                    Alert::toast('Data transaksi pakan gagal dihapus', 'error');
+                    return redirect('/kelolaTransaksiPakan');
+                }else{
+                    $detailPakan->update([
+                        'stok_pakan' => $stok - $qty,
+                    ]);
+                    TransaksiPakanModel::destroy($id);
+                    Alert::toast('Data transaksi pakan berhasil dihapus', 'success');
+                    return redirect('/kelolaTransaksiPakan');
+                }
+            }else{
+                $detailPakan->update([
+                    'stok_pakan' => $stok + $qty,
+                ]);
+                TransaksiPakanModel::destroy($id);
+                Alert::toast('Data transaksi pakan berhasil dihapus', 'success');
+                return redirect('/kelolaTransaksiPakan');
+            }
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data transaksi pakan gagal dihapus', 'error');
+            return redirect('/kelolaTransaksiPakan');
+        }
+    }
 }
