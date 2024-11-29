@@ -21,8 +21,9 @@ use App\Http\Controllers\ObatGudangController;
 use App\Http\Controllers\PakanController;
 use App\Http\Controllers\PakanGudangController;
 use App\Http\Controllers\PJGudangController;
+use App\Http\Controllers\TransaksiAlatController;
+use App\Http\Controllers\TransaksiObatController;
 use App\Http\Controllers\TransaksiPakanController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -130,6 +131,17 @@ Route::middleware(['auth', 'no-back'])->group(function () {
         Route::put('/{id}', [AlatGudangController::class, 'update'])->name('admin.kelolaAlatGudang.update');
         Route::delete('/{id}', [AlatGudangController::class, 'destroy'])->name('admin.kelolaAlatGudang.destroy');
     });
+
+    Route::group(['prefix' => 'kelolaTransaksiAlat'], function(){
+        Route::get('/', [TransaksiAlatController::class, 'index'])->name('admin.kelolaTransaksiAlat.index');
+        Route::post('/list', [TransaksiAlatController::class, 'list'])->name('admin.kelolaTransaksiAlat.list');
+        Route::get('/create', [TransaksiAlatController::class, 'create'])->name('admin.kelolaTransaksiAlat.create');
+        Route::post('/', [TransaksiAlatController::class, 'store'])->name('admin.kelolaTransaksiAlat.store');
+        Route::get('/{id}', [TransaksiAlatController::class, 'show'])->name('admin.kelolaTransaksiAlat.show');
+        Route::get('/{id}/edit', [TransaksiAlatController::class, 'edit'])->name('admin.kelolaTransaksiAlat.edit');
+        Route::put('/{id}', [TransaksiAlatController::class, 'update'])->name('admin.kelolaTransaksiAlat.update');
+        Route::delete('/{id}', [TransaksiAlatController::class, 'destroy'])->name('admin.kelolaTransaksiAlat.destroy');
+    });
     
     Route::group(['prefix' => 'kelolaObat'], function(){
         Route::get('/', [ObatController::class, 'index'])->name('admin.kelolaObat.index');
@@ -151,6 +163,17 @@ Route::middleware(['auth', 'no-back'])->group(function () {
         Route::get('/{id}/edit', [ObatGudangController::class, 'edit'])->name('admin.kelolaObatGudang.edit');
         Route::put('/{id}', [ObatGudangController::class, 'update'])->name('admin.kelolaObatGudang.update');
         Route::delete('/{id}', [ObatGudangController::class, 'destroy'])->name('admin.kelolaObatGudang.destroy');
+    });
+
+    Route::group(['prefix' => 'kelolaTransaksiObat'], function(){
+        Route::get('/', [TransaksiObatController::class, 'index'])->name('admin.kelolaTransaksiObat.index');
+        Route::post('/list', [TransaksiObatController::class, 'list'])->name('admin.kelolaTransaksiObat.list');
+        Route::get('/create', [TransaksiObatController::class, 'create'])->name('admin.kelolaTransaksiObat.create');
+        Route::post('/', [TransaksiObatController::class, 'store'])->name('admin.kelolaTransaksiObat.store');
+        Route::get('/{id}', [TransaksiObatController::class, 'show'])->name('admin.kelolaTransaksiObat.show');
+        Route::get('/{id}/edit', [TransaksiObatController::class, 'edit'])->name('admin.kelolaTransaksiObat.edit');
+        Route::put('/{id}', [TransaksiObatController::class, 'update'])->name('admin.kelolaTransaksiObat.update');
+        Route::delete('/{id}', [TransaksiObatController::class, 'destroy'])->name('admin.kelolaTransaksiObat.destroy');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');

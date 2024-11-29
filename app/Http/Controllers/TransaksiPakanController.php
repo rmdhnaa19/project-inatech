@@ -85,12 +85,6 @@ class TransaksiPakanController extends Controller
         $tipe_transaki = $request->tipe_transaksi;
 
         if ($tipe_transaki == 'Masuk') {
-            TransaksiPakanModel::create([
-                'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
-                'tipe_transaksi' => $tipe_transaki,
-                'quantity' => $qty,
-                'id_detail_pakan' => $id_pakanGudang
-            ]);
             DetailPakanModel::find($id_pakanGudang)->update([
                 'stok_pakan' => $qty_old + $qty
             ]);
@@ -99,21 +93,20 @@ class TransaksiPakanController extends Controller
                 Alert::toast('Data transaksi keluar gagal ditambahkan karena stok kurang', 'error');
                 return redirect()->back();
             }else {
-                TransaksiPakanModel::create([
-                    'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
-                    'tipe_transaksi' => $tipe_transaki,
-                    'quantity' => $qty,
-                    'id_detail_pakan' => $id_pakanGudang
-                ]);
                 DetailPakanModel::find($id_pakanGudang)->update([
                     'stok_pakan' => $qty_old - $qty
                 ]);
             }
         }
 
-        Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
+        TransaksiPakanModel::create([
+            'kd_transaksi_pakan' => $request->kd_transaksi_pakan,
+            'tipe_transaksi' => $tipe_transaki,
+            'quantity' => $qty,
+            'id_detail_pakan' => $id_pakanGudang
+        ]);
 
-        // Redirect ke halaman kelola pengguna
+        Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
         return redirect()->route('admin.kelolaTransaksiPakan.index');
     }
 
