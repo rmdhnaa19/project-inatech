@@ -17,9 +17,9 @@ class TransaksiAlatController extends Controller
             'paragraph' => 'Berikut ini merupakan data transaksi alat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-                ['label' => 'Kelola Transaksi Pakan'],
+                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                ['label' => 'Kelola Transaksi Alat'],
             ]
         ];
         $activeMenu = 'kelolaTransaksiAlat';
@@ -54,9 +54,9 @@ class TransaksiAlatController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data transaksi alat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-                ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiAlat.index')],
+                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                ['label' => 'Kelola Transaksi Alat', 'url' => route('admin.kelolaTransaksiAlat.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -130,9 +130,9 @@ class TransaksiAlatController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data transaksi alat yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-                ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiAlat.index')],
+                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                ['label' => 'Kelola Transaksi Alat', 'url' => route('admin.kelolaTransaksiAlat.index')],
                 ['label' => 'Edit'],
             ]
         ];
