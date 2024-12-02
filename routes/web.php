@@ -39,11 +39,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate')->middleware('guest');
+Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 
+Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
+    Route::group(['prefix' => 'pakanGudang'], function(){
+        Route::get('/', [PakanGudangController::class, 'index'])->name('user.kelolaPakanGudang.index');
+        Route::get('/create', [PakanGudangController::class, 'create'])->name('user.kelolaPakanGudang.create');
+        Route::post('/', [PakanGudangController::class, 'store'])->name('user.kelolaPakanGudang.store');
+    });
+
+    Route::group(['prefix' => 'transaksiPakan'], function(){
+        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.TransaksiPakan.index');
+        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.TransaksiPakan.list');
+        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.TransaksiPakan.create');
+        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.TransaksiPakan.store');
+        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.TransaksiPakan.show');
+    });
+});
 
 // Interface Admin
-Route::middleware(['auth', 'no-back'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
     Route::group(['prefix' => 'kelolaPengguna'], function(){
         Route::get('/', [UserController::class, 'index'])->name('admin.kelolaPengguna.index');
         Route::post('/list', [UserController::class, 'list'])->name('admin.kelolaPengguna.list');
@@ -175,8 +191,6 @@ Route::middleware(['auth', 'no-back'])->group(function () {
         Route::put('/{id}', [TransaksiObatController::class, 'update'])->name('admin.kelolaTransaksiObat.update');
         Route::delete('/{id}', [TransaksiObatController::class, 'destroy'])->name('admin.kelolaTransaksiObat.destroy');
     });
-
-    Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
 });
 
 // manajemen tambak

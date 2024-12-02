@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         // Middleware lain
         'no-back' => \App\Http\Middleware\NoBackAfterLogout::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];    
 }

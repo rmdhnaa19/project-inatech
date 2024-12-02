@@ -15,6 +15,8 @@
     <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon">
     <!-- Load DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    {{-- APEXCHART --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">

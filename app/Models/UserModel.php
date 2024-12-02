@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class UserModel extends Authenticatable
@@ -17,5 +18,9 @@ class UserModel extends Authenticatable
 
     public function role():BelongsTo{
         return $this->belongsTo(RoleModel::class, 'id_role', 'id_role');
+    }
+
+    public function detailUser():HasMany{
+        return $this->hasMany(DetailUserModel::class, 'id_user', 'id_user');
     }
 }

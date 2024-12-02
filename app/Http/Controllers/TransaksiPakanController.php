@@ -48,25 +48,38 @@ class TransaksiPakanController extends Controller
             ->make(true);
     }
 
-    public function create(){
-        $breadcrumb = (object) [
-            'title' => 'Tambah Data Transaksi Pakan',
-            'paragraph' => 'Berikut ini merupakan form tambah data transaksi pakan yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
-                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
-                ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiPakan.index')],
-                ['label' => 'Tambah'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiPakan';
-        $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
-        return view('admin.kelolaTransaksiPakan.create', [
-            'breadcrumb' => $breadcrumb, 
-            'activeMenu' => $activeMenu, 
-            'pakanGudang' => $pakanGudang
-        ]);
+    public function create(Request $request){
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Data Transaksi Pakan',
+                'paragraph' => 'Berikut ini merupakan form tambah data transaksi pakan yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                    ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
+                    ['label' => 'Kelola Transaksi Pakan', 'url' => route('admin.kelolaTransaksiPakan.index')],
+                    ['label' => 'Tambah'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiPakan';
+            $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
+            return view('admin.kelolaTransaksiPakan.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Transaksi Pakan',
+                'paragraph' => 'Berikut ini merupakan form tambah transaksi pakan yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Tambah Transaksi Pakan'],
+                ]
+            ];
+            $activeMenu = 'transaksiPakan';
+            $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
+            $selectedIdDetailPakan = $request->input('id_detail_pakan'); // Ambil ID dari URL
+            // $idDetailPakan = $request->query('id_detail_pakan');
+            // $pakanGudang = DetailPakanModel::findOrFail($idDetailPakan)->with(['pakan', 'gudang'])->get();
+            return view('adminGudang.transaksiPakan.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'selectedIdDetailPakan' => $selectedIdDetailPakan]);
+        }
     }
     
     public function store(Request $request)
@@ -105,9 +118,13 @@ class TransaksiPakanController extends Controller
             'quantity' => $qty,
             'id_detail_pakan' => $id_pakanGudang
         ]);
-
-        Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
-        return redirect()->route('admin.kelolaTransaksiPakan.index');
+        if (auth()->user()->id_role == 1) {
+            Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
+            return redirect()->route('admin.kelolaTransaksiPakan.index');
+        }elseif (auth()->user()->id_role == 2) {
+            Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
+            return redirect()->route('user.TransaksiPakan.index');
+        }
     }
 
     public function show($id)
