@@ -6,6 +6,7 @@ use App\Models\FaseKolamModel;
 use App\Models\KolamModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class FaseKolamController extends Controller
@@ -72,7 +73,7 @@ class FaseKolamController extends Controller
 
     // Simpan data ke database
     FaseKolamModel::create($validatedData);
-
+    Alert::toast('Data Fase Kolam berhasil diubah', 'success'); 
     return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
     }
 
@@ -114,16 +115,9 @@ class FaseKolamController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $fasekolam = FaseKolamModel::find($id);
-
-        if (!$fasekolam) {
-            return redirect()->route('fasekolam.index')->with('error', 'Fase kolam tidak ditemukan');
-    }
-
-    // Validasi input
-        $validatedData = $request->validate([
+    public function update(Request $request, string $id) {
+    
+    $request->validate([
         'tanggal_mulai' => 'required|string',
         'tanggal_panen' => 'required|string',
         'jumlah_tebar' => 'required|integer',
@@ -132,23 +126,33 @@ class FaseKolamController extends Controller
         'id_kolam' => 'required|integer',
     ]);
 
-    // Mengelola upload foto jika ada
-    if ($request->hasFile('foto')) {
-        $path = $request->file('foto')->store('foto_fasekolam', 'public');
-        $validatedData['foto'] = $path;
+    $fasekolam = FaseKolamModel::find($id);
+
+    if ($request->file('foto') == '') {
+        $fasekolam->update([
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_panen' => $request->tanggal_panen,
+            'jumlah_tebar' => $request->jumlah_tebar,
+            'densitas' => $request->densitas,
+            'id_kolam' => $request->id_kolam,
+    ]);
+    }else{
+        Storage::disk('public')->delete($request->oldImage);
+        $foto = $request->file('foto');
+        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('foto_fasekolam', $foto, $namaFoto);
+        $updateFoto['foto'] = $path;
+
+    $fasekolam->update([
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_panen' => $request->tanggal_panen,
+            'jumlah_tebar' => $request->jumlah_tebar,
+            'densitas' => $request->densitas,
+            'id_kolam' => $request->id_kolam,
+            'foto' => $updateFoto['foto']
+        ]);
     }
-
-    // Update data fase kolam
-    $fasekolam->update($validatedData);
-
-    return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil diubah');
-    }
-
-
-    public function destroy($id) {
-        $fasekolam = FaseKolamModel::findOrFail($id);
-        Storage::delete($fasekolam->foto);
-        FaseKolamModel::destroy($id);
-        return response()->redirect()->route('fasekolam.index');
+        Alert::toast('Data Fase Kolam berhasil diubah', 'success');   
+        return redirect()->route('fasekolam.index');
     }
 }

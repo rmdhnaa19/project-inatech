@@ -5,6 +5,7 @@ use App\Models\KolamModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class KolamController extends Controller
@@ -49,6 +50,7 @@ class KolamController extends Controller
         ];
         $activeMenu = 'manajemenTambak';
         $tambak = TambakModel::all();
+        Alert::toast('Data Kolam berhasil ditambahkan', 'success');
         return view('kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
@@ -114,10 +116,9 @@ class KolamController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $kolam = KolamModel::find($id);
-            $validatedData = $request->validate([
+    public function update(Request $request, string $id) {
+    
+        $request->validate([
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
             'tipe_kolam' => 'required|in:kotak,bundar',
             'kd_kolam' => 'required|string|unique:kolam,kd_kolam,' . $id . ',id_kolam',
@@ -126,17 +127,39 @@ class KolamController extends Controller
             'luas_kolam' => 'required|integer',
             'kedalaman' => 'required|integer',
             'id_tambak' => 'required|integer',
-        ]);
-        if ($request->hasFile('foto')) {
-            Storage::delete('public/' . $kolam->foto);
-            $path = $request->file('foto')->store('foto_kolam', 'public');
-            // dd($path); debug $path
-            $validatedData['foto'] = $path;
-        } 
+    ]);
 
-        // Mengupdate data kolam di database
-        $kolam->update($validatedData);
-            
-        return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil diubah');
-    }
-}    
+    $kolam = KolamModel::find($id);
+    
+    if ($request->file('foto') == '') {
+        $kolam->update([
+            'tipe_kolam' => $request->tipe_kolam,
+            'kd_kolam' => $request->kd_kolam,
+            'panjang_kolam' => $request->panjang_kolam,
+            'lebar_kolam' => $request->lebar_kolam,
+            'luas_kolam' => $request->luas_kolam,
+            'kedalaman' => $request->kedalaman,
+            'id_tambak' => $request->id_tambak,
+    ]);
+    }else{
+        Storage::disk('public')->delete($request->oldImage);
+        $foto = $request->file('foto');
+        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('foto_kolam', $foto, $namaFoto);
+        $updateFoto['foto'] = $path;
+
+    $kolam->update([
+            'tipe_kolam' => $request->tipe_kolam,
+            'kd_kolam' => $request->kd_kolam,
+            'panjang_kolam' => $request->panjang_kolam,
+            'lebar_kolam' => $request->lebar_kolam,
+            'luas_kolam' => $request->luas_kolam,
+            'kedalaman' => $request->kedalaman,
+            'id_tambak' => $request->id_tambak,
+            'foto' => $updateFoto['foto']
+            ]);
+        }
+            Alert::toast('Data Kolam berhasil diubah', 'success');   
+            return redirect()->route('tambak.index');
+        }
+    } 

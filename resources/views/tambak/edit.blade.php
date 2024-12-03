@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Manajemen Tambak')
+@section('title', 'Edit Tambak')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -97,7 +97,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-sm btn-danger"
-                    onclick="window.location.href='{{ url('kelolaPengguna') }}'"
+                    onclick="window.location.href='{{ url('tambak') }}'"
                     style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                 <button type="submit" class="btn btn-primary btn-sm"
                     style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
