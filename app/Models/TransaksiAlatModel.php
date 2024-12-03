@@ -15,7 +15,7 @@ class TransaksiAlatModel extends Model
 
     protected $fillable = ['kd_transaksi_alat', 'tipe_transaksi', 'quantity', 'id_detail_alat', 'created_at', 'updated_at'];
 
-    public function detail_alat():BelongsTo{
+    public function detailAlat():BelongsTo{
         return $this->belongsTo(DetailAlatModel::class, 'id_detail_alat', 'id_detail_alat');
     }
 }

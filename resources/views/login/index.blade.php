@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <div id="auth">
         <div class="container">
             <div class="row">
@@ -66,7 +67,8 @@
 
                                 <div class='form-check clearfix my-4'>
                                     <div class="checkbox float-left">
-                                        <input type="checkbox" id="checkbox1" class='form-check-input'>
+                                        <input type="checkbox" id="checkbox1" class='form-check-input' name="remember"
+                                            id="remember">
                                         <label for="checkbox1">Remember me</label>
                                     </div>
                                 </div>
@@ -84,6 +86,11 @@
     <script src="{{ asset('voler-master/dist/assets/js/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('voler-master/src/assets/js/app.js') }}"></script>
     <script src="{{ asset('voler-master/src/assets/js/main.js') }}"></script>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
 </body>
 
 </html>

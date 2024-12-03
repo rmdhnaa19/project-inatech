@@ -45,17 +45,21 @@
                 </div>
             </li> --}}
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                <a href="#" id="dropdownToggle" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                     <div class="avatar mr-1">
-                        <img src="{{ Storage::url(auth()->user()->foto) }}" alt="foto">
+                        @if (auth()->user()->foto != '')
+                            <img src="{{ Storage::url(auth()->user()->foto) }}" alt="foto">
+                        @else
+                            <img src="{{ asset('storage/asset_web/No Image Profile.png') }}" alt="foto">
+                        @endif
                     </div>
                     <div class="d-none d-md-block d-lg-inline-block">Selamat Datang, {{ auth()->user()->nama }}</div>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <a class="dropdown-item" href="#"><i data-feather="user"></i> Edit Profil</a>
                     <a class="dropdown-item" href="#"><i data-feather="settings"></i> Settings</a>
                     <div class="dropdown-divider"></div>
-                    <form action="/logout" method="POST">
+                    <form action="{{ route('login.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout</button>
                     </form>

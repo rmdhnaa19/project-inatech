@@ -6,26 +6,45 @@ use App\Models\DetailPakanModel;
 use App\Models\GudangModel;
 use App\Models\PakanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class PakanGudangController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Pakan ke Gudang',
-            'paragraph' => 'Berikut ini merupakan data pakan ke gudang yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
-                ['label' => 'Kelola Pakan ke Gudang'],
-            ]
-        ];
-        $activeMenu = 'kelolaPakanGudang';
-        $pakanGudang = DetailPakanModel::all();
-        $gudang = GudangModel::all();
-        $pakan = PakanModel::all();
-        return view('admin.kelolaPakanGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'pakan' => $pakan, 'gudang' => $gudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Pakan ke Gudang',
+                'paragraph' => 'Berikut ini merupakan data pakan ke gudang yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                    ['label' => 'Kelola Pakan ke Gudang'],
+                ]
+            ];
+            $activeMenu = 'kelolaPakanGudang';
+            $pakanGudang = DetailPakanModel::all();
+            $gudang = GudangModel::all();
+            $pakan = PakanModel::all();
+            return view('admin.kelolaPakanGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'pakan' => $pakan, 'gudang' => $gudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Data Pakan',
+                'paragraph' => 'Berikut ini merupakan data pakan yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Pakan']
+                ]
+            ];
+            $activeMenu = 'PakanGudang';
+            $user = Auth::user();
+            $gudangIds = $user->detailUser->pluck('id_gudang'); // Ambil semua id_gudang
+            $pakanGudang = DetailPakanModel::whereIn('id_gudang', $gudangIds)->get();
+            return view('adminGudang.pakanGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'user' => $user, 'gudangIds' => $gudangIds]);
+        }
+        
     }
 
     public function list(Request $request)
@@ -64,7 +83,8 @@ class PakanGudangController extends Controller
         $activeMenu = 'kelolaPakanGudang';
         $gudang = GudangModel::all();
         $pakan = PakanModel::all();
-        return view('admin.kelolaPakanGudang.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'pakan' => $pakan]);
+        $pakanGudang = DetailPakanModel::all();
+        return view('admin.kelolaPakanGudang.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'pakan' => $pakan, 'pakanGudang' => $pakanGudang]);
     }
 
     public function store(Request $request)
@@ -92,9 +112,10 @@ class PakanGudangController extends Controller
 
         // Buat user baru
         DetailPakanModel::create($validatedData);
+        Alert::toast('Data pakan ke gudang berhasil ditambah', 'success');
 
         // Redirect ke halaman kelola pengguna
-        return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('admin.kelolaPakanGudang.index');
     }
 
     public function edit(string $id){
@@ -145,12 +166,23 @@ class PakanGudangController extends Controller
             'id_pakan' => $request->id_pakan,
             'id_gudang' => $request->id_gudang,
         ]);
-
-        return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data Berhasil Diubah!');
+        Alert::toast('Data pakan ke gudang berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaPakanGudang.index');
     }
 
     public function destroy($id) {
-        DetailPakanModel::destroy($id);
-        return redirect()->route('admin.kelolaPakanGudang.index')->with('success', 'Data Berhasil Dihapus!');
+        $check = DetailPakanModel::find($id);
+        if (!$check) {
+            Alert::toast('Data pakan ke gudang tidak ditemukan', 'error');
+            return redirect('/kelolaPakanGudang');
+        }
+        try{
+            DetailPakanModel::destroy($id);
+            Alert::toast('Data pakan ke gudang berhasil dihapus', 'success');
+            return redirect('/kelolaPakanGudang');
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data pakan ke gudang gagal dihapus', 'error');
+            return redirect('/kelolaPakanGudang');
+        }
     }
 }

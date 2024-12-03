@@ -15,7 +15,7 @@ class TransaksiPakanModel extends Model
 
     protected $fillable = ['kd_transaksi_pakan', 'tipe_transaksi', 'quantity', 'id_detail_pakan', 'created_at', 'updated_at'];
 
-    public function detail_pakan():BelongsTo{
+    public function detailPakan():BelongsTo{
         return $this->belongsTo(DetailPakanModel::class, 'id_detail_pakan', 'id_detail_pakan');
     }
 }

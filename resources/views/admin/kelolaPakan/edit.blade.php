@@ -32,8 +32,8 @@
                                     value="{{ old('harga_satuan', $pakan->harga_satuan) }}"
                                     placeholder="Masukkan Harga Satuan Pakan" required>
                                 <p><small class="text-muted">Wajib Diisi!</small></p>
-                                @if ($errors->has('nama'))
-                                    <span class="text-danger">{{ $errors->first('nama') }}</span>
+                                @if ($errors->has('harga_satuan'))
+                                    <span class="text-danger">{{ $errors->first('harga_satuan') }}</span>
                                 @endif
                             </div>
                             <div class="form-group">
@@ -60,7 +60,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="deskripsi" class="form-label">Deskripsi</label>
-                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3">{{ old('deskripis', $pakan->deskripsi) }}</textarea>
+                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3">{{ old('deskripsi', $pakan->deskripsi) }}</textarea>
                                 <p><small class="text-muted">Boleh Dikosongi.</small></p>
                                 @if ($errors->has('deskripsi'))
                                     <span class="text-danger">{{ $errors->first('deskripsi') }}</span>

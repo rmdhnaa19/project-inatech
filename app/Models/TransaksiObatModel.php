@@ -15,7 +15,7 @@ class TransaksiObatModel extends Model
 
     protected $fillable = ['kd_transaksi_obat', 'tipe_transaksi', 'quantity', 'id_detail_obat', 'created_at', 'updated_at'];
 
-    public function detail_obat():BelongsTo{
+    public function detailObat():BelongsTo{
         return $this->belongsTo(DetailObatModel::class, 'id_detail_obat', 'id_detail_obat');
     }
 }

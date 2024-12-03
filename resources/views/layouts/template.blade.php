@@ -15,6 +15,8 @@
     <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon">
     <!-- Load DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    {{-- APEXCHART --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">
@@ -23,7 +25,13 @@
     <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaAlatGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiAlat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaObat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaObatGudang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -114,6 +122,27 @@
                 }, 1000); // 1000 ms sesuai dengan durasi transisi di CSS
             }
         }, 3000); // 3000 ms = 3 detik
+    </script>
+    <script>
+        // Ambil elemen toggle dan menu
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Tambahkan event listener ke elemen toggle
+        dropdownToggle.addEventListener('click', function(event) {
+            // Mencegah tindakan default link
+            event.preventDefault();
+
+            // Toggle kelas 'show' pada dropdown menu
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Menutup dropdown jika klik di luar
+        document.addEventListener('click', function(event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
     </script>
     @stack('js')
 </body>
