@@ -38,7 +38,7 @@ class PakanGudangController extends Controller
                     ['label' => 'Kelola Pakan']
                 ]
             ];
-            $activeMenu = 'PakanGudang';
+            $activeMenu = 'pakanGudang';
             $user = Auth::user();
             $gudangIds = $user->detailUser->pluck('id_gudang'); // Ambil semua id_gudang
             $pakanGudang = DetailPakanModel::whereIn('id_gudang', $gudangIds)->get();
