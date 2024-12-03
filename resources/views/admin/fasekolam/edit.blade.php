@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('fasekolam.update', $fasekolam->id_fase_tambak) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.fasekolam.update', $fasekolam->id_fase_tambak) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">

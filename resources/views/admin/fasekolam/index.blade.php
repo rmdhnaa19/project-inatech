@@ -4,15 +4,6 @@
     <div class="card">
         <div class="card-header">Fase Kolam</div>
         <div class="card-body">
-            {{-- @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
             <table class="table" id="table_faseKolam">
                 <thead>
                     <tr class="text-center">
@@ -38,7 +29,6 @@
                 </button>
             </div>
             <div class="modal-body" style="padding: 20px;">
-                
                 {{-- Modal Detail --}}
                 <div id="user-detail-content" class="container">
                     <div class="row">
@@ -56,148 +46,175 @@
                                     <td id="faseKolam-kode-kolam"></td>
                                 </tr>
                                 <tr>
-                                <th>Tanggal Mulai:</th>
-                                <td id="faseKolam-tanggal-mulai"></td>
-                            </tr>
-                            <tr>
-                                <th>Tanggal Panen:</th>
-                                <td id="faseKolam-tanggal-panen"></td>
-                            </tr>
+                                    <th>Tanggal Mulai:</th>
+                                    <td id="faseKolam-tanggal-mulai"></td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal Panen:</th>
+                                    <td id="faseKolam-tanggal-panen"></td>
+                                </tr>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" id="btn-delete-fasekolam">
                     <i class="bx bx-x d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">Delete</span>
+                    <span class="d-none d-sm-block">Hapus</span>
                 </button>
                 <button type="button" class="btn btn-warning ml-1" id="edit-fasekolam" data-id="">
                     <span class="d-none d-sm-block">Edit</span>
-                </button>                    
+                </button>
             </div>
         </div>
     </div>
 </div>
-@push('css')
-@endpush
-@endsection
-@push('css')
-@endpush
-@push('js')
-    <script>
-        $(document).ready(function() {
-            var datafaseKolam = $('#table_faseKolam').DataTable({
-                serverSide: true,
-                ajax: {
-                    "url": "{{ url('fasekolam/list') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function(d) {
-                        d.id_kolam = $('#id_kolam').val();
-                    },
-                    "error": function(xhr, error, thrown) {
-                        console.error('Error fetching data: ', thrown);
-                    }
-                },
-                columns: [{
-                        data: "kd_fase_tambak",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row) {
-                            var url = '{{ route('fasekolam.show', ':id') }}';
-                            url = url.replace(':id', row.id_fase_tambak);
-                            return '<a href="javascript:void(0);" data-id="' + row.id_fase_tambak +
-                            '" class="view-user-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#faseKolamDetailModal">' + data +
-                            '</a>';
-                        }
-                    },
-                    {
-                        data: "kolam.kd_kolam",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: true
-                    },
-                    {
-                        data: "tanggal_mulai",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: "tanggal_panen",
-                        className: "", // Jika tidak ada class, hapus baris ini
-                        orderable: false,
-                        searchable: false
-                    },
-                    ],
-                pagingType: "simple_numbers", 
-                dom: 'frtip', 
-                language: {
-                    search: "" 
-                }
-            });
 
-            $(document).ready(function() {
-    // Event listener untuk menampilkan detail fase kolam
-    $(document).on('click', '.view-user-details', function() {
-        var url = $(this).data('url'); 
-        var id_fase_tambak = $(this).data('id'); // Dapatkan ID fase kolam dari tombol
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(response) {
-                if (response.html) {
-                    $('#user-detail-content').html(response.html); 
-                    $('#edit-fasekolam').attr('data-id', id_fase_tambak); // Set data-id di tombol edit
-                    $('#faseKolamDetailModal').modal('show'); 
-                } else {
-                    alert('Gagal memuat detail fase kolam');
+@push('css')
+@endpush
+
+@endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        var datafaseKolam = $('#table_faseKolam').DataTable({
+            serverSide: true,
+            ajax: {
+                "url": "{{ url('fasekolam/list') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d) {
+                    d.id_kolam = $('#id_kolam').val();
+                },
+                "error": function(xhr, error, thrown) {
+                    console.error('Error fetching data: ', thrown);
                 }
             },
-            error: function(xhr, status, error) {
-                console.log(xhr.responseText);
-                alert('Gagal memuat detail fase kolam');
+            columns: [{
+                    data: "kd_fase_tambak",
+                    className: "", 
+                    orderable: true,
+                    searchable: true,
+                    render: function(data, type, row) {
+                        var url = '{{ route('admin.fasekolam.show', ':id') }}';
+                        url = url.replace(':id', row.id_fase_tambak);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_fase_tambak +
+                        '" class="view-user-details" data-url="' + url +
+                        '" data-toggle="modal" data-target="#faseKolamDetailModal">' + data +
+                        '</a>';
+                    }
+                },
+                {
+                    data: "kolam.kd_kolam",
+                    className: "", 
+                    orderable: false,
+                    searchable: true
+                },
+                {
+                    data: "tanggal_mulai",
+                    className: "", 
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "tanggal_panen",
+                    className: "", 
+                    orderable: false,
+                    searchable: false
+                },
+            ],
+            pagingType: "simple_numbers", 
+            dom: 'frtip', 
+            language: {
+                search: "" 
             }
         });
-    });
 
-    // Event listener untuk tombol Edit di dalam modal
-    $(document).on('click', '#edit-fasekolam', function() {
-        var id = $(this).data('id'); // Ambil ID fase kolam dari tombol Edit
-        if (id) {
-            var url = '{{ route("fasekolam.edit", ":id") }}'; // Template URL route
-            url = url.replace(':id', id); // Ganti placeholder dengan ID yang sesuai
-            window.location.href = url; // Alihkan ke halaman edit
-            }
-        });
-    });
-
-
-            // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_faseKolam_filter").append(
-                '<select class="form-control" name="id_kolam" id="id_kolam" required style="margin-left: 30px; width: 150px;">' +
-                '<option value="">- SEMUA -</option>' +
-                '@foreach ($kolam as $item)' +
-                '<option value="{{ $item->id_kolam }}">{{ $item->kd_kolam}}</option>' +
-                '@endforeach' +
-                '</select>' +
-                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
-
-            // Tambahkan event listener untuk tombol
-            $("#btn-tambah").on('click', function() {
-                window.location.href =
-                    "{{ url('fasekolam/create') }}"; // Arahkan ke halaman tambah pengguna
+        $(document).on('click', '.view-user-details', function() {
+            var url = $(this).data('url'); 
+            var id_fase_tambak = $(this).data('id'); 
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    if (response.html) {
+                        $('#user-detail-content').html(response.html); 
+                        $('#edit-fasekolam').attr('data-id', id_fase_tambak); 
+                        $('#faseKolamDetailModal').modal('show'); 
+                    } else {
+                        alert('Gagal memuat detail fase kolam');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('Gagal memuat detail fase kolam');
+                }
             });
-
-            // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');
-            $('#id_kolam').on('change', function() {
-                datafaseKolam.ajax.reload();
-            })    
         });
-    </script>
+
+        // Event listener untuk tombol Edit di dalam modal
+        $(document).on('click', '#edit-fasekolam', function() {
+            var id = $(this).data('id'); 
+            if (id) {
+                var url = '{{ route("admin.fasekolam.edit", ":id") }}'; 
+                url = url.replace(':id', id); 
+                window.location.href = url; 
+            }
+        });
+
+        // Event listener untuk tombol Hapus di dalam modal
+        // Event listener untuk tombol Hapus di dalam modal
+$(document).on('click', '#btn-delete-fasekolam', function() {
+    var id_fase_tambak = $('#edit-fasekolam').data('id'); 
+    if (id_fase_tambak) {
+        if (confirm('Apakah Anda yakin ingin menghapus fase kolam ini?')) {
+            const deleteUrl = '{{ route("admin.fasekolam.destroy", ":id") }}'.replace(':id', id_fase_tambak);
+            $.ajax({
+                url: deleteUrl,
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "_method": "DELETE"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = '{{ route("admin.fasekolam.index") }}'; // Redirect setelah penghapusan
+                    } else {
+                        alert('Gagal menghapus fase kolam: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Terjadi kesalahan saat menghapus fase kolam');
+                }
+            });
+        }
+    } else {
+        alert('ID fase kolam tidak ditemukan');
+    }
+});
+
+        $("#table_faseKolam_filter").append(
+            '<select class="form-control" name="id_kolam" id="id_kolam" required style="margin-left: 30px; width: 150px;">' +
+            '<option value="">- SEMUA -</option>' +
+            '@foreach ($kolam as $item)' +
+            '<option value="{{ $item->id_kolam }}">{{ $item->kd_kolam}}</option>' +
+            '@endforeach' +
+            '</select>' +
+            '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+        );
+
+        $("#btn-tambah").on('click', function() {
+            window.location.href =
+                "{{ url('fasekolam/create') }}"; 
+        });
+
+        $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');
+        $('#id_kolam').on('change', function() {
+            datafaseKolam.ajax.reload();
+        })    
+    });
+</script>
 @endpush

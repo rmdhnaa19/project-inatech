@@ -50,7 +50,6 @@ class KolamController extends Controller
         ];
         $activeMenu = 'manajemenTambak';
         $tambak = TambakModel::all();
-        Alert::toast('Data Kolam berhasil ditambahkan', 'success');
         return view('admin.kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
@@ -77,6 +76,7 @@ class KolamController extends Controller
 
         // Menyimpan data ke database
         KolamModel::create($validatedData);
+        Alert::toast('Data Kolam berhasil ditambahkan', 'success');
         return redirect()->route('admin.kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
     }
 
@@ -160,6 +160,35 @@ class KolamController extends Controller
             ]);
         }
             Alert::toast('Data Kolam berhasil diubah', 'success');   
-            return redirect()->route('admin.tambak.index');
+            return redirect()->route('admin.kolam.index');
         }
-    } 
+
+
+        public function destroy($id)
+    {
+        $kolam = KolamModel::find($id);
+        if (!$kolam) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data kolam tidak ditemukan.'
+            ], 404);
+        }
+    
+        try {
+            if ($kolam->gambar) {
+                Storage::disk('public')->delete($kolam->gambar);
+            }
+            $kolam->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data kolam berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus kolam: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+}    
