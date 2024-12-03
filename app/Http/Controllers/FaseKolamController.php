@@ -17,13 +17,13 @@ class FaseKolamController extends Controller
             'title' => 'Kelola Data Fase Kolam',
             'paragraph' => 'Berikut ini merupakan data fase kolam yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('fasekolam.index')],
+                ['label' => 'Home', 'url' => route('admin.fasekolam.index')],
                 ['label' => 'Manajemen Fase Kolam'],
             ]
         ];
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
-        return view('fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+        return view('admin.fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
     }
     
 
@@ -44,13 +44,13 @@ class FaseKolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data fase kolam yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Manajemen Fase Kolam', 'url' => route('fasekolam.index')],
+                ['label' => 'Manajemen Fase Kolam', 'url' => route('admin.fasekolam.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
-        return view('fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+        return view('admin.fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
     }
 
 
@@ -74,7 +74,7 @@ class FaseKolamController extends Controller
     // Simpan data ke database
     FaseKolamModel::create($validatedData);
     Alert::toast('Data Fase Kolam berhasil diubah', 'success'); 
-    return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    return redirect()->route('admin.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
     }
 
 
@@ -86,7 +86,7 @@ class FaseKolamController extends Controller
     }
 
     // Render view dengan data 
-    $view = view('fasekolam.show', compact('fasekolam'))->render();
+    $view = view('admin.fasekolam.show', compact('fasekolam'))->render();
     return response()->json(['html' => $view]);
     }
 
@@ -97,7 +97,7 @@ class FaseKolamController extends Controller
         $kolam = KolamModel::all();
         
         if (!$fasekolam) {
-        return redirect()->route('fasekolam.index')->with('error', 'Fase Kolam tidak ditemukan');
+        return redirect()->route('admin.fasekolam.index')->with('error', 'Fase Kolam tidak ditemukan');
     }
     
     $breadcrumb = (object) [
@@ -105,13 +105,13 @@ class FaseKolamController extends Controller
         'paragraph' => 'Berikut ini merupakan form edit data fase kolam yang ada di dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Kelola Fase Kolam', 'url' => route('fasekolam.index')],
+            ['label' => 'Kelola Fase Kolam', 'url' => route('admin.fasekolam.index')],
             ['label' => 'Edit'],
         ]
     ];
 
     $activeMenu = 'fasekolam';
-    return view('fasekolam.edit', compact('fasekolam', 'kolam', 'breadcrumb', 'activeMenu'));
+    return view('admin.fasekolam.edit', compact('fasekolam', 'kolam', 'breadcrumb', 'activeMenu'));
     }
 
 
@@ -153,6 +153,6 @@ class FaseKolamController extends Controller
         ]);
     }
         Alert::toast('Data Fase Kolam berhasil diubah', 'success');   
-        return redirect()->route('fasekolam.index');
+        return redirect()->route('admin.fasekolam.index');
     }
 }

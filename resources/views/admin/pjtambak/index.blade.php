@@ -51,14 +51,9 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">
-                        <i class="bx bx-x d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Delete</span>
-                    </button>
-                    <button type="button" class="btn btn-warning ml-1" id="edit-pjtambak" data-id="">
-                        <span class="d-none d-sm-block">Edit</span>
-                    </button>                    
-                </div>
+                    <button type="button" class="btn btn-danger" id="btn-delete-tambak">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-tambak">Edit</button>
+                </div>      
             </div>
         </div>
     </div>
@@ -102,7 +97,7 @@
                 {
                     data: "kd_user_tambak",
                     render: function(data, type, row) {
-                        var url = '{{ route('pjTambak.show', ':id') }}';
+                        var url = '{{ route('admin.pjTambak.show', ':id') }}';
                         url = url.replace(':id', row.id_user_tambak);
                         return '<a href="javascript:void(0);" data-id="' + row.id_user_tambak +
                             '" class="view-user-details" data-url="' + url +
@@ -156,12 +151,11 @@
     $(document).on('click', '#edit-pjtambak', function() {
         var id = $(this).data('id'); // Ambil ID tambak dari tombol Edit
         if (id) {
-            var url = '{{ route("pjTambak.edit", ":id") }}';
+            var url = '{{ route("admin.pjTambak.edit", ":id") }}';
             url = url.replace(':id', id);
             window.location.href = url;
         }
     });
-
 
         // Tambah tombol "Tambah" setelah kotak pencarian
         $("#table_pjTambak_filter").append(

@@ -17,13 +17,13 @@ class KolamController extends Controller
             'title' => 'Kelola Data Kolam',
             'paragraph' => 'Berikut ini merupakan data kolam yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('kolam.index')],
+                ['label' => 'Home', 'url' => route('admin.kolam.index')],
                 ['label' => 'Manajemen Kolam'],
             ]
         ];
         $activeMenu = 'manajemenKolam';
         $tambak = TambakModel::all();
-        return view('kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
+        return view('admin.kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
 
@@ -44,14 +44,14 @@ class KolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data kolam yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Manajemen Kolam', 'url' => route('kolam.index')],
+                ['label' => 'Manajemen Kolam', 'url' => route('admin.kolam.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'manajemenTambak';
         $tambak = TambakModel::all();
         Alert::toast('Data Kolam berhasil ditambahkan', 'success');
-        return view('kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
+        return view('admin.kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
 
@@ -77,7 +77,7 @@ class KolamController extends Controller
 
         // Menyimpan data ke database
         KolamModel::create($validatedData);
-        return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
+        return redirect()->route('admin.kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
     }
 
     public function show($id)
@@ -86,7 +86,7 @@ class KolamController extends Controller
         if (!$kolam) {
             return response()->json(['error' => 'Kolam tidak ditemukan.'], 404);
         }
-        $view = view('kolam.show', compact('kolam'))->render();
+        $view = view('admin.kolam.show', compact('kolam'))->render();
         return response()->json(['html' => $view]);
     }
 
@@ -97,7 +97,7 @@ class KolamController extends Controller
         $tambak = TambakModel::all();
 
         if (!$kolam) {
-            return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan');
+            return redirect()->route('admin.kolam.index')->with('error', 'Kolam tidak ditemukan');
         }
 
         $breadcrumb = (object) [
@@ -105,14 +105,14 @@ class KolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data kolam yang ada di dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Kolam', 'url' => route('kolam.index')],
+                ['label' => 'Kelola Kolam', 'url' => route('admin.kolam.index')],
                 ['label' => 'Edit'],
             ]
         ];
 
         $activeMenu = 'manajemenKolam';
 
-        return view('kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
+        return view('admin.kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
     }
 
 
@@ -160,6 +160,6 @@ class KolamController extends Controller
             ]);
         }
             Alert::toast('Data Kolam berhasil diubah', 'success');   
-            return redirect()->route('tambak.index');
+            return redirect()->route('admin.tambak.index');
         }
     } 

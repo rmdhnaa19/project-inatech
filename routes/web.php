@@ -193,54 +193,57 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
     });
 });
 
+// KELOLA TAMBAK
 // manajemen tambak
 Route::group(['prefix' => 'tambak'], function(){
-    Route::get('/', [TambakController::class, 'index'])->name('tambak.index');
-    Route::post('/list', [TambakController::class, 'list'])->name('tambak.list');
-    Route::get('/create', [TambakController::class, 'create'])->name('tambak.create');
-    Route::post('/', [TambakController::class, 'store'])->name('tambak.store');
-    Route::get('/{id}', [TambakController::class, 'show'])->name('tambak.show');
-    Route::get('/{id}/edit', [TambakController::class, 'edit'])->name('tambak.edit');
-    Route::put('/{id}', [TambakController::class, 'update'])->name('tambak.update');
-    Route::delete('/{id}', [TambakController::class, 'destroy'])->name('tambak.destroy');
+    Route::get('/', [TambakController::class, 'index'])->name('admin.tambak.index');
+    Route::post('/list', [TambakController::class, 'list'])->name('admin.tambak.list');
+    Route::get('/create', [TambakController::class, 'create'])->name('admin.tambak.create');
+    Route::post('/', [TambakController::class, 'store'])->name('admin.tambak.store');
+    Route::get('/{id}', [TambakController::class, 'show'])->name('admin.tambak.show');
+    Route::get('/{id}/edit', [TambakController::class, 'edit'])->name('admin.tambak.edit');
+    Route::put('/{id}', [TambakController::class, 'update'])->name('admin.tambak.update');
+    Route::delete('/{id}', [TambakController::class, 'destroy'])->name('admin.tambak.destroy');
 });
 
 // Route manajemen kolam
 Route::group(['prefix' => 'kolam'], function(){
-    Route::get('/', [KolamController::class, 'index'])->name('kolam.index');
-    Route::post('/list', [KolamController::class, 'list'])->name('kolam.list');
-    Route::get('/create', [KolamController::class, 'create'])->name('kolam.create');
-    Route::post('/', [KolamController::class, 'store'])->name('kolam.store');
-    Route::get('/{id}', [KolamController::class, 'show'])->name('kolam.show');
-    Route::get('/{id}/edit', [KolamController::class, 'edit'])->name('kolam.edit');
-    Route::put('/{id}', [KolamController::class, 'update'])->name('kolam.update');
-    Route::delete('/{id}', [KolamController::class, 'destroy'])->name('kolam.destroy');
+    Route::get('/', [KolamController::class, 'index'])->name('admin.kolam.index');
+    Route::post('/list', [KolamController::class, 'list'])->name('admin.kolam.list');
+    Route::get('/create', [KolamController::class, 'create'])->name('admin.kolam.create');
+    Route::post('/', [KolamController::class, 'store'])->name('admin.kolam.store');
+    Route::get('/{id}', [KolamController::class, 'show'])->name('admin.kolam.show');
+    Route::get('/{id}/edit', [KolamController::class, 'edit'])->name('admin.kolam.edit');
+    Route::put('/{id}', [KolamController::class, 'update'])->name('admin.kolam.update');
+    Route::delete('/{id}', [KolamController::class, 'destroy'])->name('admin.kolam.destroy');
 });
 
 // Route fase tambak
 Route::group(['prefix' => 'fasekolam'], function(){
-    Route::get('/', [FaseKolamController::class, 'index'])->name('fasekolam.index');
-    Route::post('/list', [FaseKolamController::class, 'list'])->name('fasekolam.list');
-    Route::get('/create', [FaseKolamController::class, 'create'])->name('fasekolam.create');
-    Route::post('/', [FaseKolamController::class, 'store'])->name('fasekolam.store');
-    Route::get('/{id}', [FaseKolamController::class, 'show'])->name('fasekolam.show');
-    Route::get('/{id}/edit', [FaseKolamController::class, 'edit'])->name('fasekolam.edit');
-    Route::put('/{id}', [FaseKolamController::class, 'update'])->name('fasekolam.update');
-    Route::delete('/{id}', [FaseKolamController::class, 'destroy'])->name('fasekolam.destroy');
+    Route::get('/', [FaseKolamController::class, 'index'])->name('admin.fasekolam.index');
+    Route::post('/list', [FaseKolamController::class, 'list'])->name('admin.fasekolam.list');
+    Route::get('/create', [FaseKolamController::class, 'create'])->name('admin.fasekolam.create');
+    Route::post('/', [FaseKolamController::class, 'store'])->name('admin.fasekolam.store');
+    Route::get('/{id}', [FaseKolamController::class, 'show'])->name('admin.fasekolam.show');
+    Route::get('/{id}/edit', [FaseKolamController::class, 'edit'])->name('admin.fasekolam.edit');
+    Route::put('/{id}', [FaseKolamController::class, 'update'])->name('admin.fasekolam.update');
+    Route::delete('/{id}', [FaseKolamController::class, 'destroy'])->name('admin.fasekolam.destroy');
 });
 
 // Route manajemen pj tambak
 Route::group(['prefix' => 'pjTambak'], function(){
-    Route::get('/', [PjTambakController::class, 'index'])->name('pjTambak.index');
-    Route::post('/list', [PjTambakController::class, 'list'])->name('pjTambak.list');
-    Route::get('/create', [PjTambakController::class, 'create'])->name('pjTambak.create');
-    Route::post('/', [PjTambakController::class, 'store'])->name('pjTambak.store');
-    Route::get('/{id}', [PjTambakController::class, 'show'])->name('pjTambak.show');
-    Route::get('/{id}/edit', [PjTambakController::class, 'edit'])->name('pjTambak.edit');
-    Route::put('/{id}', [PjTambakController::class, 'update'])->name('pjTambak.update');
-    Route::delete('/{id}', [PjTambakController::class, 'destroy'])->name('pjTambak.destroy');
+    Route::get('/', [PjTambakController::class, 'index'])->name('admin.pjTambak.index');
+    Route::post('/list', [PjTambakController::class, 'list'])->name('admin.pjTambak.list');
+    Route::get('/create', [PjTambakController::class, 'create'])->name('admin.pjTambak.create');
+    Route::post('/', [PjTambakController::class, 'store'])->name('admin.pjTambak.store');
+    Route::get('/{id}', [PjTambakController::class, 'show'])->name('admin.pjTambak.show');
+    Route::get('/{id}/edit', [PjTambakController::class, 'edit'])->name('admin.pjTambak.edit');
+    Route::put('/{id}', [PjTambakController::class, 'update'])->name('admin.pjTambak.update');
+    Route::delete('/{id}', [PjTambakController::class, 'destroy'])->name('admin.pjTambak.destroy');
 });
 
+
+// MANAJEMEN BUDIDAYA
 // Route anco
 Route::group(['prefix' => 'anco'], function(){
     Route::get('/', [AncoController::class, 'index'])->name('anco.index');
