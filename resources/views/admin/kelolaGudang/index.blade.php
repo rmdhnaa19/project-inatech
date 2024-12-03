@@ -191,7 +191,6 @@
                 });
             })
 
-
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kelolaGudang_filter").append(
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
