@@ -1,80 +1,23 @@
-<div class="container">
+<div class="container-fluid">
     <div class="text-center mb-3">
-        <h4 class="mb-4">{{ $kolam->nama_kolam }}</h4>
+        <h4 class="mb-4">{{ $kolam->kd_kolam }}</h4>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <div style="position: sticky; top: 20px;">
+        <div class="col-md-5">
+            <div class="image-container text-center" style="position: sticky; top: 20px;">
                 <img src="{{ asset('storage/' . $kolam->foto) }}" alt="Foto Kolam" class="img-fluid"
-                    style="max-width: ; height: auto;">
+                    style="width: 100%; height: auto; max-height: 300px; object-fit: cover;">
             </div>
         </div>
-        <div class="col-md-6">
-            <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px;">
-                <p><strong>Kode Kolam :</strong> {{ $kolam->kd_kolam }}</p>
+        <div class="col-md-7">
+            <div style="padding-right: 15px;">
+                {{-- <p><strong>Kode Kolam :</strong> {{ $kolam->kd_kolam }}</p> --}}
                 <p><strong>Tipe Kolam :</strong> {{ $kolam->tipe_kolam }}</p>
                 <p><strong>Nama Tambak :</strong> {{ $kolam->tambak->nama_tambak ?? 'Tambak tidak ditemukan' }}</p>
                 <p><strong>Panjang Kolam :</strong> {{ $kolam->panjang_kolam }} m</p>
-                <p><strong>Lebar Kolam :</strong> {{ $kolam->lebar_kolam }} m</p>
                 <p><strong>Luas Kolam :</strong> {{ $kolam->luas_kolam }} m²</p>
-                <p><strong>Kedalaman :</strong> {{ $kolam->kedalaman}} m</p>
+                <p><strong>Kedalaman :</strong> {{ $kolam->kedalaman }} m</p>
             </div>
         </div>
     </div>
 </div>
-
-
-
-{{-- <div class="container">
-    <div class="text-center mb-3">
-        <h4 class="mb-3">Detail Kolam</h4>
-        <img src="{{ asset('storage/' . $kolam->foto) }}" alt="Foto Kolam" class="img-fluid"
-            style="max-height: 200px; width: auto;">
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <p><strong>Kode Kolam: </strong> {{ $kolam->kd_kolam }}</p>
-            </div>
-            <div class="col">
-                <p><strong>Tipe Kolam : </strong> {{ $kolam->tipe_kolam }}</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p><strong>Nama Tambak: </strong> {{ $kolam->tambak->nama_tambak ?? 'Tambak tidak ditemukan' }} m²</p>
-            </div>
-            <div class="col">
-                <p><strong>Panjang Kolam: </strong> {{ $kolam->panjang_kolam }} m</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p><strong>Lebar Kolam: </strong> {{ $kolam->lebar_kolam }} m</p>
-            </div>
-            <div class="col">
-                <p><strong>Luas Kolam: </strong> {{ $kolam->luas_kolam }} m²</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p><strong>Kedalaman: </strong> {{ $kolam->kedalaman}} m</p>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-
-{{-- <div class="text-center mb-3">
-    <h4>Detail Kolam</h4>
-    <img src="{{ asset('storage/' . $kolam->foto) }}" alt="Foto Kolam" class="img-fluid mb-3" style="max-height: 200px;">
-    </div>
-    <div class="text-left">
-    <p><strong>Kode Kolam:</strong> {{ $kolam->kd_kolam }}</p>
-    <p><strong>Tipe Kolam:</strong> {{ $kolam->tipe_kolam }}</p>
-    <p><strong>Nama Tambak:</strong> {{ $kolam->tambak->nama_tambak ?? 'Tambak tidak ditemukan' }}</p>
-    <p><strong>Panjang Kolam:</strong> {{ $kolam->panjang_kolam }} m</p>
-    <p><strong>Lebar Kolam:</strong> {{ $kolam->lebar_kolam }} m</p>
-    <p><strong>Luas Kolam:</strong> {{ $kolam->luas_kolam }} m²</p>
-    <p><strong>Kedalaman:</strong> {{ $kolam->kedalaman}} m</p>
-</div> --}}

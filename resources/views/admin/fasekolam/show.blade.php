@@ -3,14 +3,14 @@
         <h4 class="mb-4">{{ $fasekolam->kd_fase_tambak }}</h4>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div style="position: sticky; top: 20px;">
                 <img src="{{ asset('storage/' . $fasekolam->foto) }}" alt="Foto Fase Kolam" class="img-fluid"
                     style="max-width: ; height: auto;">
             </div>
         </div>
-        <div class="col-md-6">
-            <div style="max-height: 30vh; overflow-y: auto; padding-right: 15px;">
+        <div class="col-md-7">
+            <div style="padding-right: 15px;">
                 <p><strong>Kode Fase Kolam:</strong> {{ $fasekolam->kd_fase_tambak }}</p>
                 <p><strong>Kode Kolam:</strong> {{ $fasekolam->kolam->kd_kolam ?? 'Kolam tidak ditemukan'}}</p>
                 <p><strong>Tanggal Mulai:</strong> {{ $fasekolam->tanggal_mulai }}</p>
