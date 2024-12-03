@@ -318,13 +318,14 @@ class TransaksiPakanController extends Controller
     }
 
     public function destroy($id) {
-        $check = TransaksiPakanModel::find($id);
-        if (!$check) {
-            Alert::toast('Data transaksi pakan tidak ditemukan', 'error');
-            return redirect('/kelolaTransaksiPakan');
+        $transaksiPakan = TransaksiPakanModel::find($id);
+        if (!$transaksiPakan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data transaksi pakan tidak ditemukan.'
+            ], 404);
         }
         try{
-            $transaksiPakan = TransaksiPakanModel::find($id);
             $qty = $transaksiPakan->quantity;
             $idDetailPakan = $transaksiPakan->id_detail_pakan;
             $detailPakan = DetailPakanModel::find($idDetailPakan);
@@ -332,8 +333,10 @@ class TransaksiPakanController extends Controller
             $tipeTransaki = $transaksiPakan->tipe_transaksi;
             if ($tipeTransaki == 'Masuk') {
                 if($stok < $qty){
-                    Alert::toast('Data transaksi pakan gagal dihapus', 'error');
-                    return redirect('/kelolaTransaksiPakan');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Data transaksi pakan gagal dihapus karena stok kurang.'
+                    ]);
                 }else{
                     $detailPakan->update([
                         'stok_pakan' => $stok - $qty,
@@ -344,12 +347,16 @@ class TransaksiPakanController extends Controller
                     'stok_pakan' => $stok + $qty,
                 ]);
             }
-            TransaksiPakanModel::destroy($id);
-            Alert::toast('Data transaksi pakan berhasil dihapus', 'success');
-            return redirect('/kelolaTransaksiPakan');
+            $transaksiPakan->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data transaksi pakan berhasil dihapus.'
+            ]);
         }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data transaksi pakan gagal dihapus', 'error');
-            return redirect('/kelolaTransaksiPakan');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus transaksi pakan: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

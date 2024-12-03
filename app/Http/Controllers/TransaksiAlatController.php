@@ -298,13 +298,14 @@ class TransaksiAlatController extends Controller
     }
 
     public function destroy($id) {
-        $check = TransaksiAlatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data transaksi alat tidak ditemukan', 'error');
-            return redirect('/kelolaTransaksiAlat');
+        $transaksiAlat = TransaksiAlatModel::find($id);
+        if (!$transaksiAlat) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data transaksi alat tidak ditemukan.'
+            ], 404);
         }
         try{
-            $transaksiAlat = TransaksiAlatModel::find($id);
             $qty = $transaksiAlat->quantity;
             $idDetailAlat = $transaksiAlat->id_detail_alat;
             $detailAlat = DetailAlatModel::find($idDetailAlat);
@@ -312,8 +313,10 @@ class TransaksiAlatController extends Controller
             $tipeTransaki = $transaksiAlat->tipe_transaksi;
             if ($tipeTransaki == 'Masuk') {
                 if($stok < $qty){
-                    Alert::toast('Data transaksi alat gagal dihapus', 'error');
-                    return redirect('/kelolaTransaksiAlat');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Data transaksi alat gagal dihapus karena stok kurang.'
+                    ]);
                 }else{
                     $detailAlat->update([
                         'stok_alat' => $stok - $qty,
@@ -324,12 +327,16 @@ class TransaksiAlatController extends Controller
                     'stok_alat' => $stok + $qty,
                 ]);
             }
-            TransaksiAlatModel::destroy($id);
-            Alert::toast('Data transaksi alat berhasil dihapus', 'success');
-            return redirect('/kelolaTransaksiAlat');
+            $transaksiAlat->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data transaksi alat berhasil dihapus.'
+            ]);
         }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data transaksi alat gagal dihapus', 'error');
-            return redirect('/kelolaTransaksiAlat');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus transaksi alat: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

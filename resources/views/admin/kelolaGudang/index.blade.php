@@ -151,29 +151,47 @@
                 }
             });
 
-            $(document).ready(function() {
-                $(document).on('click', '#btn-delete-gudang', function() {
-                    if (typeof currentGudangId !== 'undefined' && currentGudangId) {
-                        if (confirm('Apakah Anda yakin ingin menghapus gudang ini?')) {
+            $(document).on('click', '#btn-delete-gudang', function() {
+                if (currentGudangId) {
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data gudang ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
                             var deleteUrl = '{{ route('admin.kelolaGudang.destroy', ':id') }}'
-                                .replace(':id',
-                                    currentGudangId);
-
+                                .replace(':id', currentGudangId);
                             $.ajax({
                                 url: deleteUrl,
-                                type: 'DELETE',
+                                type: 'POST',
                                 data: {
                                     "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
                                 },
                                 success: function(response) {
                                     if (response.success) {
-                                        $('#GudangDetailModal').modal('hide');
-                                        $('#table_kelolaGudang').DataTable().ajax
-                                            .reload(); // Reload DataTable
-                                        alert(response.message);
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaGudang.index') }}"; // Redirect ke index
+                                        });
                                     } else {
-                                        alert('Gagal menghapus gudang: ' + response
-                                            .message);
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus gudang: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
                                     }
                                 },
                                 error: function(xhr) {
@@ -181,15 +199,23 @@
                                     if (xhr.responseJSON && xhr.responseJSON.message) {
                                         errorMsg += ' ' + xhr.responseJSON.message;
                                     }
-                                    alert(errorMsg);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
                                 }
                             });
                         }
-                    } else {
-                        alert('ID gudang tidak ditemukan');
-                    }
-                });
-            })
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID gudang tidak ditemukan',
+                        icon: 'error'
+                    });
+                }
+            });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
             $("#table_kelolaGudang_filter").append(

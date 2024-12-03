@@ -300,13 +300,14 @@ class TransaksiObatController extends Controller
     }
 
     public function destroy($id) {
-        $check = TransaksiObatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data transaksi obat tidak ditemukan', 'error');
-            return redirect('/kelolaTransaksiObat');
+        $transaksiObat = TransaksiObatModel::find($id);
+        if (!$transaksiObat) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data transaksi obat tidak ditemukan.'
+            ], 404);
         }
         try{
-            $transaksiObat = TransaksiObatModel::find($id);
             $qty = $transaksiObat->quantity;
             $idDetailObat = $transaksiObat->id_detail_obat;
             $detailObat = DetailObatModel::find($idDetailObat);
@@ -314,8 +315,10 @@ class TransaksiObatController extends Controller
             $tipeTransaki = $transaksiObat->tipe_transaksi;
             if ($tipeTransaki == 'Masuk') {
                 if($stok < $qty){
-                    Alert::toast('Data transaksi obat gagal dihapus', 'error');
-                    return redirect('/kelolaTransaksiObat');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Data transaksi obat gagal dihapus karena stok kurang.'
+                    ]);
                 }else{
                     $detailObat->update([
                         'stok_obat' => $stok - $qty,
@@ -326,12 +329,16 @@ class TransaksiObatController extends Controller
                     'stok_obat' => $stok + $qty,
                 ]);
             }
-            TransaksiObatModel::destroy($id);
-            Alert::toast('Data transaksi obat berhasil dihapus', 'success');
-            return redirect('/kelolaTransaksiObat');
+            $transaksiObat->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data transaksi obat berhasil dihapus.'
+            ]);
         }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data transaksi obat gagal dihapus', 'error');
-            return redirect('/kelolaTransaksiObat');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus transaksi obat: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

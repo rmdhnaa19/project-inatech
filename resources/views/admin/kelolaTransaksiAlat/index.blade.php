@@ -166,29 +166,68 @@
 
             $(document).on('click', '#btn-delete-transaksiAlat', function() {
                 if (currentTransaksiAlatId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus transaksi alat ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaTransaksiAlat.destroy', ':id') }}'.replace(
-                            ':id', currentTransaksiAlatId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#transaksiAlatDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaTransaksiAlat').DataTable().ajax.reload();
-                                alert('Transaksi alat berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus transaksi alat: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data transaksi alat ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl =
+                                '{{ route('admin.kelolaTransaksiAlat.destroy', ':id') }}'
+                                .replace(':id', currentTransaksiAlatId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaTransaksiAlat.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus transaksi alat: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus transaksi alat.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID transaksi alat tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID transaksi alat tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

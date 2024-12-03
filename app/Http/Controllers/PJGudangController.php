@@ -156,19 +156,28 @@ class PJGudangController extends Controller
         return redirect()->route('admin.kelolaPJGudang.index');
     }
 
-    public function destroy($id) {
-        $check = DetailUserModel::find($id);
-        if (!$check) {
-            Alert::toast('Data penanggung jawab tidak ditemukan', 'error');
-            return redirect('/kelolaPJGudang');
+    public function destroy($id)
+    {
+        $pjGudang = DetailUserModel::find($id);
+        if (!$pjGudang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data penanggung jawab gudang tidak ditemukan.'
+            ], 404);
         }
-        try{
-            DetailUserModel::destroy($id);
-            Alert::toast('Data penanggung jawab berhasil dihapus', 'success');
-            return redirect('/kelolaPJGudang');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data penanggung jawab gagal dihapus', 'error');
-            return redirect('/kelolaPJGudang');
+    
+        try {
+            $pjGudang->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data penanggung jawab gudang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus penanggung jawab gudang: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

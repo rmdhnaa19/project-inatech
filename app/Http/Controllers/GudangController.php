@@ -135,33 +135,49 @@ class GudangController extends Controller
                     'gambar' => $updateGambar['gambar']
                 ]);
             }
-            Alert::toast('Data Gudang berhasil diubah', 'success');
-            return redirect()->route('admin.kelolaGudang.index');
         }else {
-            
+            $gambar = $request->file('gambar');
+            $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
+            $path = Storage::disk('public')->putFileAs('foto_gudang', $gambar, $namaGambar);
+            $updateGambar['gambar'] = $path;
+    
+            $gudang->update([
+                'nama' => $request->nama,
+                'harga_satuan' => $request->harga_satuan,
+                'satuan' => $request->satuan,
+                'deskripsi' => $request->deskripsi,
+                'gambar' => $updateGambar['gambar']
+            ]);
         }
+        Alert::toast('Data Gudang berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaGudang.index');
     }
 
     public function destroy($id)
     {
-        $check = GudangModel::find($id);
-        if (!$check) {
-            Alert::toast('Data gudang tidak ditemukan', 'error');
-            return redirect('/kelolaGudang');
+        $gudang = GudangModel::find($id);
+        if (!$gudang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data gudang tidak ditemukan.'
+            ], 404);
         }
-        try{
-            $kelolaGudang = GudangModel::find($id);
-            if ($kelolaGudang->gambar != '') {
-                Storage::disk('public')->delete($kelolaGudang->gambar);
-                GudangModel::destroy($id);
-            }else{
-                GudangModel::destroy($id);
+    
+        try {
+            if ($gudang->gambar) {
+                Storage::disk('public')->delete($gudang->gambar);
             }
-            Alert::toast('Data gudang berhasil dihapus', 'success');
-            return redirect('/kelolaGudang');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data gudang gagal dihapus', 'error');
-            return redirect('/kelolaGudang');
+            $gudang->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data gudang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus gudang: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

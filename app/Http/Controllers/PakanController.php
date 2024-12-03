@@ -152,25 +152,31 @@ class PakanController extends Controller
         return redirect()->route('admin.kelolaPakan.index');
     }
 
-    public function destroy($id) {
-        $check = PakanModel::find($id);
-        if (!$check) {
-            Alert::toast('Data pakan tidak ditemukan', 'error');
-            return redirect('/kelolaPakan');
+    public function destroy($id)
+    {
+        $pakan = PakanModel::find($id);
+        if (!$pakan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pakan tidak ditemukan.'
+            ], 404);
         }
-        try{
-            $kelolaPakan = PakanModel::find($id);
-            if ($kelolaPakan->foto != '') {
-                Storage::disk('public')->delete($kelolaPakan->foto);
-                PakanModel::destroy($id);
-            } else {
-                PakanModel::destroy($id);
+    
+        try {
+            if ($pakan->foto) {
+                Storage::disk('public')->delete($pakan->foto);
             }
-            Alert::toast('Data pakan berhasil dihapus', 'success');
-            return redirect('/kelolaPakan');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data pakan gagal dihapus', 'error');
-            return redirect('/kelolaPakan');
+            $pakan->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data pakan berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data pakan: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

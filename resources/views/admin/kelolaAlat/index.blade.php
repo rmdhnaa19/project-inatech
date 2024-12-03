@@ -116,7 +116,7 @@
                 }
             });
 
-            // Event listener untuk menampilkan detail tambak
+            // Event listener untuk menampilkan detail alat
             $(document).on('click', '.view-alat-details', function() {
                 var url = $(this).data('url');
                 currentAlatId = $(this).data('id');
@@ -150,34 +150,107 @@
                 }
             });
 
+            // $(document).on('click', '#btn-delete-alat', function() {
+            //     if (currentAlatId) {
+            //         if (confirm('Apakah Anda yakin ingin menghapus data alat ini?')) {
+            //             var deleteUrl = '{{ route('admin.kelolaAlat.destroy', ':id') }}'.replace(':id',
+            //                 currentAlatId);
+            //             $.ajax({
+            //                 url: deleteUrl,
+            //                 type: 'POST', // Masih POST karena perlu override
+            //                 data: {
+            //                     "_token": "{{ csrf_token() }}",
+            //                     "_method": "DELETE" // Override metode menjadi DELETE
+            //                 },
+            //                 success: function(response) {
+            //                     if (response.success) {
+            //                         alert(response.message);
+            //                         window.location.href =
+            //                             "{{ route('admin.kelolaAlat.index') }}"; // Redirect ke index
+            //                     } else {
+            //                         alert('Gagal menghapus alat: ' + response.message);
+            //                     }
+            //                 },
+            //                 error: function(xhr) {
+            //                     let errorMsg = 'Gagal menghapus alat.';
+            //                     if (xhr.responseJSON && xhr.responseJSON.message) {
+            //                         errorMsg += ' ' + xhr.responseJSON.message;
+            //                     }
+            //                     alert(errorMsg);
+            //                 }
+            //             });
+            //         }
+            //     } else {
+            //         alert('ID alat tidak ditemukan');
+            //     }
+            // });
+
             $(document).on('click', '#btn-delete-alat', function() {
                 if (currentAlatId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus alat ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaAlat.destroy', ':id') }}'.replace(':id',
-                            currentAlatId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#alatDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaAlat').DataTable().ajax.reload();
-                                alert('Alat berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus alat: ' + xhr
-                                    .responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data alat ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kelolaAlat.destroy', ':id') }}'
+                                .replace(':id', currentAlatId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaAlat.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus alat: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus alat.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID alat tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID alat tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
+
 
             $("#table_kelolaAlat_filter").append(
                 '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
