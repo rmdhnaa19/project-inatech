@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PakanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class PakanController extends Controller
@@ -76,9 +77,10 @@ class PakanController extends Controller
 
         // Buat user baru
         PakanModel::create($validatedData);
+        Alert::toast('Data pakan berhasil ditambahkan', 'success');
 
         // Redirect ke halaman kelola pengguna
-        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('admin.kelolaPakan.index');
     }
 
     public function edit(string $id){
@@ -89,7 +91,7 @@ class PakanController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data pakan yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('admin.kelolaPakan.index')],
+                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
                 ['label' => 'Edit'],
             ]
         ];
@@ -109,15 +111,30 @@ class PakanController extends Controller
 
         $pakan = PakanModel::find($id);
 
-        if ($request->file('foto') == '') {
-            $pakan->update([
-                'nama' => $request->nama,
-                'harga_satuan' => $request->harga_satuan,
-                'satuan' => $request->satuan,
-                'deskripsi' => $request->deskripsi,
-            ]);
-        }else {
-            Storage::disk('public')->delete($request->oldImage);
+        if ($request->oldImage != '') {
+            if ($request->file('foto') == '') {
+                $pakan->update([
+                    'nama' => $request->nama,
+                    'harga_satuan' => $request->harga_satuan,
+                    'satuan' => $request->satuan,
+                    'deskripsi' => $request->deskripsi,
+                ]);
+            }else {
+                Storage::disk('public')->delete($request->oldImage);
+                $foto = $request->file('foto');
+                $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+                $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
+                $updateFoto['foto'] = $path;
+    
+                $pakan->update([
+                    'nama' => $request->nama,
+                    'harga_satuan' => $request->harga_satuan,
+                    'satuan' => $request->satuan,
+                    'deskripsi' => $request->deskripsi,
+                    'foto' => $updateFoto['foto']
+                ]);
+            }
+        } else {
             $foto = $request->file('foto');
             $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('foto_pakan', $foto, $namaFoto);
@@ -131,11 +148,29 @@ class PakanController extends Controller
                 'foto' => $updateFoto['foto']
             ]);
         }
-        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Diubah!');
+        Alert::toast('Data pakan berhasil diubah', 'success');
+        return redirect()->route('admin.kelolaPakan.index');
     }
 
     public function destroy($id) {
-        PakanModel::destroy($id);
-        return redirect()->route('admin.kelolaPakan.index')->with('success', 'Data Berhasil Dihapus!');
+        $check = PakanModel::find($id);
+        if (!$check) {
+            Alert::toast('Data pakan tidak ditemukan', 'error');
+            return redirect('/kelolaPakan');
+        }
+        try{
+            $kelolaPakan = PakanModel::find($id);
+            if ($kelolaPakan->foto != '') {
+                Storage::disk('public')->delete($kelolaPakan->foto);
+                PakanModel::destroy($id);
+            } else {
+                PakanModel::destroy($id);
+            }
+            Alert::toast('Data pakan berhasil dihapus', 'success');
+            return redirect('/kelolaPakan');
+        }catch(\Illuminate\Database\QueryException $e){
+            Alert::toast('Data pakan gagal dihapus', 'error');
+            return redirect('/kelolaPakan');
+        }
     }
 }

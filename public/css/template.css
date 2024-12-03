@@ -182,3 +182,19 @@ thead.thead-light th {
 #success-alert {
     transition: opacity 1s ease-out;
 }
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Tampilkan dropdown-menu saat ada kelas 'show' */
+.dropdown-menu.show {
+    display: block;
+}
