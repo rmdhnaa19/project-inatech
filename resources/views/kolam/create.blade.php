@@ -143,7 +143,7 @@
                     <div class="form-group">
                         <div class="col">
                             <div class="row mb-1">
-                                <div class="drop-zone px-5">
+                                <div class="drop-zone px-5 mb-4">
                                     <div class="text-center">
                                         <i class="fa-solid fa-cloud-arrow-up"
                                             style="height: 50px; font-size: 50px"></i>
@@ -168,7 +168,9 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-4">
+                
+                {{-- <div class="col-md-12 mt-4 d-flex justify-content-between"> --}}
                 <button type="button" class="btn btn-sm btn-danger"
                     onclick="window.location.href='{{ url('kolam') }}'"
                     style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>

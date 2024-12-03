@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            {{-- @if ($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -11,10 +11,10 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif --}}
-            <form action="{{ url('/kolam/' . $kolam->id_kolam) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+            @endif
+            {{-- <form action="{{ url('/kolam/' . $kolam->id_kolam) }}" method="POST" enctype="multipart/form-data"> --}}
+                <form method="POST" action="{{ url('/kolam/' . $kolam->id_kolam) }}" class="form-horizontal" enctype="multipart/form-data">
+                    @csrf {!! method_field('PUT') !!}
                 <div class="row">
                     <!-- Left Side Form Inputs -->
                     <div class="col-md-6">
@@ -115,6 +115,15 @@
                         
                                     } else if (tipeKolam === 'bundar') {
                                         kolomTambahanDiv.innerHTML = `
+                                        <div class="form-group">
+                                            <label for="id_tambak" class="form-label">Nama Tambak</label>
+                                            <select class="choices form-select" name="id_tambak" id="id_tambak">
+                                                <option value="">- Pilih Nama Tambak -</option>
+                                                @foreach ($tambak as $item)
+                                                    <option value="{{ $item->id_tambak }}" {{ old('id_tambak', $kolam->id_tambak) == $item->id_tambak ? 'selected' : '' }}>{{ $item->nama_tambak }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                             <div class="form-group">
                                                 <label for="diameter_kolam" class="form-label">Diameter Kolam (m)</label>
                                                 <input type="number" class="form-control" id="panjang_kolam" name="panjang_kolam" value="{{ old('panjang_kolam', $kolam->panjang_kolam) }}" required>
@@ -146,7 +155,7 @@
                         </script>                            
                     </div>                       
 
-                <!-- Drag and Drop Foto-->
+                <!-- Right Side Drag and Drop -->
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="form-group">
                         <div class="col">
@@ -166,11 +175,12 @@
                             <div class="row mb-5">
                                 <div class="form-file">
                                     <label class="form-file-label" for="foto">
-                                        <span class="form-file-text">KOSONGI JIKA TIDAK DIGANTI</span>
+                                        <span class="form-file-text">Abaikan jika tidak mengganti</span>
                                         <span class="form-file-button">Browse</span>
+                                        <input type="hidden" id="oldImage" name="oldImage"
+                                            value="{{ $kolam->foto }}">
                                         <input type="file" class="drop-zone__input" id="foto"
                                             name="foto">
-                                        <input type="hidden" name="oldImage" value="{{ $kolam->foto }}">
                                     </label>
                                 </div>
                             </div>
@@ -185,7 +195,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-sm btn-danger"
-                    onclick="window.location.href='{{ url('kelolaPengguna') }}'"
+                    onclick="window.location.href='{{ url('kolam') }}'"
                     style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
                 <button type="submit" class="btn btn-primary btn-sm"
                     style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
@@ -193,63 +203,105 @@
         </form>
     </div>
 </div>
-
 @endsection
 @push('css')
 @endpush
 @push('js')
 <script>
+    // Pilih elemen-elemen yang dibutuhkan
     const dropZone = document.querySelector('.drop-zone');
     const dropZoneInput = document.querySelector('.drop-zone__input');
-    const dropZonePreview = document.querySelector('#drop-zone-preview');
     const browseInput = document.querySelector('#foto');
     const fileNameLabel = document.querySelector('.form-file-text');
 
-    // Handle the file drop
+    // Fungsi untuk menangani event dragover
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('drop-zone--over');
     });
 
+    // Fungsi untuk menangani event dragleave
     dropZone.addEventListener('dragleave', () => {
         dropZone.classList.remove('drop-zone--over');
     });
 
+    // Fungsi untuk menangani event drop
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('drop-zone--over');
         const files = e.dataTransfer.files;
-        dropZoneInput.files = files;
-        updateFileName(files[0].name);
-        previewFile(files[0]);
+        if (files.length > 0) {
+            dropZoneInput.files = files;
+            updateFileName(files[0].name);
+            previewImage(files[0]);
+            uploadFile(files[0]);
+        }
     });
 
-    // Handle the file browse
+    // Fungsi untuk menangani event change pada input file
     browseInput.addEventListener('change', function() {
-        dropZoneInput.files = browseInput.files; 
-        updateFileName(this.files[0].name);
-        previewFile(this.files[0]);
+        if (this.files.length > 0) {
+            dropZoneInput.files = this.files; // Sync files dengan drop zone
+            updateFileName(this.files[0].name);
+            previewImage(this.files[0]);
+            uploadFile(this.files[0]);
+        }
     });
 
-    // Update the filename in the label
+    // Fungsi untuk mengupdate nama file pada label
     function updateFileName(name) {
         fileNameLabel.textContent = name;
     }
 
-    // Preview the uploaded file
-    function previewFile(file) {
+    // Fungsi untuk preview gambar
+    function previewImage(file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            dropZonePreview.innerHTML = '';
+            // Buat elemen gambar
             const img = document.createElement('img');
             img.src = e.target.result;
+            img.className = 'preview-image';
             img.style.maxWidth = '100%';
             img.style.maxHeight = '100%';
-            img.style.objectFit = 'cover';
-            dropZonePreview.appendChild(img);
+            img.style.objectFit = 'contain';
+
+            // Hapus isi drop zone dan tambahkan gambar
+            dropZone.innerHTML = '';
+            dropZone.appendChild(img);
+
+            // Ubah style drop zone
+            dropZone.style.padding = '0';
+            dropZone.style.border = 'none';
         }
         reader.readAsDataURL(file);
     }
+
+    // Fungsi placeholder untuk upload file
+    function uploadFile(file) {
+        // Implementasi logika upload file di sini
+        console.log('Mengupload file:', file.name);
+    }
+
+    // Fungsi untuk reset drop zone
+    function resetDropZone() {
+        dropZone.innerHTML = `
+            <div class="text-center">
+            <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+            <p>Seret lalu letakkan file di sini</p>
+            </div>`;
+        dropZone.style.padding = ''; // Reset ke default
+        dropZone.style.border = ''; // Reset ke default
+        fileNameLabel.textContent = 'Pilih file...';
+    }
+
+    // Tambahkan event click pada preview gambar untuk mengganti gambar
+    dropZone.addEventListener('click', () => {
+        if (dropZone.querySelector('.preview-image')) {
+            if (confirm('Apakah Anda ingin mengganti gambar?')) {
+                resetDropZone();
+                browseInput.click();
+            }
+        }
+    });
 </script>
 @endpush
-

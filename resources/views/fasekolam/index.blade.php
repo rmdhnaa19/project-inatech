@@ -20,8 +20,6 @@
                         <th>KODE KOLAM</th>
                         <th>TANGGAL MULAI</th>
                         <th>TANGGAL PANEN</th>
-                        {{-- <th>DENSITAS</th>
-                        <th>JUMLAH TEBAR</th> --}}
                     </tr>
                 </thead>
             </table>
@@ -65,15 +63,6 @@
                                 <th>Tanggal Panen:</th>
                                 <td id="faseKolam-tanggal-panen"></td>
                             </tr>
-                            {{-- <tr>
-                                <th>Jumlah Tebar:</th>
-                                <td id="faseKolam-jumlah-tebar"></td>
-                            </tr>
-                            <tr>
-                                <th>Densitas:</th>
-                                <td id="faseKolam-densitas"></td>
-                            </tr> --}}
-                                    
                             </table>
                         </div>
                     </div>
@@ -92,25 +81,7 @@
     </div>
 </div>
 @push('css')
-<style>
-    .modal-dialog {
-        max-width: 40%;
-        margin: 5vh auto; 
-    }
-
-    .modal-content {
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        max-height: 70vh; 
-        overflow-y: auto; 
-    }
-
-    .table-borderless th, .table-borderless td {
-        padding: 0.5rem 0.5rem;
-    }
-</style>
 @endpush
-
 @endsection
 @push('css')
 @endpush

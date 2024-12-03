@@ -6,6 +6,7 @@ use App\Models\GudangModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class TambakController extends Controller
@@ -49,7 +50,7 @@ class TambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data tambak yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('tambak.index')],
+                ['label' => 'Kelola Tambak', 'url' => route('tambak.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -84,7 +85,8 @@ class TambakController extends Controller
 
         // Simpan data ke database
         TambakModel::create($validatedData);
-        return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
+        Alert::toast('Data Tambak berhasil diubah', 'success');
+        return redirect()->route('tambak.index');
     }
 
     public function show($id)
@@ -127,7 +129,8 @@ class TambakController extends Controller
 
 
     public function update(Request $request, string $id) {
-    $request->validate([
+    
+        $request->validate([
         'nama_tambak' => 'required|string|unique:tambak,nama_tambak,'.$id.',id_tambak',
         'id_gudang' => 'required',
         'luas_lahan' => 'required|numeric',
@@ -154,15 +157,16 @@ class TambakController extends Controller
         $updateFoto['foto'] = $path;
 
     $tambak->update([
-        'nama_tambak' => $request->nama_tambak,
-        'id_gudang' => $request->id_gudang,
-        'luas_lahan' => $request->luas_lahan,
-        'luas_tambak' => $request->luas_tambak,
-        'lokasi_tambak' => $request->lokasi_tambak,
-        'foto' => $updateFoto['foto']
+            'nama_tambak' => $request->nama_tambak,
+            'id_gudang' => $request->id_gudang,
+            'luas_lahan' => $request->luas_lahan,
+            'luas_tambak' => $request->luas_tambak,
+            'lokasi_tambak' => $request->lokasi_tambak,
+            'foto' => $updateFoto['foto']
         ]);
     }
-        return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diperbarui.');
+        Alert::toast('Data Tambak berhasil diubah', 'success');   
+        return redirect()->route('tambak.index');
     }
 
 

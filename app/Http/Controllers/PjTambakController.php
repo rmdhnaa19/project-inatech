@@ -6,6 +6,7 @@ use App\Models\UserModel;
 use App\Models\TambakModel;
 use App\Models\PjTambakModel;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class PjTambakController extends Controller
@@ -81,8 +82,8 @@ class PjTambakController extends Controller
 
         // Simpan data ke database
         PjTambakModel::create($validatedData);
-
-        return redirect()->route('pjTambak.index')->with('success', 'Data user tambak berhasil ditambahkan');
+        Alert::toast('Data Penanggung Jawab Tambak berhasil ditambahkan', 'success');
+        return redirect()->route('pjTambak.index');
     }
 
     public function show($id)
@@ -131,14 +132,14 @@ class PjTambakController extends Controller
 
         // Validasi input
         $validatedData = $request->validate([
-            'kd_user_tambak' => 'required|string|unique:pj_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
+            'kd_user_tambak' => 'required|string|unique:user_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
             'id_user' => 'required|integer',
             'id_tambak' => 'required|integer',
         ]);
 
         // Update data tambak
         $pjtambak->update($validatedData);
-
-        return redirect()->route('pjTambak.index')->with('success', 'Data pj tambak berhasil diubah');
+        Alert::toast('Data Penanggung Jawab Tambak berhasil diubah', 'success');
+        return redirect()->route('pjTambak.index');
     }
 }
