@@ -45,8 +45,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
     Route::group(['prefix' => 'pakanGudang'], function(){
         Route::get('/', [PakanGudangController::class, 'index'])->name('user.kelolaPakanGudang.index');
-        Route::get('/create', [PakanGudangController::class, 'create'])->name('user.kelolaPakanGudang.create');
-        Route::post('/', [PakanGudangController::class, 'store'])->name('user.kelolaPakanGudang.store');
     });
 
     Route::group(['prefix' => 'transaksiPakan'], function(){
