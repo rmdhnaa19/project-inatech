@@ -112,7 +112,7 @@ class PjTambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab tambak yang ada di dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pj Tambak', 'url' => route('pjTambak.index')],
+                ['label' => 'Kelola Pj Tambak', 'url' => route('admin.pjTambak.index')],
                 ['label' => 'Edit'],
             ]
         ];
@@ -141,5 +141,29 @@ class PjTambakController extends Controller
         $pjtambak->update($validatedData);
         Alert::toast('Data Penanggung Jawab Tambak berhasil diubah', 'success');
         return redirect()->route('admin.pjTambak.index');
+    }
+    public function destroy($id)
+{
+    $pjtambak = PjTambakModel::find($id);
+
+    if (!$pjtambak) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data Penanggung Jawab Tambak tidak ditemukan.'
+        ], 404);
+    }
+
+    try {
+        $pjtambak->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Penanggung Jawab Tambak berhasil dihapus.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus data: ' . $e->getMessage()
+        ], 500);
+        }
     }
 }

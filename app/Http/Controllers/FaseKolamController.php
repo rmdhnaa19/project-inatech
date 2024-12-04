@@ -73,7 +73,7 @@ class FaseKolamController extends Controller
 
     // Simpan data ke database
     FaseKolamModel::create($validatedData);
-    Alert::toast('Data Fase Kolam berhasil diubah', 'success'); 
+    Alert::toast('Data Fase Kolam berhasil ditambahkan', 'success'); 
     return redirect()->route('admin.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
     }
 
@@ -118,6 +118,7 @@ class FaseKolamController extends Controller
     public function update(Request $request, string $id) {
     
     $request->validate([
+        'kd_fase_tambak' => 'required|string|unique:fase_tambak,kd_fase_tambak,' . $id . ',id_fase_tambak',
         'tanggal_mulai' => 'required|string',
         'tanggal_panen' => 'required|string',
         'jumlah_tebar' => 'required|integer',
@@ -130,6 +131,7 @@ class FaseKolamController extends Controller
 
     if ($request->file('foto') == '') {
         $fasekolam->update([
+            'kd_fase_tambak' => $request->kd_fase_tambak,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_panen' => $request->tanggal_panen,
             'jumlah_tebar' => $request->jumlah_tebar,
@@ -155,4 +157,33 @@ class FaseKolamController extends Controller
         Alert::toast('Data Fase Kolam berhasil diubah', 'success');   
         return redirect()->route('admin.fasekolam.index');
     }
-}
+
+    public function destroy($id)
+    {
+        $fasekolam = FaseKolamModel::find($id);
+        if (!$fasekolam) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data fase kolam tidak ditemukan.'
+            ], 404);
+        }
+    
+        try {
+            if ($fasekolam->gambar) {
+                Storage::disk('public')->delete($fasekolam->gambar);
+            }
+            $fasekolam->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data fase kolam berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus fase kolam: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+}    
+

@@ -57,14 +57,9 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
-                    <i class="bx bx-x d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">Hapus</span>
-                </button>
-                <button type="button" class="btn btn-warning ml-1" id="edit-kolam" data-id="">
-                    <span class="d-none d-sm-block">Edit</span>
-                </button>
-            </div>
+                <button type="button" class="btn btn-danger" id="btn-delete-kolam">Hapus</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-kolam">Edit</button>
+            </div>     
         </div>
     </div>
     </div>
@@ -73,115 +68,131 @@
 @endpush
 @push('js')
     <script>
-        $(document).ready(function() {
-            var dataManajemenKolam = $('#table_manajemenKolam').DataTable({
-                serverSide: true,
-                ajax: {
-                    "url": "{{ url('kolam/list') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function(d) {
-                        d.id_tambak = $('#id_tambak').val();
-                    },
-                    "error": function(xhr, error, thrown) {
-                        console.error('Error fetching data: ', thrown);
-                    }
-                },
-                columns: [
-                    {
-                        data: "kd_kolam",
-                        className: "",
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row) {
-                            var url = '{{ route('kolam.show', ':id') }}';
-                            url = url.replace(':id', row.id_kolam);
-                            return '<a href="javascript:void(0);" data-id="' + row.id_kolam +
-                '" class="view-user-details" data-url="' + url +
-                '" data-toggle="modal" data-target="#kolamDetailModal">' + data +
-                '</a>';                                
-                        }
-                    },
-                    {
-                        data: "tipe_kolam",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "tambak.nama_tambak",
-                        className: "",
-                        orderable: false,
-                        searchable: true
-                    },
-                    {
-                        data: "luas_kolam",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                ],
-                pagingType: "simple_numbers", 
-                dom: 'frtip', 
-                language: {
-                    search: "" 
-                }
-            });
+    $(document).ready(function() {
+        var currentKolamId = null; // Variabel global untuk menyimpan ID kolam saat ini
 
-            // Event listener untuk menampilkan detail tambak
-        $(document).on('click', '.view-user-details', function() {
-        var url = $(this).data('url');
-        var id_kolam = $(this).data('id'); // Ambil ID tambak dari id kolam jika di klik
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(response) {
-                if (response.html) {
-                    $('#user-detail-content').html(response.html);
-                    $('#edit-kolam').data('id', id_kolam);
-                    $('#kolamDetailModal').modal('show');
-                } else {
-                    alert('Gagal memuat detail kolam');
+        var dataManajemenKolam = $('#table_manajemenKolam').DataTable({
+            serverSide: true,
+            ajax: {
+                "url": "{{ url('kolam/list') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d) {
+                    d.id_tambak = $('#id_tambak').val();
+                },
+                "error": function(xhr, error, thrown) {
+                    console.error('Error fetching data: ', thrown);
                 }
             },
-            error: function(xhr, status, error) {
-                console.log(xhr.responseText);
-                alert('Gagal memuat detail kolam');
+            columns: [
+                {
+                    data: "kd_kolam",
+                    render: function(data, type, row) {
+                        var url = '{{ route('admin.kolam.show', ':id') }}';
+                        url = url.replace(':id', row.id_kolam);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_kolam +
+                               '" class="view-user-details" data-url="' + url +
+                               '" data-toggle="modal" data-target="#kolamDetailModal">' + data + '</a>';
+                    }
+                },
+                { data: "tipe_kolam" },
+                { data: "tambak.nama_tambak" },
+                { data: "luas_kolam" },
+            ],
+            pagingType: "simple_numbers",
+            dom: 'frtip',
+            language: {
+                search: ""
             }
         });
-    });
 
-    // Event listener untuk tombol Edit di dalam modal
-    $(document).on('click', '#edit-kolam', function() {
-        var id = $(this).data('id'); 
-        if (id) {
-            var url = '{{ route("kolam.edit", ":id") }}';
-            url = url.replace(':id', id);
-            window.location.href = url;
-        }
-    });
-
-    // Tambahkan tombol "Tambah" setelah kolom pencarian
-    $("#table_manajemenKolam_filter").append(
-                '<select class="form-control" name="id_tambak" id="id_tambak" required style="margin-left: 30px; width: 150px;">' +
-                '<option value="">- SEMUA -</option>' +
-                '@foreach ($tambak as $item)' +
-                '<option value="{{ $item->id_tambak }}">{{ $item->nama_tambak }}</option>' +
-                '@endforeach' +
-                '</select>' +
-                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
-                
-
-            // Tambahkan event listener untuk tombol tambah 
-            $("#btn-tambah").on('click', function() {
-                window.location.href =
-                    "{{ url('kolam/create') }}"; 
+        // Event listener untuk menampilkan detail kolam
+        $(document).on('click', '.view-user-details', function() {
+            var url = $(this).data('url');
+            currentKolamId = $(this).data('id'); // Simpan ID kolam saat ini
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    if (response.html) {
+                        $('#user-detail-content').html(response.html);
+                        $('#kolamDetailModal').modal('show');
+                    } else {
+                        alert('Gagal memuat detail kolam');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('Gagal memuat detail kolam');
+                }
             });
-            // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data Kolam...');
-            $('#id_tambak').on('change', function() {
-                dataManajemenKolam.ajax.reload();
-            })        
         });
-    </script>
+
+        // Tombol Edit
+        $(document).on('click', '#btn-edit-kolam', function() {
+            if (currentKolamId) {
+                const editUrl = '{{ route('admin.kolam.edit', ':id') }}'.replace(':id', currentKolamId);
+                window.location.href = editUrl; // Redirect ke halaman edit
+            } else {
+                alert('ID kolam tidak ditemukan');
+            }
+        });
+
+        // Tombol Hapus
+        $(document).on('click', '#btn-delete-kolam', function() {
+    if (currentKolamId) {
+        if (confirm('Apakah Anda yakin ingin menghapus data kolam ini?')) {
+            const deleteUrl = '{{ route('admin.kolam.destroy', ':id') }}'.replace(':id', currentKolamId);
+
+            $.ajax({
+                url: deleteUrl,
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "_method": "DELETE"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = "{{ route('admin.kolam.index') }}"; // Redirect ke halaman index
+                    } else {
+                        alert('Gagal menghapus kolam: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Terjadi kesalahan saat menghapus kolam');
+                }
+            });
+        }
+    } else {
+        alert('ID kolam tidak ditemukan');
+    }
+});
+
+
+        // Tambahkan tombol "Tambah" setelah kolom pencarian
+        $("#table_manajemenKolam_filter").append(
+            '<select class="form-control" name="id_tambak" id="id_tambak" style="margin-left: 30px; width: 150px;">' +
+            '<option value="">- SEMUA -</option>' +
+            '@foreach ($tambak as $item)' +
+            '<option value="{{ $item->id_tambak }}">{{ $item->nama_tambak }}</option>' +
+            '@endforeach' +
+            '</select>' +
+            '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+        );
+
+        // Event listener untuk tombol tambah
+        $("#btn-tambah").on('click', function() {
+            window.location.href = "{{ url('kolam/create') }}";
+        });
+
+        // Filter berdasarkan tambak
+        $('#id_tambak').on('change', function() {
+            dataManajemenKolam.ajax.reload();
+        });
+
+        // Placeholder pada search
+        $('input[type="search"]').attr('placeholder', 'Cari data Kolam...');
+    });
+</script>
 @endpush
