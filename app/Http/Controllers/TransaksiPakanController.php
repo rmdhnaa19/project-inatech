@@ -12,40 +12,86 @@ use Yajra\DataTables\Facades\DataTables;
 class TransaksiPakanController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Transaksi Pakan',
-            'paragraph' => 'Berikut ini merupakan data transaksi pakan yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
-                ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
-                ['label' => 'Kelola Transaksi Pakan'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiPakan';
-        $pakanGudang = DetailPakanModel::all();
-        return view('admin.kelolaTransaksiPakan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Transaksi Pakan',
+                'paragraph' => 'Berikut ini merupakan data transaksi pakan yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Pakan', 'url' => route('admin.kelolaPakan.index')],
+                    ['label' => 'Kelola Pakan ke Gudang', 'url' => route('admin.kelolaPakanGudang.index')],
+                    ['label' => 'Kelola Transaksi Pakan'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiPakan';
+            $pakanGudang = DetailPakanModel::all();
+            return view('admin.kelolaTransaksiPakan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Riwayat Transaksi Pakan',
+                'paragraph' => 'Berikut ini merupakan riwayat transaksi pakan yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Riwayat Transaksi Pakan'],
+                ]
+            ];
+            $activeMenu = 'transaksiPakan';
+            // Ambil ID gudang dari detail_user
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+
+            // Filter data pakan gudang
+            $pakanGudang = DetailPakanModel::where('id_gudang', $gudangIds)->get();
+
+            return view('adminGudang.transaksiPakan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'gudangIds' => $gudangIds]);
+        }
     }
 
     public function list(Request $request)
     {
-        $transaksiPakans = TransaksiPakanModel::with(['detailPakan.gudang', 'detailPakan.pakan'])
-            ->select('transaksi_pakan.*', 'pakan.nama as nama_pakan', 'gudang.nama as nama_gudang')
-            ->join('detail_pakan', 'transaksi_pakan.id_detail_pakan', '=', 'detail_pakan.id_detail_pakan')
-            ->join('pakan', 'detail_pakan.id_pakan', '=', 'pakan.id_pakan')
-            ->join('gudang', 'detail_pakan.id_gudang', '=', 'gudang.id_gudang');
+        if (auth()->user()->id_role == 1) {
+            $transaksiPakans = TransaksiPakanModel::with(['detailPakan.gudang', 'detailPakan.pakan'])
+                ->select('transaksi_pakan.*', 'pakan.nama as nama_pakan', 'gudang.nama as nama_gudang')
+                ->join('detail_pakan', 'transaksi_pakan.id_detail_pakan', '=', 'detail_pakan.id_detail_pakan')
+                ->join('pakan', 'detail_pakan.id_pakan', '=', 'pakan.id_pakan')
+                ->join('gudang', 'detail_pakan.id_gudang', '=', 'gudang.id_gudang');
 
-        return DataTables::of($transaksiPakans)
-            ->addColumn('pakan_gudang', function ($transaksi) {
-                return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
-            })
-            ->addColumn('created_at_formatted', function ($transaksi) {
-                return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
-            })
-            ->filterColumn('pakan_gudang', function($query, $keyword) {
-                $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
-            })
-            ->make(true);
+            return DataTables::of($transaksiPakans)
+                ->addColumn('pakan_gudang', function ($transaksi) {
+                    return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('pakan_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }elseif (auth()->user()->id_role == 2) {
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+
+            $transaksiPakans = TransaksiPakanModel::with(['detailPakan.gudang', 'detailPakan.pakan'])
+                ->select(
+                    'transaksi_pakan.*', 
+                    'pakan.nama as nama_pakan', 
+                    'gudang.nama as nama_gudang'
+                )
+                ->join('detail_pakan', 'transaksi_pakan.id_detail_pakan', '=', 'detail_pakan.id_detail_pakan')
+                ->join('pakan', 'detail_pakan.id_pakan', '=', 'pakan.id_pakan')
+                ->join('gudang', 'detail_pakan.id_gudang', '=', 'gudang.id_gudang')
+                ->whereIn('detail_pakan.id_gudang', $gudangIds);
+
+            return DataTables::query($transaksiPakans)
+                ->addColumn('pakan_gudang', function ($transaksi) {
+                    return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('pakan_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }
     }
 
     public function create(Request $request){
