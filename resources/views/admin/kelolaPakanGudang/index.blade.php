@@ -24,7 +24,7 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="PakanGudangDetailModal" tabindex="-1" role="dialog"
+    <div class="modal fade text-left" id="pakanGudangDetailModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel17" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
@@ -35,7 +35,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
-                    <div id="PakanGudang-detail-content" class="container-fluid">
+                    <div id="pakanGudang-detail-content" class="container-fluid">
                         <div class="text-center mb-3">
                             <h4 class="mb-4"></h4>
                         </div>
@@ -58,8 +58,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <button type="button" class="btn btn-danger" id="btn-delete-PakanGudang">Hapus</button>
-                    <button type="button" class="btn btn-primary" id="btn-edit-PakanGudang">Edit</button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-pakanGudang">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-pakanGudang">Edit</button>
                 </div>
             </div>
         </div>
@@ -96,8 +96,8 @@
                         var url = '{{ route('admin.kelolaPakanGudang.show', ':id') }}';
                         url = url.replace(':id', row.id_detail_pakan);
                         return '<a href="javascript:void(0);" data-id="' + row.id_detail_pakan +
-                            '" class="view-PakanGudang-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#PakanGudangDetailModal">' +
+                            '" class="view-pakanGudang-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#pakanGudangDetailModal">' +
                             data + '</a>';
                     }
                 }, {
@@ -124,7 +124,7 @@
             });
 
             // Event listener untuk menampilkan detail tambak
-            $(document).on('click', '.view-PakanGudang-details', function() {
+            $(document).on('click', '.view-pakanGudang-details', function() {
                 var url = $(this).data('url');
                 currentPakanGudangId = $(this).data('id');
 
@@ -134,8 +134,8 @@
                     success: function(response) {
                         if (response.html) {
                             // Load konten detail ke modal
-                            $('#PakanGudang-detail-content').html(response.html);
-                            $('#PakanGudangDetailModal').modal('show');
+                            $('#pakanGudang-detail-content').html(response.html);
+                            $('#pakanGudangDetailModal').modal('show');
                         } else {
                             alert('Gagal memuat detail pakan ke gudang');
                         }
@@ -147,7 +147,7 @@
                 });
             });
 
-            $(document).on('click', '#btn-edit-PakanGudang', function() {
+            $(document).on('click', '#btn-edit-pakanGudang', function() {
                 if (currentPakanGudangId) {
                     var editUrl = '{{ route('admin.kelolaPakanGudang.edit', ':id') }}'.replace(':id',
                         currentPakanGudangId);
@@ -157,33 +157,69 @@
                 }
             });
 
-            $(document).on('click', '#btn-delete-PakanGudang', function() {
+            $(document).on('click', '#btn-delete-pakanGudang', function() {
                 if (currentPakanGudangId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus pakan ke gudang ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaPakanGudang.destroy', ':id') }}'.replace(
-                            ':id',
-                            currentPakanGudangId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#PakanGudangDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaPakanGudang').DataTable().ajax.reload();
-                                alert('Pakan ke gudang berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus pakan ke gudang: ' + xhr
-                                    .responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data pakan ke gudang ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kelolaPakanGudang.destroy', ':id') }}'
+                                .replace(':id', currentPakanGudangId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaPakanGudang.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus pakan ke gudang: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus pakan ke gudang.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID pakan ke gudang tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID pakan ke gudang tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

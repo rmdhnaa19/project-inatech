@@ -152,30 +152,68 @@
 
             $(document).on('click', '#btn-delete-PJGudang', function() {
                 if (currentPJGudangId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaPJGudang.destroy', ':id') }}'.replace(':id',
-                            currentPJGudangId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#PJGudangDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaPJGudang').DataTable().ajax.reload();
-                                alert('Penanggung jawab gudang berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus penanggung jawab gudang: ' + xhr
-                                    .responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data penanggung jawab gudang ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kelolaPJGudang.destroy', ':id') }}'
+                                .replace(':id', currentPJGudangId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaPJGudang.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus penanggung jawab gudang: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg =
+                                        'Gagal menghapus penanggung jawab gudang.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID penanggung jawab gudang tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID penanggung jawab gudang tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

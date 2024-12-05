@@ -23,7 +23,7 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="PakanDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
+    <div class="modal fade text-left" id="pakanDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
@@ -34,7 +34,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="padding: 20px; max-height: 70vh; overflow-y: hidden;">
-                    <div id="Pakan-detail-content" class="container-fluid">
+                    <div id="pakan-detail-content" class="container-fluid">
                         <div class="text-center mb-3">
                             <h4 class="mb-4"></h4>
                         </div>
@@ -56,8 +56,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <button type="button" class="btn btn-danger" id="btn-delete-Pakan">Hapus</button>
-                    <button type="button" class="btn btn-primary" id="btn-edit-Pakan">Edit</button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-pakan">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-pakan">Edit</button>
                 </div>
             </div>
         </div>
@@ -91,8 +91,8 @@
                         var url = '{{ route('admin.kelolaPakan.show', ':id') }}';
                         url = url.replace(':id', row.id_pakan);
                         return '<a href="javascript:void(0);" data-id="' + row.id_pakan +
-                            '" class="view-Pakan-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#PakanDetailModal">' + data +
+                            '" class="view-pakan-details" data-url="' + url +
+                            '" data-toggle="modal" data-target="#pakanDetailModal">' + data +
                             '</a>';
                     }
                 }, {
@@ -117,7 +117,7 @@
             });
 
             // Event listener untuk menampilkan detail tambak
-            $(document).on('click', '.view-Pakan-details', function() {
+            $(document).on('click', '.view-pakan-details', function() {
                 var url = $(this).data('url');
                 currentPakanId = $(this).data('id');
 
@@ -127,8 +127,8 @@
                     success: function(response) {
                         if (response.html) {
                             // Load konten detail ke modal
-                            $('#Pakan-detail-content').html(response.html);
-                            $('#PakanDetailModal').modal('show');
+                            $('#pakan-detail-content').html(response.html);
+                            $('#pakanDetailModal').modal('show');
                         } else {
                             alert('Gagal memuat detail penanggung jawab gudang');
                         }
@@ -140,7 +140,7 @@
                 });
             });
 
-            $(document).on('click', '#btn-edit-Pakan', function() {
+            $(document).on('click', '#btn-edit-pakan', function() {
                 if (currentPakanId) {
                     var editUrl = '{{ route('admin.kelolaPakan.edit', ':id') }}'.replace(':id',
                         currentPakanId);
@@ -150,32 +150,69 @@
                 }
             });
 
-            $(document).on('click', '#btn-delete-Pakan', function() {
+            $(document).on('click', '#btn-delete-pakan', function() {
                 if (currentPakanId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus pakan ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaPakan.destroy', ':id') }}'.replace(':id',
-                            currentPakanId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#PakanDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaPakan').DataTable().ajax.reload();
-                                alert('Penanggung jawab gudang berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus penanggung jawab gudang: ' + xhr
-                                    .responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data pakan ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kelolaPakan.destroy', ':id') }}'
+                                .replace(':id', currentPakanId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaPakan.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus data pakan: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus data pakan.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID penanggung jawab gudang tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID pakan tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

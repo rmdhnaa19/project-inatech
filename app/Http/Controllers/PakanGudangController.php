@@ -170,19 +170,28 @@ class PakanGudangController extends Controller
         return redirect()->route('admin.kelolaPakanGudang.index');
     }
 
-    public function destroy($id) {
-        $check = DetailPakanModel::find($id);
-        if (!$check) {
-            Alert::toast('Data pakan ke gudang tidak ditemukan', 'error');
-            return redirect('/kelolaPakanGudang');
+    public function destroy($id)
+    {
+        $pakanGudang = DetailPakanModel::find($id);
+        if (!$pakanGudang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pakan ke gudang tidak ditemukan.'
+            ], 404);
         }
-        try{
-            DetailPakanModel::destroy($id);
-            Alert::toast('Data pakan ke gudang berhasil dihapus', 'success');
-            return redirect('/kelolaPakanGudang');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data pakan ke gudang gagal dihapus', 'error');
-            return redirect('/kelolaPakanGudang');
+    
+        try {
+            $pakanGudang->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data pakan ke gudang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus pakan ke gudang: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

@@ -151,25 +151,31 @@ class ObatController extends Controller
         return redirect()->route('admin.kelolaObat.index');
     }
 
-    public function destroy($id) {
-        $check = ObatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data obat tidak ditemukan', 'error');
-            return redirect('/kelolaObat');
+    public function destroy($id)
+    {
+        $obat = ObatModel::find($id);
+        if (!$obat) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data obat tidak ditemukan.'
+            ], 404);
         }
-        try{
-            $kelolaObat = ObatModel::find($id);
-            if ($kelolaObat->foto != '') {
-                Storage::disk('public')->delete($kelolaObat->foto);
-                ObatModel::destroy($id);
-            } else {
-                ObatModel::destroy($id);
+    
+        try {
+            if ($obat->foto) {
+                Storage::disk('public')->delete($obat->foto);
             }
-            Alert::toast('Data obat berhasil dihapus', 'success');
-            return redirect('/kelolaObat');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data obat gagal dihapus', 'error');
-            return redirect('/kelolaObat');
+            $obat->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data obat berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data obat: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

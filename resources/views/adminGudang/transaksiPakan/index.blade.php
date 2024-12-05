@@ -1,24 +1,26 @@
 @extends('layouts.template')
-@section('title', 'Kelola Transaksi Pakan')
+@section('title', 'Riwayat Transaksi Pakan')
 @section('content')
     <div class="card">
-        <div class="card-header">Data Transaksi Pakan</div>
+        <div class="card-header">Transaksi Pakan</div>
         <div class="card-body">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
+            {{-- @if (session('success'))
+                <div class="alert alert-success" id="success-alert">
+                    {{ session('success') }}
                 </div>
-            </div>
+            @endif --}}
+            <table class="table mb-3" id="table_transaksiPakan">
+                <thead>
+                    <tr>
+                        <th style="display: none">ID</th>
+                        <th class="text-center">KODE</th>
+                        <th class="text-center">TANGGAL</th>
+                        <th class="text-center">NAMA PAKAN</th>
+                        <th class="text-center">TIPE TRANSAKSI</th>
+                        <th class="text-center">QUANTITY</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 
@@ -66,10 +68,10 @@
     <script>
         var currentTransaksiPakanId;
         $(document).ready(function() {
-            var dataKelolaTransaksiPakan = $('#table_kelolaTransaksiPakan').DataTable({
+            var dataTransaksiPakan = $('#table_transaksiPakan').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('kelolaTransaksiPakan/list') }}",
+                    "url": "{{ url('transaksiPakan/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
@@ -146,55 +148,6 @@
                         alert('Gagal memuat detail transaksi pakan');
                     }
                 });
-            });
-
-            $(document).on('click', '#btn-edit-transaksiPakan', function() {
-                if (currentTransaksiPakanId) {
-                    var editUrl = '{{ route('admin.kelolaTransaksiPakan.edit', ':id') }}'.replace(':id',
-                        currentTransaksiPakanId);
-                    window.location.href = editUrl;
-                } else {
-                    alert('ID transaksi pakan tidak ditemukan');
-                }
-            });
-
-            $(document).on('click', '#btn-delete-transaksiPakan', function() {
-                if (currentTransaksiPakanId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus transaksi pakan ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaTransaksiPakan.destroy', ':id') }}'.replace(
-                            ':id', currentTransaksiPakanId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#transaksiPakanDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaTransaksiPakan').DataTable().ajax.reload();
-                                alert('Transaksi pakan berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus transaksi pakan: ' + xhr.responseText);
-                            }
-                        });
-                    }
-                } else {
-                    alert('ID transaksi pakan tidak ditemukan');
-                }
-            });
-
-            // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_kelolaTransaksiPakan_filter").append(
-                '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
-            );
-
-            // Tambahkan event listener untuk tombol
-            $("#btn-tambah").on('click', function() {
-                window.location.href =
-                    "{{ url('kelolaTransaksiPakan/create') }}"; // Arahkan ke halaman tambah pengguna
             });
 
             // Menambahkan placeholder pada kolom search
