@@ -153,7 +153,7 @@
                     <i data-feather="home" width="20"></i>
                     <span>Dashboard</span>
                 </a>
-            </li>
+            </li> 
             <li class='sidebar-title'>MANAJEMEN INVENTORY</li>
             <li
                 class="sidebar-item has-sub {{ in_array($activeMenu, ['pakanGudang', 'transaksiPakan']) ? 'active' : '' }}">
