@@ -202,6 +202,19 @@
                     </li>
                 </ul>
             </li>
+
+        @elseif (auth()->user()->id_role == 3)
+        <li class="sidebar-item  has-sub">
+            <a href="#" class='sidebar-link'>
+                <i data-feather="triangle" width="20"></i>
+                <span>Kelola Tambak</span>
+            </a>
+            <ul class="submenu ">
+                <li>
+                    <a href="{{ url('/fasekolam') }}">Fase Kolam</a>
+                </li>
+            </ul>
+        </li>
         @endif
 
     </ul>

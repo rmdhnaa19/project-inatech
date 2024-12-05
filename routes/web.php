@@ -47,7 +47,23 @@ Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
         Route::get('/', [PakanGudangController::class, 'index'])->name('user.kelolaPakanGudang.index');
         Route::get('/create', [PakanGudangController::class, 'create'])->name('user.kelolaPakanGudang.create');
         Route::post('/', [PakanGudangController::class, 'store'])->name('user.kelolaPakanGudang.store');
+    });    
+
+    Route::group(['prefix' => 'transaksiPakan'], function(){
+        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.TransaksiPakan.index');
+        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.TransaksiPakan.list');
+        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.TransaksiPakan.create');
+        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.TransaksiPakan.store');
+        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.TransaksiPakan.show');
     });
+});
+
+Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
+    Route::group(['prefix' => 'faseKolam'], function(){
+        Route::get('/', [FaseKolamController::class, 'index'])->name('user.fasekolam.index');
+        Route::get('/create', [FaseKolamController::class, 'create'])->name('user.fasekolam.create');
+        Route::post('/', [FaseKolamController::class, 'store'])->name('user.fasekolam.store');
+    });    
 
     Route::group(['prefix' => 'transaksiPakan'], function(){
         Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.TransaksiPakan.index');
