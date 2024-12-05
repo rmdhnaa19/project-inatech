@@ -4,6 +4,11 @@
     <div class="card">
         <div class="card-header">Kelola Anco</div>
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success" id="success-alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <table class="table" id="table_anco">
                 <thead>
                     <tr class="text-center">
@@ -164,10 +169,7 @@
                             $('#user-detail-content').html(response.html);
                             $('#ancoDetailModal').modal('show');
 
-                            // Tambahkan tombol edit secara dinamis
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-anco">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                            
                         } else {
                             alert('Gagal memuat detail anco');
                         }

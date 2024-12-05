@@ -177,10 +177,7 @@
                             $('#user-detail-content').html(response.html);
                             $('#penangananDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID penanganan
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-penanganan">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                            
                         } else {
                             alert('Gagal memuat detail penanganan');
                         }

@@ -21,7 +21,7 @@
                 </thead>
             </table>
         </div>
-    </div>
+    </div> 
 
     {{-- Modal --}}
     <div class="modal fade text-left" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17"

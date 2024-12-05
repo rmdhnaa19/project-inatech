@@ -172,10 +172,7 @@
                             $('#user-detail-content').html(response.html);
                             $('#kualitasairDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID kualitas air
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-kualitasair">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                           
                         } else {
                             alert('Gagal memuat detail kualitas air');
                         }
