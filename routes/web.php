@@ -44,15 +44,15 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
     Route::group(['prefix' => 'pakanGudang'], function(){
-        Route::get('/', [PakanGudangController::class, 'index'])->name('user.kelolaPakanGudang.index');
+        Route::get('/', [PakanGudangController::class, 'index'])->name('user.pakanGudang.index');
     });
 
     Route::group(['prefix' => 'transaksiPakan'], function(){
-        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.TransaksiPakan.index');
-        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.TransaksiPakan.list');
-        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.TransaksiPakan.create');
-        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.TransaksiPakan.store');
-        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.TransaksiPakan.show');
+        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.transaksiPakan.index');
+        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.transaksiPakan.list');
+        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.transaksiPakan.create');
+        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.transaksiPakan.store');
+        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.transaksiPakan.show');
     });
 });
 

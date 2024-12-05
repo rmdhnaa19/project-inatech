@@ -68,21 +68,16 @@ class TransaksiPakanController extends Controller
                 ->make(true);
         }elseif (auth()->user()->id_role == 2) {
             $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
-
             $transaksiPakans = TransaksiPakanModel::with(['detailPakan.gudang', 'detailPakan.pakan'])
-                ->select(
-                    'transaksi_pakan.*', 
-                    'pakan.nama as nama_pakan', 
-                    'gudang.nama as nama_gudang'
-                )
+                ->select('transaksi_pakan.*', 'pakan.nama as nama_pakan', 'gudang.nama as nama_gudang')
                 ->join('detail_pakan', 'transaksi_pakan.id_detail_pakan', '=', 'detail_pakan.id_detail_pakan')
                 ->join('pakan', 'detail_pakan.id_pakan', '=', 'pakan.id_pakan')
                 ->join('gudang', 'detail_pakan.id_gudang', '=', 'gudang.id_gudang')
                 ->whereIn('detail_pakan.id_gudang', $gudangIds);
 
-            return DataTables::query($transaksiPakans)
+            return DataTables::of($transaksiPakans)
                 ->addColumn('pakan_gudang', function ($transaksi) {
-                    return $transaksi->nama_pakan . ' - ' . $transaksi->nama_gudang;
+                    return $transaksi->nama_pakan;
                 })
                 ->addColumn('created_at_formatted', function ($transaksi) {
                     return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
@@ -175,14 +170,23 @@ class TransaksiPakanController extends Controller
 
     public function show($id)
     {
-        $transaksiPakan = TransaksiPakanModel::with('detailPakan')->find($id); // Ambil data tambak dengan relasi gudang
-        if (!$transaksiPakan) {
-            return response()->json(['error' => 'Transaksi pakan tidak ditemukan.'], 404);
+        if (auth()->user()->id_role == 1) {
+            $transaksiPakan = TransaksiPakanModel::with('detailPakan')->find($id); // Ambil data tambak dengan relasi gudang
+            if (!$transaksiPakan) {
+                return response()->json(['error' => 'Transaksi pakan tidak ditemukan.'], 404);
+            }
+            // Render view dengan data tambak
+            $view = view('admin.kelolaTransaksiPakan.show', compact('transaksiPakan'))->render();
+            return response()->json(['html' => $view]);
+        }elseif (auth()->user()->id_role == 2) {
+            $transaksiPakan = TransaksiPakanModel::with('detailPakan')->find($id); // Ambil data tambak dengan relasi gudang
+            if (!$transaksiPakan) {
+                return response()->json(['error' => 'Transaksi pakan tidak ditemukan.'], 404);
+            }
+            // Render view dengan data tambak
+            $view = view('adminGudang.transaksiPakan.show', compact('transaksiPakan'))->render();
+            return response()->json(['html' => $view]);
         }
-
-        // Render view dengan data tambak
-        $view = view('admin.kelolaTransaksiPakan.show', compact('transaksiPakan'))->render();
-        return response()->json(['html' => $view]);
     }
 
     public function edit(string $id){
