@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AncoModel;
 use App\Models\FaseKolamModel;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class AncoController extends Controller
@@ -24,7 +25,7 @@ class AncoController extends Controller
         ];
         $activeMenu = 'anco';
         $fase_kolam = FaseKolamModel::all();
-        return view('anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+        return view('admin.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
     }
 
     // menampilkan data table    
@@ -48,7 +49,7 @@ class AncoController extends Controller
     ];
     $activeMenu = 'anco';
     $fase_kolam = FaseKolamModel::all();
-    return view('anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    return view('admin.anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
 
 public function store(Request $request)
@@ -88,6 +89,8 @@ public function store(Request $request)
 
     $anco->save();
 
+    Alert::toast('Data anco berhasil ditambahkan', 'success');
+
     // Redirect ke halaman index dengan pesan sukses
     return redirect()->route('anco.index')->with('success', 'Data anco berhasil ditambahkan');
 }
@@ -100,7 +103,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('anco.show', compact('anco'))->render();
+    $view = view('admin.anco.show', compact('anco'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -119,7 +122,7 @@ public function edit(string $id){
     ];
     $activeMenu = 'anco';
 
-    return view('anco.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'anco' => $anco, 'faseKolam' => $faseKolam]);
+    return view('admin.anco.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'anco' => $anco, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){

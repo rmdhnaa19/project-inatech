@@ -23,7 +23,7 @@ class KematianUdangController extends Controller
         ];
         $activeMenu = 'kematianudang';
         $fase_kolam = FaseKolamModel::all();
-        return view('kematianudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+        return view('admin.kematianudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
     }
 
     // menampilkan data table    
@@ -46,7 +46,7 @@ class KematianUdangController extends Controller
     ];
     $activeMenu = 'kematianUdang';
     $fase_kolam = FaseKolamModel::all();
-    return view('kematianudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    return view('admin.kematianudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
 
 public function store(Request $request)
@@ -68,8 +68,8 @@ public function store(Request $request)
     // } 
     
     if ($request->hasFile('gambar')) {
-        $foto = $request->file('gambar');
-        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $gambar = $request->file('gambar');
+        $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
         $path = Storage::disk('public')->putFileAs('gambar_kematianudang', $gambar, $namaGambar);
         $validatedData['Gambar'] = $path; // Tambahkan path foto ke validated data
     }
@@ -91,7 +91,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('kematianudang.show', compact('kematianudangs'))->render();
+    $view = view('admin.kematianudang.show', compact('kematianudangs'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -110,7 +110,7 @@ public function edit(string $id){
     ];
     $activeMenu = 'kematianUdang';
 
-    return view('kematianudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kematianudangs' => $kematianudangs, 'faseKolam' => $faseKolam]);
+    return view('admin.kematianudang.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kematianudangs' => $kematianudangs, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){

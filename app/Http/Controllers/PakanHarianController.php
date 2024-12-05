@@ -8,6 +8,7 @@ use App\Models\FaseKolamModel;
 use App\Models\PakanModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PakanHarianController extends Controller
 {
@@ -27,7 +28,7 @@ class PakanHarianController extends Controller
         $activeMenu = 'pakanHarian';
         $fase_kolam = FaseKolamModel::all();
         $detail_pakan = DetailPakanModel::all();
-        return view('pakanharian.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
+        return view('admin.pakanharian.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
     }
 
     // menampilkan data table    
@@ -52,7 +53,7 @@ class PakanHarianController extends Controller
     $activeMenu = 'pakanHarian';
     $fase_kolam = FaseKolamModel::all();
     $detail_pakan = DetailPakanModel::all();
-    return view('pakanharian.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
+    return view('admin.pakanharian.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
 }
 
 public function store(Request $request)
@@ -85,6 +86,8 @@ public function store(Request $request)
 
     $pakan_harians->save();
 
+    Alert::toast('Data pakan harian berhasil ditambahkan', 'success');
+
     // Redirect ke halaman index dengan pesan sukses
     return redirect()->route('pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
 }
@@ -97,7 +100,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('pakanharian.show', compact('pakan_harians'))->render();
+    $view = view('admin.pakanharian.show', compact('pakan_harians'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -116,7 +119,7 @@ public function edit(string $id){
     ];
     $activeMenu = 'pakanHarian';
 
-    return view('pakanharian.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakan_harians' => $pakan_harians, 'faseKolam' => $faseKolam]);
+    return view('admin.pakanharian.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakan_harians' => $pakan_harians, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){

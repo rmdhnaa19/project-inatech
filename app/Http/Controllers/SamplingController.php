@@ -6,6 +6,7 @@ use App\Models\SamplingModel;
 use App\Models\FaseKolamModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SamplingController extends Controller
 {
@@ -24,7 +25,7 @@ class SamplingController extends Controller
         ];
         $activeMenu = 'sampling';
         $fase_kolam = FaseKolamModel::all();
-        return view('sampling.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+        return view('admin.sampling.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
     }
 
     // menampilkan data table    
@@ -48,7 +49,7 @@ class SamplingController extends Controller
     ];
     $activeMenu = 'sampling';
     $fase_kolam = FaseKolamModel::all();
-    return view('sampling.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    return view('admin.sampling.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
 
 public function store(Request $request)
@@ -91,8 +92,9 @@ public function store(Request $request)
     $samplings->catatan = $request->catatan;
     $samplings->id_fase_tambak = $request->id_fase_tambak;
 
-
     $samplings->save();
+
+    Alert::toast('Data sampling berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
     return redirect()->route('sampling.index')->with('success', 'Data sampling berhasil ditambahkan');
@@ -106,7 +108,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('sampling.show', compact('samplings'))->render();
+    $view = view('admin.sampling.show', compact('samplings'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -125,7 +127,7 @@ public function edit(string $id){
     ];
     $activeMenu = 'sampling';
 
-    return view('sampling.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'samplings' => $samplings, 'faseKolam' => $faseKolam]);
+    return view('admin.sampling.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'samplings' => $samplings, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){

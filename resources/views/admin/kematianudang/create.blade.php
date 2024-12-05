@@ -6,7 +6,7 @@
      @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
-                        @foreach ($errors->all() as $error)
+                        @foreach ($errors->all() as $error) 
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="row mb-5">
                                     <div class="form-file">
-                                        <label class="form-file-label" for="foto">
+                                        <label class="form-file-label" for="gambar">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                             <input type="file" class="drop-zone__input" id="gambar"
@@ -181,25 +181,31 @@
             e.preventDefault();
             dropZone.classList.remove('drop-zone--over');
             const files = e.dataTransfer.files;
-            dropZoneInput.files = files;
-            updateFileName(files[0].name);
-            uploadFile(files[0]);
+            if(files.length > 0) {
+                dropZoneInput.files = files;
+                updateFileName(files[0].name);
+                previewImage(files[0]);
+                uploadFile(files[0]);
+            }
         });
 
         // Handle the file browse
         browseInput.addEventListener('change', function() {
-            dropZoneInput.files = browseInput.files; // Sync files with drop zone
+            if(this.files.length > 0) {
+                dropZoneInput.files = this.files; // Sync files with drop zone
             updateFileName(this.files[0].name);
+            previewImage(this.files[0]);
             uploadFile(this.files[0]);
+            }
         });
 
         // Update the filename in the label
-        dropZoneInput.addEventListener('change', function() {
-            if (dropZoneInput.files.length > 0) {
-                updateFileName(dropZoneInput.files[0].name);
-                uploadFile(dropZoneInput.files[0]); // Upload file to server
-            }
-        });
+        // dropZoneInput.addEventListener('change', function() {
+        //     if (dropZoneInput.files.length > 0) {
+        //         updateFileName(dropZoneInput.files[0].name);
+        //         uploadFile(dropZoneInput.files[0]); // Upload file to server
+        //     }
+        // });
 
         function updateFileName(name) {
             fileNameLabel.textContent = name;
