@@ -236,6 +236,30 @@ Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
         Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.transaksiPakan.store');
         Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.transaksiPakan.show');
     });
+
+    Route::group(['prefix' => 'alatGudang'], function(){
+        Route::get('/', [AlatGudangController::class, 'index'])->name('user.alatGudang.index');
+    });
+
+    Route::group(['prefix' => 'transaksiAlat'], function(){
+        Route::get('/', [TransaksiAlatController::class, 'index'])->name('user.transaksiAlat.index');
+        Route::post('/list', [TransaksiAlatController::class, 'list'])->name('user.transaksiAlat.list');
+        Route::get('/create', [TransaksiAlatController::class, 'create'])->name('user.transaksiAlat.create');
+        Route::post('/', [TransaksiAlatController::class, 'store'])->name('user.transaksiAlat.store');
+        Route::get('/{id}', [TransaksiAlatController::class, 'show'])->name('user.transaksiAlat.show');
+    });
+
+    Route::group(['prefix' => 'obatGudang'], function(){
+        Route::get('/', [ObatGudangController::class, 'index'])->name('user.obatGudang.index');
+    });
+
+    Route::group(['prefix' => 'transaksiObat'], function(){
+        Route::get('/', [TransaksiObatController::class, 'index'])->name('user.transaksiObat.index');
+        Route::post('/list', [TransaksiObatController::class, 'list'])->name('user.transaksiObat.list');
+        Route::get('/create', [TransaksiObatController::class, 'create'])->name('user.transaksiObat.create');
+        Route::post('/', [TransaksiObatController::class, 'store'])->name('user.transaksiObat.store');
+        Route::get('/{id}', [TransaksiObatController::class, 'show'])->name('user.transaksiObat.show');
+    });
 });
 
 Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){

@@ -117,8 +117,6 @@ class TransaksiPakanController extends Controller
             $activeMenu = 'transaksiPakan';
             $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
             $selectedIdDetailPakan = $request->input('id_detail_pakan'); // Ambil ID dari URL
-            // $idDetailPakan = $request->query('id_detail_pakan');
-            // $pakanGudang = DetailPakanModel::findOrFail($idDetailPakan)->with(['pakan', 'gudang'])->get();
             return view('adminGudang.transaksiPakan.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'selectedIdDetailPakan' => $selectedIdDetailPakan]);
         }
     }
