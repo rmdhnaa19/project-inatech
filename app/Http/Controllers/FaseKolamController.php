@@ -6,6 +6,7 @@ use App\Models\FaseKolamModel;
 use App\Models\KolamModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class FaseKolamController extends Controller
@@ -16,13 +17,13 @@ class FaseKolamController extends Controller
             'title' => 'Kelola Data Fase Kolam',
             'paragraph' => 'Berikut ini merupakan data fase kolam yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('fasekolam.index')],
+                ['label' => 'Home', 'url' => route('admin.fasekolam.index')],
                 ['label' => 'Manajemen Fase Kolam'],
             ]
         ];
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
-        return view('fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+        return view('admin.fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
     }
     
 
@@ -43,13 +44,13 @@ class FaseKolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data fase kolam yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Manajemen Fase Kolam', 'url' => route('fasekolam.index')],
+                ['label' => 'Manajemen Fase Kolam', 'url' => route('admin.fasekolam.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
-        return view('fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+        return view('admin.fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
     }
 
 
@@ -72,8 +73,8 @@ class FaseKolamController extends Controller
 
     // Simpan data ke database
     FaseKolamModel::create($validatedData);
-
-    return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    Alert::toast('Data Fase Kolam berhasil ditambahkan', 'success'); 
+    return redirect()->route('admin.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
     }
 
 
@@ -85,7 +86,7 @@ class FaseKolamController extends Controller
     }
 
     // Render view dengan data 
-    $view = view('fasekolam.show', compact('fasekolam'))->render();
+    $view = view('admin.fasekolam.show', compact('fasekolam'))->render();
     return response()->json(['html' => $view]);
     }
 
@@ -96,7 +97,7 @@ class FaseKolamController extends Controller
         $kolam = KolamModel::all();
         
         if (!$fasekolam) {
-        return redirect()->route('fasekolam.index')->with('error', 'Fase Kolam tidak ditemukan');
+        return redirect()->route('admin.fasekolam.index')->with('error', 'Fase Kolam tidak ditemukan');
     }
     
     $breadcrumb = (object) [
@@ -104,26 +105,20 @@ class FaseKolamController extends Controller
         'paragraph' => 'Berikut ini merupakan form edit data fase kolam yang ada di dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Kelola Fase Kolam', 'url' => route('fasekolam.index')],
+            ['label' => 'Kelola Fase Kolam', 'url' => route('admin.fasekolam.index')],
             ['label' => 'Edit'],
         ]
     ];
 
     $activeMenu = 'fasekolam';
-    return view('fasekolam.edit', compact('fasekolam', 'kolam', 'breadcrumb', 'activeMenu'));
+    return view('admin.fasekolam.edit', compact('fasekolam', 'kolam', 'breadcrumb', 'activeMenu'));
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $fasekolam = FaseKolamModel::find($id);
-
-        if (!$fasekolam) {
-            return redirect()->route('fasekolam.index')->with('error', 'Fase kolam tidak ditemukan');
-    }
-
-    // Validasi input
-        $validatedData = $request->validate([
+    public function update(Request $request, string $id) {
+    
+    $request->validate([
+        'kd_fase_tambak' => 'required|string|unique:fase_tambak,kd_fase_tambak,' . $id . ',id_fase_tambak',
         'tanggal_mulai' => 'required|string',
         'tanggal_panen' => 'required|string',
         'jumlah_tebar' => 'required|integer',
@@ -132,23 +127,63 @@ class FaseKolamController extends Controller
         'id_kolam' => 'required|integer',
     ]);
 
-    // Mengelola upload foto jika ada
-    if ($request->hasFile('foto')) {
-        $path = $request->file('foto')->store('foto_fasekolam', 'public');
-        $validatedData['foto'] = $path;
+    $fasekolam = FaseKolamModel::find($id);
+
+    if ($request->file('foto') == '') {
+        $fasekolam->update([
+            'kd_fase_tambak' => $request->kd_fase_tambak,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_panen' => $request->tanggal_panen,
+            'jumlah_tebar' => $request->jumlah_tebar,
+            'densitas' => $request->densitas,
+            'id_kolam' => $request->id_kolam,
+    ]);
+    }else{
+        Storage::disk('public')->delete($request->oldImage);
+        $foto = $request->file('foto');
+        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('foto_fasekolam', $foto, $namaFoto);
+        $updateFoto['foto'] = $path;
+
+    $fasekolam->update([
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_panen' => $request->tanggal_panen,
+            'jumlah_tebar' => $request->jumlah_tebar,
+            'densitas' => $request->densitas,
+            'id_kolam' => $request->id_kolam,
+            'foto' => $updateFoto['foto']
+        ]);
+    }
+        Alert::toast('Data Fase Kolam berhasil diubah', 'success');   
+        return redirect()->route('admin.fasekolam.index');
     }
 
-    // Update data fase kolam
-    $fasekolam->update($validatedData);
-
-    return redirect()->route('fasekolam.index')->with('success', 'Data fase kolam berhasil diubah');
+    public function destroy($id)
+    {
+        $fasekolam = FaseKolamModel::find($id);
+        if (!$fasekolam) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data fase kolam tidak ditemukan.'
+            ], 404);
+        }
+    
+        try {
+            if ($fasekolam->gambar) {
+                Storage::disk('public')->delete($fasekolam->gambar);
+            }
+            $fasekolam->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data fase kolam berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus fase kolam: ' . $e->getMessage()
+            ], 500);
+        }
     }
+}    
 
-
-    public function destroy($id) {
-        $fasekolam = FaseKolamModel::findOrFail($id);
-        Storage::delete($fasekolam->foto);
-        FaseKolamModel::destroy($id);
-        return response()->redirect()->route('fasekolam.index');
-    }
-}

@@ -12,7 +12,7 @@
                     </ul>
                 </div>
             @endif --}}
-        <form action="{{ route('pjTambak.update', $pjtambak->id_user_tambak) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.pjTambak.update', $pjtambak->id_user_tambak) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">

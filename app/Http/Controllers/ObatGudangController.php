@@ -152,19 +152,28 @@ class ObatGudangController extends Controller
         return redirect()->route('admin.kelolaObatGudang.index');
     }
 
-    public function destroy($id) {
-        $check = DetailObatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data obat ke gudang tidak ditemukan', 'error');
-            return redirect('/kelolaObatGudang');
+    public function destroy($id)
+    {
+        $obatGudang = DetailObatModel::find($id);
+        if (!$obatGudang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data obat ke gudang tidak ditemukan.'
+            ], 404);
         }
-        try{
-            DetailObatModel::destroy($id);
-            Alert::toast('Data obat ke gudang berhasil dihapus', 'success');
-            return redirect('/kelolaObatGudang');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data obat ke gudang gagal dihapus', 'error');
-            return redirect('/kelolaObatGudang');
+    
+        try {
+            $obatGudang->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data obat ke gudang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus obat ke gudang: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

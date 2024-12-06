@@ -152,30 +152,67 @@
 
             $(document).on('click', '#btn-delete-obat', function() {
                 if (currentObatId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus obat ini?')) {
-                        var deleteUrl = '{{ route('admin.kelolaObat.destroy', ':id') }}'.replace(':id',
-                            currentObatId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#obatDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kelolaObat').DataTable().ajax.reload();
-                                alert('Obat berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus obat: ' + xhr
-                                    .responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data obat ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kelolaObat.destroy', ':id') }}'
+                                .replace(':id', currentObatId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kelolaObat.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus data obat: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus data obat.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('ID obat tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID obat tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

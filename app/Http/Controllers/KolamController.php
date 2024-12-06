@@ -5,6 +5,7 @@ use App\Models\KolamModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class KolamController extends Controller
@@ -16,13 +17,13 @@ class KolamController extends Controller
             'title' => 'Kelola Data Kolam',
             'paragraph' => 'Berikut ini merupakan data kolam yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('kolam.index')],
+                ['label' => 'Home', 'url' => route('admin.kolam.index')],
                 ['label' => 'Manajemen Kolam'],
             ]
         ];
         $activeMenu = 'manajemenKolam';
         $tambak = TambakModel::all();
-        return view('kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
+        return view('admin.kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
 
@@ -43,13 +44,13 @@ class KolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data kolam yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Manajemen Kolam', 'url' => route('kolam.index')],
+                ['label' => 'Manajemen Kolam', 'url' => route('admin.kolam.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'manajemenTambak';
         $tambak = TambakModel::all();
-        return view('kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
+        return view('admin.kolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
     }
 
 
@@ -75,7 +76,8 @@ class KolamController extends Controller
 
         // Menyimpan data ke database
         KolamModel::create($validatedData);
-        return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
+        Alert::toast('Data Kolam berhasil ditambahkan', 'success');
+        return redirect()->route('admin.kolam.index')->with('success', 'Data kolam berhasil ditambahkan');
     }
 
     public function show($id)
@@ -84,7 +86,7 @@ class KolamController extends Controller
         if (!$kolam) {
             return response()->json(['error' => 'Kolam tidak ditemukan.'], 404);
         }
-        $view = view('kolam.show', compact('kolam'))->render();
+        $view = view('admin.kolam.show', compact('kolam'))->render();
         return response()->json(['html' => $view]);
     }
 
@@ -95,7 +97,7 @@ class KolamController extends Controller
         $tambak = TambakModel::all();
 
         if (!$kolam) {
-            return redirect()->route('kolam.index')->with('error', 'Kolam tidak ditemukan');
+            return redirect()->route('admin.kolam.index')->with('error', 'Kolam tidak ditemukan');
         }
 
         $breadcrumb = (object) [
@@ -103,21 +105,20 @@ class KolamController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data kolam yang ada di dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Kolam', 'url' => route('kolam.index')],
+                ['label' => 'Kelola Kolam', 'url' => route('admin.kolam.index')],
                 ['label' => 'Edit'],
             ]
         ];
 
         $activeMenu = 'manajemenKolam';
 
-        return view('kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
+        return view('admin.kolam.edit', compact('kolam', 'tambak', 'breadcrumb', 'activeMenu'));
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $kolam = KolamModel::find($id);
-            $validatedData = $request->validate([
+    public function update(Request $request, string $id) {
+    
+        $request->validate([
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
             'tipe_kolam' => 'required|in:kotak,bundar',
             'kd_kolam' => 'required|string|unique:kolam,kd_kolam,' . $id . ',id_kolam',
@@ -126,17 +127,68 @@ class KolamController extends Controller
             'luas_kolam' => 'required|integer',
             'kedalaman' => 'required|integer',
             'id_tambak' => 'required|integer',
-        ]);
-        if ($request->hasFile('foto')) {
-            Storage::delete('public/' . $kolam->foto);
-            $path = $request->file('foto')->store('foto_kolam', 'public');
-            // dd($path); debug $path
-            $validatedData['foto'] = $path;
-        } 
+    ]);
 
-        // Mengupdate data kolam di database
-        $kolam->update($validatedData);
-            
-        return redirect()->route('kolam.index')->with('success', 'Data kolam berhasil diubah');
+    $kolam = KolamModel::find($id);
+    
+    if ($request->file('foto') == '') {
+        $kolam->update([
+            'tipe_kolam' => $request->tipe_kolam,
+            'kd_kolam' => $request->kd_kolam,
+            'panjang_kolam' => $request->panjang_kolam,
+            'lebar_kolam' => $request->lebar_kolam,
+            'luas_kolam' => $request->luas_kolam,
+            'kedalaman' => $request->kedalaman,
+            'id_tambak' => $request->id_tambak,
+    ]);
+    }else{
+        Storage::disk('public')->delete($request->oldImage);
+        $foto = $request->file('foto');
+        $namaFoto = time() . '.' . $foto->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('foto_kolam', $foto, $namaFoto);
+        $updateFoto['foto'] = $path;
+
+    $kolam->update([
+            'tipe_kolam' => $request->tipe_kolam,
+            'kd_kolam' => $request->kd_kolam,
+            'panjang_kolam' => $request->panjang_kolam,
+            'lebar_kolam' => $request->lebar_kolam,
+            'luas_kolam' => $request->luas_kolam,
+            'kedalaman' => $request->kedalaman,
+            'id_tambak' => $request->id_tambak,
+            'foto' => $updateFoto['foto']
+            ]);
+        }
+            Alert::toast('Data Kolam berhasil diubah', 'success');   
+            return redirect()->route('admin.kolam.index');
+        }
+
+
+        public function destroy($id)
+    {
+        $kolam = KolamModel::find($id);
+        if (!$kolam) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data kolam tidak ditemukan.'
+            ], 404);
+        }
+    
+        try {
+            if ($kolam->gambar) {
+                Storage::disk('public')->delete($kolam->gambar);
+            }
+            $kolam->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data kolam berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus kolam: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }    

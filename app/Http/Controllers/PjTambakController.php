@@ -6,6 +6,7 @@ use App\Models\UserModel;
 use App\Models\TambakModel;
 use App\Models\PjTambakModel;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class PjTambakController extends Controller
@@ -17,14 +18,14 @@ class PjTambakController extends Controller
             'title' => 'Kelola Penanggung Jawab Tambak',
             'paragraph' => 'Berikut ini merupakan Penanggung Jawab yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('pjTambak.index')],
+                ['label' => 'Home', 'url' => route('admin.pjTambak.index')],
                 ['label' => 'Penanggung Jawab Tambak'],
             ]
         ];
         $activeMenu = 'pjTambak';
         $tambak = TambakModel::all();
         $user = UserModel::all();
-        return view('pjTambak.index', [
+        return view('admin.pjTambak.index', [
             'breadcrumb' => $breadcrumb, 
             'activeMenu' => $activeMenu, 
             'tambak' => $tambak, 
@@ -54,7 +55,7 @@ class PjTambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah penanggung jawab tambak yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Penanggung Jawab Tambak', 'url' => route('pjTambak.index')],
+                ['label' => 'Kelola Penanggung Jawab Tambak', 'url' => route('admin.pjTambak.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -62,7 +63,7 @@ class PjTambakController extends Controller
         $tambak = TambakModel::all();
         $user = UserModel::all();
         
-        return view('pjTambak.create', [
+        return view('admin.pjTambak.create', [
             'breadcrumb' => $breadcrumb, 
             'activeMenu' => $activeMenu, 
             'tambak' => $tambak, 
@@ -81,8 +82,8 @@ class PjTambakController extends Controller
 
         // Simpan data ke database
         PjTambakModel::create($validatedData);
-
-        return redirect()->route('pjTambak.index')->with('success', 'Data user tambak berhasil ditambahkan');
+        Alert::toast('Data Penanggung Jawab Tambak berhasil ditambahkan', 'success');
+        return redirect()->route('admin.pjTambak.index');
     }
 
     public function show($id)
@@ -92,7 +93,7 @@ class PjTambakController extends Controller
             return response()->json(['error' => 'Pj Tambak tidak ditemukan.'], 404);
         }
         
-        $view = view('pjtambak.show', compact('pjtambak'))->render();
+        $view = view('admin.pjtambak.show', compact('pjtambak'))->render();
         return response()->json(['html' => $view]);
     }
 
@@ -103,7 +104,7 @@ class PjTambakController extends Controller
         $tambak = TambakModel::all();
         
         if (!$pjtambak) {
-            return redirect()->route('pjTambak.index')->with('error', 'Pj Tambak tidak ditemukan');
+            return redirect()->route('admin.pjTambak.index')->with('error', 'Pj Tambak tidak ditemukan');
         }
         
         $breadcrumb = (object) [
@@ -111,14 +112,14 @@ class PjTambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data penanggung jawab tambak yang ada di dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pj Tambak', 'url' => route('pjTambak.index')],
+                ['label' => 'Kelola Pj Tambak', 'url' => route('admin.pjTambak.index')],
                 ['label' => 'Edit'],
             ]
         ];
 
         $activeMenu = 'manajemenpjTambak';
 
-        return view('pjTambak.edit', compact('pjtambak', 'tambak', 'user', 'breadcrumb', 'activeMenu'));
+        return view('admin.pjTambak.edit', compact('pjtambak', 'tambak', 'user', 'breadcrumb', 'activeMenu'));
     }
 
     public function update(Request $request, $id)
@@ -126,19 +127,43 @@ class PjTambakController extends Controller
         $pjtambak = PjTambakModel::find($id);
 
         if (!$pjtambak) {
-            return redirect()->route('pjTambak.index')->with('error', 'Pj Tambak tidak ditemukan');
+            return redirect()->route('admin.pjTambak.index')->with('error', 'Pj Tambak tidak ditemukan');
         }
 
         // Validasi input
         $validatedData = $request->validate([
-            'kd_user_tambak' => 'required|string|unique:pj_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
+            'kd_user_tambak' => 'required|string|unique:user_tambak,kd_user_tambak,' . $id . ',id_user_tambak',
             'id_user' => 'required|integer',
             'id_tambak' => 'required|integer',
         ]);
 
         // Update data tambak
         $pjtambak->update($validatedData);
+        Alert::toast('Data Penanggung Jawab Tambak berhasil diubah', 'success');
+        return redirect()->route('admin.pjTambak.index');
+    }
+    public function destroy($id)
+{
+    $pjtambak = PjTambakModel::find($id);
 
-        return redirect()->route('pjTambak.index')->with('success', 'Data pj tambak berhasil diubah');
+    if (!$pjtambak) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data Penanggung Jawab Tambak tidak ditemukan.'
+        ], 404);
+    }
+
+    try {
+        $pjtambak->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Penanggung Jawab Tambak berhasil dihapus.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus data: ' . $e->getMessage()
+        ], 500);
+        }
     }
 }

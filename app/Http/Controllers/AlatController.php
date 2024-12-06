@@ -72,12 +72,12 @@ class AlatController extends Controller
 
     public function show($id)
     {
-        $alat = AlatModel::find($id); // Ambil data tambak dengan relasi gudang
+        $alat = AlatModel::find($id); // Ambil data alat dengan relasi gudang
         if (!$alat) {
             return response()->json(['error' => 'Data alat tidak ditemukan.'], 404);
         }
 
-        // Render view dengan data tambak
+        // Render view dengan data alat
         $view = view('admin.kelolaAlat.show', compact('alat'))->render();
         return response()->json(['html' => $view]);
     }
@@ -151,25 +151,31 @@ class AlatController extends Controller
         }
     }
 
-    public function destroy($id) {
-        $check = AlatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data alat tidak ditemukan', 'error');
-            return redirect('/kelolaAlat');
+    public function destroy($id)
+    {
+        $alat = AlatModel::find($id);
+        if (!$alat) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alat tidak ditemukan.'
+            ], 404);
         }
-        try{
-            $kelolaAlat = AlatModel::find($id);
-            if ($kelolaAlat->foto != '') {
-                Storage::disk('public')->delete($kelolaAlat->foto);
-                AlatModel::destroy($id);
-            }else {
-                AlatModel::destroy($id);
+    
+        try {
+            if ($alat->foto) {
+                Storage::disk('public')->delete($alat->foto);
             }
-            Alert::toast('Data alat berhasil dihapus', 'success');
-            return redirect('/kelolaAlat');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data alat gagal dihapus', 'error');
-            return redirect('/kelolaAlat');
+            $alat->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data alat berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus alat: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

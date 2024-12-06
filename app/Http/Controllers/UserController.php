@@ -209,25 +209,31 @@ class UserController extends Controller
         return redirect()->route('admin.kelolaPengguna.index');
     }
 
-    public function destroy($id) {
-        $check = UserModel::find($id);
-        if (!$check) {
-            Alert::toast('Data pengguna tidak ditemukan', 'error');
-            return redirect('/kelolaPengguna');
+    public function destroy($id)
+    {
+        $user = UserModel::find($id);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pengguna tidak ditemukan.'
+            ], 404);
         }
-        try{
-            $kelolaPengguna = UserModel::find($id);
-            if ($kelolaPengguna->foto != '') {
-                Storage::disk('public')->delete($kelolaPengguna->foto);
-                UserModel::destroy($id);
-            } else {
-                UserModel::destroy($id);
+    
+        try {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
             }
-            Alert::toast('Data pengguna berhasil dihapus', 'success');
-            return redirect('/kelolaPengguna');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data pengguna gagal dihapus', 'error');
-            return redirect('/kelolaPengguna');
+            $user->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data pengguna berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data pengguna: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

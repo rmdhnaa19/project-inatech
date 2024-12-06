@@ -6,6 +6,7 @@ use App\Models\GudangModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class TambakController extends Controller
@@ -16,12 +17,12 @@ class TambakController extends Controller
             'title' => 'Kelola Data Tambak',
             'paragraph' => 'Berikut ini merupakan data tambak yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('tambak.index')],
+                ['label' => 'Home', 'url' => route('admin.tambak.index')],
                 ['label' => 'Manajemen Tambak'],
             ]
         ];
         $activeMenu = 'manajemenTambak';
-        return view('tambak.index',['breadcrumb' =>$breadcrumb,'activeMenu' => $activeMenu]);
+        return view('admin.tambak.index',['breadcrumb' =>$breadcrumb,'activeMenu' => $activeMenu]);
     }
     
 
@@ -49,14 +50,14 @@ class TambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data tambak yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Pengguna', 'url' => route('tambak.index')],
+                ['label' => 'Kelola Tambak', 'url' => route('admin.tambak.index')],
                 ['label' => 'Tambah'],
             ]
         ];
         $activeMenu = 'manajemenTambak';
         $tambak = TambakModel::all();
         $gudang= GudangModel::all();
-        return view('tambak.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'tambak' => $tambak]);
+        return view('admin.tambak.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'gudang' => $gudang, 'tambak' => $tambak]);
     }
 
     public function store(Request $request)
@@ -84,7 +85,8 @@ class TambakController extends Controller
 
         // Simpan data ke database
         TambakModel::create($validatedData);
-        return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil ditambahkan');
+        Alert::toast('Data Tambak berhasil ditambahkan', 'success');
+        return redirect()->route('admin.tambak.index');
     }
 
     public function show($id)
@@ -95,7 +97,7 @@ class TambakController extends Controller
     }
 
     // Render view 
-    $view = view('tambak.show', compact('tambak'))->render();
+    $view = view('admin.tambak.show', compact('tambak'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -106,7 +108,7 @@ class TambakController extends Controller
         $gudang = GudangModel::all();
         
         if (!$tambak) {
-            return redirect()->route('tambak.index')->with('error', 'Tambak tidak ditemukan');
+            return redirect()->route('admin.tambak.index')->with('error', 'Tambak tidak ditemukan');
         }
         
         $breadcrumb = (object) [
@@ -114,20 +116,21 @@ class TambakController extends Controller
             'paragraph' => 'Berikut ini merupakan form edit data tambak yang ada di dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Tambak', 'url' => route('tambak.index')],
+                ['label' => 'Kelola Tambak', 'url' => route('admin.tambak.index')],
                 ['label' => 'Edit'],
             ]
         ];
 
         $activeMenu = 'manajemenTambak';
 
-        return view('tambak.edit', compact('tambak', 'gudang', 'breadcrumb', 'activeMenu'));
+        return view('admin.tambak.edit', compact('tambak', 'gudang', 'breadcrumb', 'activeMenu'));
         // return view('tambak.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak, 'gudang' => $gudang]);
     }
 
 
     public function update(Request $request, string $id) {
-    $request->validate([
+    
+        $request->validate([
         'nama_tambak' => 'required|string|unique:tambak,nama_tambak,'.$id.',id_tambak',
         'id_gudang' => 'required',
         'luas_lahan' => 'required|numeric',
@@ -154,24 +157,52 @@ class TambakController extends Controller
         $updateFoto['foto'] = $path;
 
     $tambak->update([
-        'nama_tambak' => $request->nama_tambak,
-        'id_gudang' => $request->id_gudang,
-        'luas_lahan' => $request->luas_lahan,
-        'luas_tambak' => $request->luas_tambak,
-        'lokasi_tambak' => $request->lokasi_tambak,
-        'foto' => $updateFoto['foto']
+            'nama_tambak' => $request->nama_tambak,
+            'id_gudang' => $request->id_gudang,
+            'luas_lahan' => $request->luas_lahan,
+            'luas_tambak' => $request->luas_tambak,
+            'lokasi_tambak' => $request->lokasi_tambak,
+            'foto' => $updateFoto['foto']
         ]);
     }
-        return redirect()->route('tambak.index')->with('success', 'Data tambak berhasil diperbarui.');
+        Alert::toast('Data Tambak berhasil diubah', 'success');   
+        return redirect()->route('admin.tambak.index');
     }
 
 
-    public function destroy($id) {
+    // public function destroy($id) {
+    //     $tambak = TambakModel::find($id);
+    //     if ($tambak->foto) {
+    //         Storage::disk('public')->delete($tambak->foto);
+    //     }
+    //     TambakModel::destroy($id);
+    //     return redirect()->route('admin.tambak.index')->with('success', 'Data Berhasil Dihapus!');
+
+    public function destroy($id)
+    {
         $tambak = TambakModel::find($id);
-        if ($tambak->foto) {
-            Storage::disk('public')->delete($tambak->foto);
+        if (!$tambak) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tambak tidak ditemukan.'
+            ], 404);
         }
-        TambakModel::destroy($id);
-        return redirect()->route('tambak.index')->with('success', 'Data Berhasil Dihapus!');
+    
+        try {
+            if ($tambak->gambar) {
+                Storage::disk('public')->delete($tambak->gambar);
+            }
+            $tambak->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data tambak berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus tambak: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
+}    

@@ -82,16 +82,17 @@
     <script src="{{ asset('voler-master/dist/assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/bootstrap-4.0.0-dist/js/bootstrap.min.js') }}"></script>
     <!-- Load jQuery (versi yang Anda gunakan) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('javascript/jquery-3.7.1.min.js') }}"></script>
     <!-- Load DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://kit.fontawesome.com/75f7078132.js" crossorigin="anonymous"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
     <!-- Bootstrap JS (versi yang sesuai) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ asset('javascript/bootstrap.min.js') }}"></script>
 
     <!-- SweetAlert2 -->
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+    <script src="{{ asset('javascript/sweetalert2@11.js') }}"></script>
+
 
     <script>
         $.ajaxSetup({
@@ -109,19 +110,6 @@
         });
     </script>
     <script>
-        // Menghilangkan notifikasi dengan efek fade out setelah 3 detik
-        setTimeout(function() {
-            let alert = document.getElementById('success-alert');
-            if (alert) {
-                alert.style.opacity = '0'; // Mengurangi opacity untuk efek fade out
-                // Menghapus elemen setelah efek fade out selesai (1 detik)
-                setTimeout(function() {
-                    alert.style.display = 'none';
-                }, 1000); // 1000 ms sesuai dengan durasi transisi di CSS
-            }
-        }, 3000); // 3000 ms = 3 detik
-    </script>
-    <script>
         // Ambil elemen toggle dan menu
         const dropdownToggle = document.getElementById('dropdownToggle');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -137,6 +125,7 @@
 
         // Menutup dropdown jika klik di luar
         document.addEventListener('click', function(event) {
+            // Periksa apakah klik terjadi di luar toggle atau menu
             if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
                 dropdownMenu.classList.remove('show');
             }

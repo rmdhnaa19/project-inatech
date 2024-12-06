@@ -152,19 +152,28 @@ class AlatGudangController extends Controller
         return redirect()->route('admin.kelolaAlatGudang.index');
     }
 
-    public function destroy($id) {
-        $check = DetailAlatModel::find($id);
-        if (!$check) {
-            Alert::toast('Data alat ke gudang tidak ditemukan', 'error');
-            return redirect('/kelolaAlatGudang');
+    public function destroy($id)
+    {
+        $alatGudang = DetailAlatModel::find($id);
+        if (!$alatGudang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alat ke gudang tidak ditemukan.'
+            ], 404);
         }
-        try{
-            DetailAlatModel::destroy($id);
-            Alert::toast('Data alat ke gudang berhasil dihapus', 'success');
-            return redirect('/kelolaAlatGudang');
-        }catch(\Illuminate\Database\QueryException $e){
-            Alert::toast('Data alat ke gudang gagal dihapus', 'error');
-            return redirect('/kelolaAlatGudang');
+    
+        try {
+            $alatGudang->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data alat ke gudang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus alat ke gudang: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
