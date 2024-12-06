@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header">Fase Kolam</div>
         <div class="card-body">
-            <table class="table" id="table_faseKolam">
+            <table class="table" id="table_fasekolamuser">
                 <thead>
                     <tr class="text-center">
                         <th>KODE FASE KOLAM</th>
@@ -59,13 +59,9 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-danger" id="btn-delete-fasekolam">
-                    <i class="bx bx-x d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">Hapus</span>
-                </button>
-                <button type="button" class="btn btn-warning ml-1" id="edit-fasekolam" data-id="">
-                    <span class="d-none d-sm-block">Edit</span>
-                </button>
+                <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ route('user.fasekolam.index') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
             </div>
         </div>
     </div>
@@ -79,10 +75,10 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        var datafaseKolam = $('#table_faseKolam').DataTable({
+        var datafaseKolam = $('#table_fasekolamuser').DataTable({
             serverSide: true,
             ajax: {
-                "url": "{{ url('fasekolam/list') }}",
+                "url": "{{ route('user.fasekolam.list') }}",
                 "dataType": "json",
                 "type": "POST",
                 "data": function(d) {
@@ -154,64 +150,19 @@
             });
         });
 
-        // Event listener untuk tombol Edit di dalam modal
-        $(document).on('click', '#edit-fasekolam', function() {
-            var id = $(this).data('id'); 
-            if (id) {
-                var url = '{{ route("admin.fasekolam.edit", ":id") }}'; 
-                url = url.replace(':id', id); 
-                window.location.href = url; 
-            }
-        });
 
-        
-        // Event listener untuk tombol Hapus di dalam modal
-$(document).on('click', '#btn-delete-fasekolam', function() {
-    var id_fase_tambak = $('#edit-fasekolam').data('id'); 
-    if (id_fase_tambak) {
-        if (confirm('Apakah Anda yakin ingin menghapus fase kolam ini?')) {
-            const deleteUrl = '{{ route("admin.fasekolam.destroy", ":id") }}'.replace(':id', id_fase_tambak);
-            $.ajax({
-                url: deleteUrl,
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "_method": "DELETE"
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        window.location.href = '{{ route("admin.fasekolam.index") }}'; // Redirect setelah penghapusan
-                    } else {
-                        alert('Gagal menghapus fase kolam: ' + response.message);
-                    }
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat menghapus fase kolam');
-                }
-            });
-        }
-    } else {
-        alert('ID fase kolam tidak ditemukan');
-    }
-});
-
-        $("#table_faseKolam_filter").append(
+        $("#table_fasekolamuser_filter").append(
             '<select class="form-control" name="id_kolam" id="id_kolam" required style="margin-left: 30px; width: 150px;">' +
             '<option value="">- SEMUA -</option>' +
             '@foreach ($kolam as $item)' +
             '<option value="{{ $item->id_kolam }}">{{ $item->kd_kolam}}</option>' +
             '@endforeach' +
-            '</select>' +
-            '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+            '</select>'            
         );
 
-        $("#btn-tambah").on('click', function() {
-            window.location.href =
-                "{{ url('fasekolam/create') }}"; 
-        });
-
-        $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');
+        // placeholder search
+        $('input[type="search"]').attr('placeholder', 'Cari data Fase Kolam...');        
+        
         $('#id_kolam').on('change', function() {
             datafaseKolam.ajax.reload();
         })    
