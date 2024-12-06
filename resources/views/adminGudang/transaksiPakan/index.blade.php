@@ -58,6 +58,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ url('transaksiPakan') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
+                </div>
             </div>
         </div>
     </div>
@@ -87,7 +92,7 @@
                     orderable: true,
                     searchable: false,
                     render: function(data, type, row) {
-                        var url = '{{ route('admin.kelolaTransaksiPakan.show', ':id') }}';
+                        var url = '{{ route('user.transaksiPakan.show', ':id') }}';
                         url = url.replace(':id', row.id_transaksi_pakan);
                         return '<a href="javascript:void(0);" data-id="' + row
                             .id_transaksi_pakan +
@@ -152,6 +157,7 @@
 
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data transaksi pakan...');
+
             $('#id_role').on('change', function() {
                 dataKelolaTransaksiPakan.ajax.reload();
             })

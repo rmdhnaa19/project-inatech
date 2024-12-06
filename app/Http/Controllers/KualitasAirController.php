@@ -6,6 +6,7 @@ use App\Models\KualitasAirModel;
 use App\Models\FaseKolamModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KualitasAirController extends Controller
 {
@@ -24,7 +25,7 @@ class KualitasAirController extends Controller
         ];
         $activeMenu = 'kualitasair';
         $fase_kolam = FaseKolamModel::all();
-        return view('kualitasair.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+        return view('admin.kualitasair.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
     }
 
     // menampilkan data table    
@@ -48,7 +49,7 @@ class KualitasAirController extends Controller
     ];
     $activeMenu = 'kualitasAir';
     $fase_kolam = FaseKolamModel::all();
-    return view('kualitasair.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    return view('admin.kualitasair.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
 
 public function store(Request $request)
@@ -84,8 +85,10 @@ public function store(Request $request)
 
     $kualitasairs->save();
 
+    Alert::toast('Data Kualitas Air berhasil ditambahkan', 'success');
+
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('kualitasair.index');
+    return redirect()->route('kualitasair.index')->with('success', 'Data Kualitas Air berhasil ditambahkan.');
 }
 
 public function show($id)
@@ -96,7 +99,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('kualitasair.show', compact('kualitasairs'))->render();
+    $view = view('admin.kualitasair.show', compact('kualitasairs'))->render();
     return response()->json(['html' => $view]);
 }
 
@@ -113,7 +116,7 @@ public function edit(string $id){
             ['label' => 'Edit'],
         ]
     ];
-    $activeMenu = 'kualitasAir';
+    $activeMenu = 'admin.kualitasAir';
 
     return view('kualitasair.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kualitasairs' => $kualitasairs, 'faseKolam' => $faseKolam]);
 }
