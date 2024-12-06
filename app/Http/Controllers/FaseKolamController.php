@@ -14,6 +14,7 @@ class FaseKolamController extends Controller
 {
     public function index()
     {
+    if (auth()->user()->id_role == 1) {
         $breadcrumb = (object) [
             'title' => 'Kelola Data Fase Kolam',
             'paragraph' => 'Berikut ini merupakan data fase kolam yang terinput ke dalam sistem',
@@ -25,21 +26,59 @@ class FaseKolamController extends Controller
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
         return view('admin.fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+    }elseif (auth()->user()->id_role == 3) {
+        $breadcrumb = (object) [
+            'title' => 'Data Fase Kolam',
+            'paragraph' => 'Berikut ini merupakan data fase kolam yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('user.fasekolam.index')],
+                ['label' => 'Data Fase Kolam'],
+            ]
+        ];
+        $activeMenu = 'fasekolam';
+        $user = Auth::user();
+        $tambakIds = $user->userTambak->pluck('id_tambak'); // Ambil semua id_tambak
+        $kolam = KolamModel::whereIn('id_tambak', $tambakIds)->get();
+        return view('adminTambak.fasekolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam, 'user' => $user, 'tambakIds' => $tambakIds]);
     }
+}
     
 
     public function list(Request $request)
     {
-        $fasekolams = FaseKolamModel::select('id_fase_tambak', 'kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar', 'densitas', 'id_kolam', 'created_at', 'updated_at')->with('kolam');  
-        if ($request->id_kolam) {
-            $fasekolams->where('id_kolam', $request->id_kolam);
+        if (auth()->user()->id_role == 1) {
+            $fasekolams = FaseKolamModel::select('id_fase_tambak', 'kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar', 'densitas', 'id_kolam', 'created_at', 'updated_at')->with('kolam');  
+            if ($request->id_kolam) {
+                $fasekolams->where('id_kolam', $request->id_kolam);
+            }
+            return DataTables::of($fasekolams)
+            ->make(true);
+        }elseif (auth()->user()->id_role == 3) {
+            $user = Auth::user();
+$tambakIds = $user->userTambak->pluck('id_tambak'); // Ambil ID tambak milik user
+
+// Query fase kolam berdasarkan id_tambak milik user yang sedang login
+$fasekolams = FaseKolamModel::select('id_fase_tambak', 'kd_fase_tambak', 'tanggal_mulai', 'tanggal_panen', 'jumlah_tebar', 'densitas', 'id_kolam', 'created_at', 'updated_at')
+    ->with(['kolam' => function($query) use ($tambakIds) {
+        // Hanya muat kolam yang memiliki id_tambak yang sesuai dengan milik user
+        $query->whereIn('id_tambak', $tambakIds);
+    }])
+    ->whereIn('id_kolam', function($query) use ($tambakIds) {
+        // Pastikan hanya ambil fase kolam yang terkait dengan id_tambak milik user
+        $query->select('id_kolam')->from('kolam')->whereIn('id_tambak', $tambakIds);
+    })
+    ->get();
+
+            if ($request->id_kolam) {
+                $fasekolams->where('id_kolam', $request->id_kolam);
+            }
+            return DataTables::of($fasekolams)
+            ->make(true);
         }
-        return DataTables::of($fasekolams)
-        ->make(true);
     }
 
 
-    public function create($request){
+    public function create(Request $request){
         if (auth()->user()->id_role == 1) {
         $breadcrumb = (object) [
             'title' => 'Tambah Data Fase Kolam',
@@ -53,13 +92,13 @@ class FaseKolamController extends Controller
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
         return view('admin.fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+
     }elseif (auth()->user()->id_role == 3) {
         $breadcrumb = (object) [
             'title' => 'Tambah Data Fase Kolam',
             'paragraph' => 'Berikut ini merupakan form tambah data fase kolam yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Manajemen Fase Kolam', 'url' => route('admin.fasekolam.index')],
                 ['label' => 'Tambah'],
             ]
         ];
@@ -67,7 +106,7 @@ class FaseKolamController extends Controller
         $user = Auth::user();
         $kolam = KolamModel::with(['tambak'])->get();
         $selectedIdkolam = $request->input('id_kolam'); // Ambil ID dari URL
-        return view('adminTambak.faseKolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam,'selectedIdkolam' => $selectedIdkolam]);
+        return view('adminTambak.faseKolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam, 'selectedIdkolam' => $selectedIdkolam]);
     }
     }
 
@@ -90,8 +129,13 @@ class FaseKolamController extends Controller
 
     // Simpan data ke database
     FaseKolamModel::create($validatedData);
-    Alert::toast('Data Fase Kolam berhasil ditambahkan', 'success'); 
-    return redirect()->route('admin.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    if (auth()->user()->id_role == 1) {
+        Alert::toast('Data Fase Kolam berhasil ditambahkan', 'success'); 
+        return redirect()->route('admin.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    }elseif (auth()->user()->id_role == 3) {
+        Alert::toast('Data Fase Kolam berhasil ditambahkan', 'success'); 
+        return redirect()->route('user.fasekolam.index')->with('success', 'Data fase kolam berhasil ditambahkan');
+    }
     }
 
 

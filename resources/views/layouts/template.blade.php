@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fasekolamuser.css') }}">
     @stack('css')
 </head>
 
