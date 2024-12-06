@@ -6,7 +6,7 @@
      @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
-                        @foreach ($errors->all() as $error)
+                        @foreach ($errors->all() as $error) 
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -85,7 +85,7 @@
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
                         <div class="form-group">
                             <div class="col">
                                 <div class="row mb-1">
@@ -102,9 +102,9 @@
                                     <span class="text-center">Atau</span>
                                 </div>
                                 <div class="row">
-                                    <div class="form-file">
+                                    <div class="form-file"> -->
                                         <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
-                                        <label class="form-file-label" for="gambar">
+                                        <!-- <label class="form-file-label" for="gambar">
                                             <span class="form-file-text">Choose file...</span>
                                             <span class="form-file-button">Browse</span>
                                         </label>
@@ -112,7 +112,42 @@
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div> -->
+
+                    <div class="col-md-6 d-flex justify-content-center align-items-center mt-3">
+                        <div class="form-group">
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <div class="drop-zone"
+                                        style="width: 300px; height: 300px; border: 2px dashed #ccc; border-radius: 5px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <div class="text-center">
+                                            <i class="fa-solid fa-cloud-arrow-up"
+                                                style="height: 50px; font-size: 50px"></i>
+                                            <p class="mt-2">Seret lalu letakkan file di sini</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <span class="text-center">Atau</span>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="form-file">
+                                        <label class="form-file-label" for="gambar">
+                                            <span class="form-file-text">Choose file...</span>
+                                            <span class="form-file-button">Browse</span>
+                                            <input type="file" class="drop-zone__input" id="gambar"
+                                                name="gambar">
+                                        </label>
+                                    </div>
+                                </div>
+                                @if ($errors->has('gambar'))
+                                    <div class="row alert alert-danger">
+                                        <span class="text-center">{{ $errors->first('gambar') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 
             </div>
         </form>
@@ -126,6 +161,7 @@
 
 @push('js')
 <script>
+        // Pilih elemen-elemen yang dibutuhkan
         const dropZone = document.querySelector('.drop-zone');
         const dropZoneInput = document.querySelector('.drop-zone__input');
         const browseInput = document.querySelector('#gambar');
@@ -145,28 +181,86 @@
             e.preventDefault();
             dropZone.classList.remove('drop-zone--over');
             const files = e.dataTransfer.files;
-            dropZoneInput.files = files;
-            updateFileName(files[0].name);
-            uploadFile(files[0]);
+            if(files.length > 0) {
+                dropZoneInput.files = files;
+                updateFileName(files[0].name);
+                previewImage(files[0]);
+                uploadFile(files[0]);
+            }
         });
 
         // Handle the file browse
         browseInput.addEventListener('change', function() {
-            dropZoneInput.files = browseInput.files; // Sync files with drop zone
+            if(this.files.length > 0) {
+                dropZoneInput.files = this.files; // Sync files with drop zone
             updateFileName(this.files[0].name);
+            previewImage(this.files[0]);
             uploadFile(this.files[0]);
+            }
         });
 
         // Update the filename in the label
-        dropZoneInput.addEventListener('change', function() {
-            if (dropZoneInput.files.length > 0) {
-                updateFileName(dropZoneInput.files[0].name);
-                uploadFile(dropZoneInput.files[0]); // Upload file to server
-            }
-        });
+        // dropZoneInput.addEventListener('change', function() {
+        //     if (dropZoneInput.files.length > 0) {
+        //         updateFileName(dropZoneInput.files[0].name);
+        //         uploadFile(dropZoneInput.files[0]); // Upload file to server
+        //     }
+        // });
 
         function updateFileName(name) {
             fileNameLabel.textContent = name;
         }
+
+            // Fungsi untuk preview gambar
+            function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Buat elemen gambar
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '100%';
+                img.style.objectFit = 'contain';
+
+                // Hapus isi drop zone dan tambahkan gambar
+                dropZone.innerHTML = '';
+                dropZone.appendChild(img);
+
+                // Ubah style drop zone
+                dropZone.style.padding = '0';
+                dropZone.style.border = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // Fungsi placeholder untuk upload file
+        function uploadFile(file) {
+            // Implementasi logika upload file di sini
+            console.log('Mengupload file:', file.name);
+        }
+
+        // Fungsi untuk reset drop zone
+        function resetDropZone() {
+            dropZone.innerHTML = `
+                    <div class="text-center">
+                    <i class="fa-solid fa-cloud-arrow-up" style="height: 50px; font-size: 50px"></i>
+                    <p>Seret lalu letakkan file di sini</p>
+                    </div>`;
+            dropZone.style.padding = ''; // Reset ke default
+            dropZone.style.border = ''; // Reset ke default
+            fileNameLabel.textContent = 'Pilih file...';
+        }
+
+        // Tambahkan event click pada preview gambar untuk mengganti gambar
+        dropZone.addEventListener('click', () => {
+            if (dropZone.querySelector('.preview-image')) {
+                if (confirm('Apakah Anda ingin mengganti gambar?')) {
+                    resetDropZone();
+                    browseInput.click();
+                }
+            }
+        });
+
     </script>
 @endpush

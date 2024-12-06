@@ -174,10 +174,7 @@
                             $('#user-detail-content').html(response.html);
                             $('#pakanharianDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID pengguna
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-pakanharian">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                            
                         } else {
                             alert('Gagal memuat detail pakan harian');
                         }

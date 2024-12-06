@@ -6,6 +6,7 @@ use App\Models\PenangananModel;
 use App\Models\FaseKolamModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PenangananController extends Controller
 {
@@ -24,7 +25,7 @@ class PenangananController extends Controller
         ];
         $activeMenu = 'penanganan';
         $fase_kolam = FaseKolamModel::all();
-        return view('penanganan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+        return view('admin.penanganan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
     }
 
     // menampilkan data table    
@@ -48,7 +49,7 @@ class PenangananController extends Controller
     ];
     $activeMenu = 'penanganan';
     $fase_kolam = FaseKolamModel::all();
-    return view('penanganan.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    return view('admin.penanganan.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
 }
 
 public function store(Request $request)
@@ -82,8 +83,10 @@ public function store(Request $request)
 
     $penanganans->save();
 
+    Alert::toast('Data penanganan berhasil ditambahkan', 'success');
+
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('penanganan.index')->with('success', 'Data penangan berhasil ditambahkan');
+    return redirect()->route('penanganan.index')->with('success', 'Data penanganan berhasil ditambahkan');
 }
 
 public function show($id)
@@ -94,7 +97,7 @@ public function show($id)
     }
 
     // Render view dengan data tambak
-    $view = view('penanganan.show', compact('penanganans'))->render();
+    $view = view('admin.penanganan.show', compact('penanganans'))->render();
     return response()->json(['html' => $view]);
 }
 

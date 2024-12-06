@@ -1,17 +1,19 @@
 @extends('layouts.template')
-@section('title', 'Kualitas Air')
+@section('title', 'Penanganan')
 @section('content')
     <div class="card">
-        <div class="card-header">Kelola Kualitas Air</div>
+        <div class="card-header">Kelola Penanganan</div>
         <div class="card-body">
-            <table class="table" id="table_kualitasAir">
+            <table class="table" id="table_penanganan">
                 <thead>
                     <tr class="text-center">
-                        <th>KODE KUALITAS AIR</th>
+                        <th>KODE PENANGANAN</th>
                         <th>TANGGAL CEK</th>
-                        <th>PH AIR </th>
-                        <th>KEJERNIHAN AIR</th>
-                        <th>WARNA AIR</th>
+                        <th>PEMBERIAN MINERAL</th>
+                        <th>PEMBERIAN VITAMIN</th>
+                        <th>PEMBERIAN OBAT</th>
+                        <th>PENAMBAHAN AIR</th>
+                        <th>PENGURANGAN AIR</th>
                     </tr>
                 </thead>
             </table>
@@ -19,12 +21,12 @@
     </div>
 
     {{-- Modal --}}
-    <div class="modal fade text-left" id="kualitasairDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
+    <div class="modal fade text-left" id="penangananDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
                 <div class="modal-header bg-primary" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                    <h5 class="modal-title white" id="myModalLabel160">Detail Kualitas Air</h5>
+                    <h5 class="modal-title white" id="myModalLabel160">Detail Penanganan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -33,15 +35,11 @@
                     {{-- Modal Detail --}}
                     <div id="user-detail-content" class="container">
                         <div class="row">
-                            <!-- <div class="col-md-4">
-                                <img id="foto" class="img-fluid rounded mb-3" src="" alt="Foto Pengguna"
-                                    style="max-width: 100%; height: auto;">
-                            </div> -->
                             <div class="col-md-8">
                                 <table class="table table-borderless">
                                     <tr>
-                                        <th>Kode Kualitas Air : </th>
-                                        <td id="kd_kualitas_air"></td>
+                                        <th>Kode Penanganan : </th>
+                                        <td id="kd_penanganan"></td>
                                     </tr>
                                     <tr>
                                         <th>Fase Kolam : </th>
@@ -56,32 +54,28 @@
                                         <td id="waktu_cek"></td>
                                     </tr>
                                     <tr>
-                                        <th>pH : </th>
-                                        <td id="pH"></td>
+                                        <th>Pemberian Mineral : </th>
+                                        <td id="pemberian_mineral"></td>
                                     </tr>
                                     <tr>
-                                        <th>Salinitas : </th>
-                                        <td id="salinitas"></td>
+                                        <th>Pemberian Vitamin : </th>
+                                        <td id="pemberian_vitamin"></td>
                                     </tr>
                                     <tr>
-                                        <th>DO : </th>
-                                        <td id="DO"></td>
+                                        <th>Pemberian Obat : </th>
+                                        <td id="pemberian_obat"></td>
                                     </tr>
                                     <tr>
-                                        <th>Suhu : </th>
-                                        <td id="suhu"></td>
+                                        <th>Penambahan Air : </th>
+                                        <td id="penambahan_air"></td>
                                     </tr>
                                     <tr>
-                                        <th>Kejernihan Air : </th>
-                                        <td id="kejernihan_air"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Warna Air : </th>
-                                        <td id="warna_air"></td>
+                                        <th>Pengurangan Air : </th>
+                                        <td id="pengurangan_air"></td>
                                     </tr>
                                     <tr>
                                         <th>Catatan : </th>
-                                        <td id="catatan"></td>
+                                        <td id="Catatan"></td>
                                     </tr>
                                 </table>
                             </div>
@@ -89,8 +83,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                    <button type="button" class="btn btn-danger" id="btn-delete-kualitasair">Hapus</button>
-                    <button type="button" class="btn btn-primary" id="btn-edit-kualitasair">Edit</button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-penanganan">Hapus</button>
+                    <button type="button" class="btn btn-primary" id="btn-edit-penanganan">Edit</button>
                 </div>
             </div>
         </div>
@@ -100,29 +94,29 @@
 @endpush
 @push('js')
     <script>
-        var currentKualitasAirId
+        var currentPenangananId;
         $(document).ready(function() {
-            var datakualitasAir = $('#table_kualitasAir').DataTable({
+            var dataPenanganan = $('#table_penanganan').DataTable({
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('kualitasair/list') }}",
+                    "url": "{{ url('penanganan/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "error": function(xhr, error, thrown) {
                         console.error('Error fetching data: ', thrown);
                     }
-                }, 
+                },
                 columns: [{
-                        data: "kd_kualitas_air",
+                        data: "kd_penanganan",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                        var url = '{{ route('kualitasair.show', ':id') }}';
-                        url = url.replace(':id', row.id_kualitas_air);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_kualitas_air +
+                        var url = '{{ route('penanganan.show', ':id') }}';
+                        url = url.replace(':id', row.id_penanganan);
+                        return '<a href="javascript:void(0);" data-id="' + row.id_penanganan +
                             '" class="view-user-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#kualitasairDetailModal">' + data +
+                            '" data-toggle="modal" data-target="#penangananDetailModal">' + data +
                             '</a>';
                         }
                     },
@@ -133,19 +127,30 @@
                         searchable: true
                     },
                     {
-                        data: "pH",
+                        data: "pemberian_mineral",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "kejernihan_air",
+                        data: "pemberian_vitamin",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
                     },
                     {
-                        data: "warna_air",
+                        data: "pemberian_obat",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "penambahan_air",
+                        className: "", // Jika tidak ada class, hapus baris ini
+                        orderable: true,
+                        searchable: true
+                    },{
+                        data: "pengurangan_air",
                         className: "", // Jika tidak ada class, hapus baris ini
                         orderable: true,
                         searchable: true
@@ -158,10 +163,10 @@
                 }
             });
 
-            // Event listener untuk menampilkan detail kualitas air
+            // Event listener untuk menampilkan detail tambak
             $(document).on('click', '.view-user-details', function() {
                 var url = $(this).data('url');
-                currentKualitasAirId = $(this).data('id');
+                currentPenangananId = $(this).data('id');
 
                 $.ajax({
                     url: url,
@@ -170,37 +175,34 @@
                         if (response.html) {
                             // Load konten detail ke modal
                             $('#user-detail-content').html(response.html);
-                            $('#kualitasairDetailModal').modal('show');
+                            $('#penangananDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID kualitas air
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-kualitasair">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                            
                         } else {
-                            alert('Gagal memuat detail kualitas air');
+                            alert('Gagal memuat detail penanganan');
                         }
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText);
-                        alert('Gagal memuat detail kualitas air');
+                        alert('Gagal memuat detail penanganan');
                     }
                 });
             });
 
-            $(document).on('click', '#btn-edit-kualitasair', function() {
-                if (currentKualitasAirId) {
-                    var editUrl = '{{ route('kualitasair.edit', ':id') }}'.replace(':id', currentKualitasAirId);
+            $(document).on('click', '#btn-edit-penanganan', function() {
+                if (currentPenangananId) {
+                    var editUrl = '{{ route('penanganan.edit', ':id') }}'.replace(':id', currentPenangananId);
                     window.location.href = editUrl;
                 } else {
-                    alert('ID Kualitas Air tidak ditemukan');
+                    alert('ID Penanganan tidak ditemukan');
                 }
             });
 
-            $(document).on('click', '#btn-delete-kualitasair', function() {
-                if (currentKualitasAirId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data kualitas air ini?')) {
-                        var deleteUrl = '{{ route('kualitasair.destroy', ':id') }}'.replace(':id',
-                            currentKualitasAirId);
+            $(document).on('click', '#btn-delete-penanganan', function() {
+                if (currentPenangananId) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data penanganan ini?')) {
+                        var deleteUrl = '{{ route('penanganan.destroy', ':id') }}'.replace(':id',
+                            currentPenangananId);
 
                         $.ajax({
                             url: deleteUrl,
@@ -209,23 +211,23 @@
                                 "_token": "{{ csrf_token() }}",
                             },
                             success: function(response) {
-                                $('#kualitasairDetailModal').modal('hide');
+                                $('#penangananDetailModal').modal('hide');
                                 // Reload DataTable
-                                $('#table_kualitasAir').DataTable().ajax.reload();
-                                alert('Data Kualitas Air berhasil dihapus');
+                                $('#table_penanganan').DataTable().ajax.reload();
+                                alert('Data Penanganan berhasil dihapus');
                             },
                             error: function(xhr) {
-                                alert('Gagal menghapus data kualitas air: ' + xhr.responseText);
+                                alert('Gagal menghapus data penanganan: ' + xhr.responseText);
                             }
                         });
                     }
                 } else {
-                    alert('Data Kualitas Air tidak ditemukan');
+                    alert('Data Penanganan tidak ditemukan');
                 }
             });
 
             // Tambahkan tombol "Tambah" setelah kolom pencarian
-            $("#table_kualitasAir_filter").append(
+            $("#table_penanganan_filter").append(
                 '<select class="form-control" name="id_fase_tambak" id="id_fase_tambak" required style="margin-left: 30px; width: 150px;">' +
                 '<option value="">- SEMUA -</option>' +
                 '@foreach ($fase_kolam as $item)' +
@@ -238,12 +240,12 @@
             $("#btn-tambah").on('click', function() {
                 window.location.href =
                 // "{{ route('kolam.create') }}"
-                    "{{ url('kualitasair/create') }}"; // Arahkan ke halaman tambah 
+                    "{{ url('penanganan/create') }}"; // Arahkan ke halaman tambah pengguna
             });
             // Menambahkan placeholder pada kolom search
-            $('input[type="search"]').attr('placeholder', 'Cari data kualitas air...');
+            $('input[type="search"]').attr('placeholder', 'Cari data penanganan...');
             $('#id_fase_tambak').on('change', function() {
-                datakualitasAir.ajax.reload();
+                dataPenanganan.ajax.reload();
             })
         });
     </script>

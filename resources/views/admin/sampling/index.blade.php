@@ -209,10 +209,7 @@
                             $('#user-detail-content').html(response.html);
                             $('#samplingDetailModal').modal('show');
 
-                            // Setel action form penghapusan sesuai dengan ID sampling
-                            var editButton =
-                                '<button type="button" class="btn btn-primary" id="btn-edit-sampling">Edit</button>';
-                            $('#user-detail-content').append(editButton);
+                            
                         } else {
                             alert('Gagal memuat detail sampling');
                         }
