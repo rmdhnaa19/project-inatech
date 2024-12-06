@@ -58,6 +58,7 @@ Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
     });
 });
 
+// role user untuk pj tambak
 Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
     Route::group(['prefix' => 'faseKolam'], function(){
         Route::get('/', [FaseKolamController::class, 'index'])->name('user.fasekolam.index');
