@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-primary mt-auto rounded-0"
-                                    onclick="window.location.href='{{ route('user.transaksiPakan.create', ['id_detail_pakan' => $detailPakan->id_detail_pakan]) }}'">
+                                    onclick="window.location.href='{{ route('user.transaksiAlat.create', ['id_detail_alat' => $detailAlat->id_detail_alat]) }}'">
                                     Tambah
                                 </button>
 
