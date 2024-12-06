@@ -23,4 +23,7 @@ class UserModel extends Authenticatable
     public function detailUser():HasMany{
         return $this->hasMany(DetailUserModel::class, 'id_user', 'id_user');
     }
+    public function userTambak():HasMany{
+        return $this->hasMany(PjTambakModel::class, 'id_user', 'id_user');
+    }
 }
