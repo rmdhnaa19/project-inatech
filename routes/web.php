@@ -263,8 +263,18 @@ Route::middleware(['auth', 'no-back', 'role:2'])->group(function (){
 });
 
 Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
-    
-});
+    Route::group(['prefix' => 'Kolam'], function(){
+        Route::get('/', [KolamController::class, 'index'])->name('user.kolam.index');
+    });
+
+        Route::group(['prefix' => 'faseKolam'], function(){
+            Route::get('/', [FaseKolamController::class, 'index'])->name('user.fasekolam.index');
+            Route::get('/create', [FaseKolamController::class, 'create'])->name('user.fasekolam.create');
+            Route::post('/', [FaseKolamController::class, 'store'])->name('user.fasekolam.store');
+        });
+    });
+
+
 
 // MANAJEMEN BUDIDAYA
 // Route anco

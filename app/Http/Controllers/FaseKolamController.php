@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FaseKolamModel;
 use App\Models\KolamModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -38,7 +39,8 @@ class FaseKolamController extends Controller
     }
 
 
-    public function create(){
+    public function create($request){
+        if (auth()->user()->id_role == 1) {
         $breadcrumb = (object) [
             'title' => 'Tambah Data Fase Kolam',
             'paragraph' => 'Berikut ini merupakan form tambah data fase kolam yang terinput ke dalam sistem',
@@ -51,8 +53,23 @@ class FaseKolamController extends Controller
         $activeMenu = 'fasekolam';
         $kolam = KolamModel::all();
         return view('admin.fasekolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam]);
+    }elseif (auth()->user()->id_role == 3) {
+        $breadcrumb = (object) [
+            'title' => 'Tambah Data Fase Kolam',
+            'paragraph' => 'Berikut ini merupakan form tambah data fase kolam yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'Manajemen Fase Kolam', 'url' => route('admin.fasekolam.index')],
+                ['label' => 'Tambah'],
+            ]
+        ];
+        $activeMenu = 'fasekolam';
+        $user = Auth::user();
+        $kolam = KolamModel::with(['tambak'])->get();
+        $selectedIdkolam = $request->input('id_kolam'); // Ambil ID dari URL
+        return view('adminTambak.faseKolam.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam,'selectedIdkolam' => $selectedIdkolam]);
     }
-
+    }
 
     public function store(Request $request)
     {
