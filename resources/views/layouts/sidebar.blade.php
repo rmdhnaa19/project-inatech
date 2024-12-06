@@ -204,19 +204,23 @@
             </li>
 
         @elseif (auth()->user()->id_role == 3)
-        <li class="sidebar-item  has-sub">
-            <a href="#" class='sidebar-link'>
-                <i data-feather="triangle" width="20"></i>
-                <span>Kelola Tambak</span>
-            </a>
-            <ul class="submenu ">
-                <li>
-                    <a href="{{ url('/fasekolam') }}">Fase Kolam</a>
-                </li>
-            </ul>
-        </li>
+        <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
+            <li
+                class="sidebar-item has-sub {{ in_array($activeMenu, ['Kolam']) ? 'active' : '' }}">
+                <a href="#" class='sidebar-link'>
+                    <i data-feather="triangle" width="20"></i>
+                    <span>Kelola Tambak</span>
+                </a>
+                <ul class="submenu {{ in_array($activeMenu, ['Kolam', 'faseKolam']) ? 'active' : '' }}">
+                    <li class="{{ $activeMenu == 'Kolam' ? 'active' : '' }}">
+                        <a href="{{ url('/Kolam') }}">Kolam</a>
+                    </li>
+                    <li class="{{ $activeMenu == 'faseKolam' ? 'active' : '' }}">
+                        <a href="{{ url('/faseKolam') }}">Fase Kolam</a>
+                    </li>
+                </ul>
+            </li>
         @endif
-
     </ul>
 </div>
 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
