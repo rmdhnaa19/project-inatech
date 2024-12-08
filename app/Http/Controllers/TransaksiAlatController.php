@@ -12,61 +12,109 @@ use Yajra\DataTables\Facades\DataTables;
 class TransaksiAlatController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Transaksi Alat',
-            'paragraph' => 'Berikut ini merupakan data transaksi alat yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-                ['label' => 'Kelola Transaksi Alat'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiAlat';
-        $alatGudang = DetailAlatModel::all();
-        return view('admin.kelolaTransaksiAlat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Transaksi Alat',
+                'paragraph' => 'Berikut ini merupakan data transaksi alat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                    ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                    ['label' => 'Kelola Transaksi Alat'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiAlat';
+            $alatGudang = DetailAlatModel::all();
+            return view('admin.kelolaTransaksiAlat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Riwayat Transaksi Alat',
+                'paragraph' => 'Berikut ini merupakan data transaksi alat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Riwayat Transaksi Alat'],
+                ]
+            ];
+            $activeMenu = 'transaksiAlat';
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+            $alatGudang = DetailAlatModel::where('id_gudang', $gudangIds)->get();
+            return view('adminGudang.transaksiAlat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'gudangIds' => $gudangIds]);
+        }
     }
 
     public function list(Request $request)
     {
-        $transaksiAlats = TransaksiAlatModel::with(['detailAlat.gudang', 'detailAlat.alat'])
-            ->select('transaksi_alat.*', 'alat.nama as nama_alat', 'gudang.nama as nama_gudang')
-            ->join('detail_alat', 'transaksi_alat.id_detail_alat', '=', 'detail_alat.id_detail_alat')
-            ->join('alat', 'detail_alat.id_alat', '=', 'alat.id_alat')
-            ->join('gudang', 'detail_alat.id_gudang', '=', 'gudang.id_gudang');
+        if (auth()->user()->id_role == 1) {
+            $transaksiAlats = TransaksiAlatModel::with(['detailAlat.gudang', 'detailAlat.alat'])
+                ->select('transaksi_alat.*', 'alat.nama as nama_alat', 'gudang.nama as nama_gudang')
+                ->join('detail_alat', 'transaksi_alat.id_detail_alat', '=', 'detail_alat.id_detail_alat')
+                ->join('alat', 'detail_alat.id_alat', '=', 'alat.id_alat')
+                ->join('gudang', 'detail_alat.id_gudang', '=', 'gudang.id_gudang');
 
-        return DataTables::of($transaksiAlats)
-            ->addColumn('alat_gudang', function ($transaksi) {
-                return $transaksi->nama_alat . ' - ' . $transaksi->nama_gudang;
-            })
-            ->addColumn('created_at_formatted', function ($transaksi) {
-                return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
-            })
-            ->filterColumn('alat_gudang', function($query, $keyword) {
-                $query->whereRaw("CONCAT(alat.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
-            })
-            ->make(true);
+            return DataTables::of($transaksiAlats)
+                ->addColumn('alat_gudang', function ($transaksi) {
+                    return $transaksi->nama_alat . ' - ' . $transaksi->nama_gudang;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('alat_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(alat.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }elseif (auth()->user()->id_role == 2) {
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+            $transaksiAlats = TransaksiAlatModel::with(['detailAlat.gudang', 'detailAlat.alat'])
+                ->select('transaksi_alat.*', 'alat.nama as nama_alat', 'gudang.nama as nama_gudang')
+                ->join('detail_alat', 'transaksi_alat.id_detail_alat', '=', 'detail_alat.id_detail_alat')
+                ->join('alat', 'detail_alat.id_alat', '=', 'alat.id_alat')
+                ->join('gudang', 'detail_alat.id_gudang', '=', 'gudang.id_gudang')
+                ->whereIn('detail_alat.id_gudang', $gudangIds);;
+
+            return DataTables::of($transaksiAlats)
+                ->addColumn('alat_gudang', function ($transaksi) {
+                    return $transaksi->nama_alat;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('alat_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(alat.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }
     }
 
-    public function create(){
-        $breadcrumb = (object) [
-            'title' => 'Tambah Data Transaksi Alat',
-            'paragraph' => 'Berikut ini merupakan form tambah data transaksi alat yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
-                ['label' => 'Kelola Transaksi Alat', 'url' => route('admin.kelolaTransaksiAlat.index')],
-                ['label' => 'Tambah'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiAlat';
-        $alatGudang = DetailAlatModel::with(['alat', 'gudang'])->get();
-        return view('admin.kelolaTransaksiAlat.create', [
-            'breadcrumb' => $breadcrumb, 
-            'activeMenu' => $activeMenu, 
-            'alatGudang' => $alatGudang
-        ]);
+    public function create(Request $request){
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Data Transaksi Alat',
+                'paragraph' => 'Berikut ini merupakan form tambah data transaksi alat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                    ['label' => 'Kelola Alat ke Gudang', 'url' => route('admin.kelolaAlatGudang.index')],
+                    ['label' => 'Kelola Transaksi Alat', 'url' => route('admin.kelolaTransaksiAlat.index')],
+                    ['label' => 'Tambah'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiAlat';
+            $alatGudang = DetailAlatModel::with(['alat', 'gudang'])->get();
+            return view('admin.kelolaTransaksiAlat.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Transaksi Alat',
+                'paragraph' => 'Berikut ini merupakan form tambah data transaksi alat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Tambah Transaksi Alat'],
+                ]
+            ];
+            $activeMenu = 'transaksiAlat';
+            $alatGudang = DetailAlatModel::with(['alat', 'gudang'])->get();
+            $selectedIdDetailAlat = $request->input('id_detail_alat'); // Ambil ID dari URL
+            return view('adminGudang.transaksiAlat.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'selectedIdDetailAlat' => $selectedIdDetailAlat]);
+        }
     }
     
     public function store(Request $request)
@@ -105,20 +153,36 @@ class TransaksiAlatController extends Controller
             'id_detail_alat' => $id_alatGudang
         ]);
 
-        Alert::toast('Data transaksi alat berhasil ditambah', 'success');
-        return redirect()->route('admin.kelolaTransaksiAlat.index');
+        if (auth()->user()->id_role == 1) {
+            Alert::toast('Data transaksi alat berhasil ditambah', 'success');
+            return redirect()->route('admin.kelolaTransaksiAlat.index');
+        }elseif (auth()->user()->id_role == 2) {
+            Alert::toast('Data transaksi alat berhasil ditambah', 'success');
+            return redirect()->route('user.transaksiAlat.index');
+        }
     }
 
     public function show($id)
     {
-        $transaksiAlat = TransaksiAlatModel::with('detailAlat')->find($id); // Ambil data tambak dengan relasi gudang
-        if (!$transaksiAlat) {
-            return response()->json(['error' => 'Transaksi alat tidak ditemukan.'], 404);
-        }
+        if (auth()->user()->id_role == 1) {
+            $transaksiAlat = TransaksiAlatModel::with('detailAlat')->find($id); // Ambil data tambak dengan relasi gudang
+            if (!$transaksiAlat) {
+                return response()->json(['error' => 'Transaksi alat tidak ditemukan.'], 404);
+            }
 
-        // Render view dengan data tambak
-        $view = view('admin.kelolaTransaksiAlat.show', compact('transaksiAlat'))->render();
-        return response()->json(['html' => $view]);
+            // Render view dengan data tambak
+            $view = view('admin.kelolaTransaksiAlat.show', compact('transaksiAlat'))->render();
+            return response()->json(['html' => $view]);
+        }elseif (auth()->user()->id_role == 2) {
+            $transaksiAlat = TransaksiAlatModel::with('detailAlat')->find($id); // Ambil data tambak dengan relasi gudang
+            if (!$transaksiAlat) {
+                return response()->json(['error' => 'Transaksi alat tidak ditemukan.'], 404);
+            }
+
+            // Render view dengan data tambak
+            $view = view('adminGudang.transaksiAlat.show', compact('transaksiAlat'))->render();
+            return response()->json(['html' => $view]);
+        }
     }
 
     public function edit(string $id){

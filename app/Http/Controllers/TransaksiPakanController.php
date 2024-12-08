@@ -83,7 +83,7 @@ class TransaksiPakanController extends Controller
                     return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
                 })
                 ->filterColumn('pakan_gudang', function($query, $keyword) {
-                    $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                    $query->whereRaw("CONCAT(pakan.nama) like ?", ["%{$keyword}%"]);
                 })
                 ->make(true);
         }
@@ -162,7 +162,7 @@ class TransaksiPakanController extends Controller
             return redirect()->route('admin.kelolaTransaksiPakan.index');
         }elseif (auth()->user()->id_role == 2) {
             Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
-            return redirect()->route('user.TransaksiPakan.index');
+            return redirect()->route('user.transaksiPakan.index');
         }
     }
 

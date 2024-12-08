@@ -153,7 +153,7 @@
                     <i data-feather="home" width="20"></i>
                     <span>Dashboard</span>
                 </a>
-            </li> 
+            </li>
             <li class='sidebar-title'>MANAJEMEN INVENTORY</li>
             <li
                 class="sidebar-item has-sub {{ in_array($activeMenu, ['pakanGudang', 'transaksiPakan']) ? 'active' : '' }}">
@@ -163,50 +163,47 @@
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['pakanGudang', 'transaksiPakan']) ? 'active' : '' }}">
                     <li class="{{ $activeMenu == 'pakanGudang' ? 'active' : '' }}">
-                        <a href="{{ url('/pakanGudang') }}">Pakan ke Gudang</a>
+                        <a href="{{ url('/pakanGudang') }}">Data Pakan</a>
                     </li>
                     <li class="{{ $activeMenu == 'transaksiPakan' ? 'active' : '' }}">
-                        <a href="{{ url('/transaksiPakan') }}">Transaksi Pakan</a>
+                        <a href="{{ url('/transaksiPakan') }}">Riwayat Transaksi Pakan</a>
                     </li>
                 </ul>
             </li>
             <li
-                class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaAlat', 'kelolaAlatGudang', 'kelolaTransaksiAlat']) ? 'active' : '' }}">
+                class="sidebar-item  has-sub {{ in_array($activeMenu, ['alatGudang', 'transaksiAlat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
                     <i data-feather="briefcase" width="20"></i>
                     <span>Manajemen Alat</span>
                 </a>
-                <ul
-                    class="submenu {{ in_array($activeMenu, ['kelolaAlatGudang', 'kelolaTransaksiAlat']) ? 'active' : '' }}">
+                <ul class="submenu {{ in_array($activeMenu, ['alatGudang', 'transaksiAlat']) ? 'active' : '' }}">
                     <li>
-                        <a href="{{ url('/kelolaAlatGudang') }}">Alat ke Gudang</a>
+                        <a href="{{ url('/alatGudang') }}">Data Alat</a>
                     </li>
                     <li>
-                        <a href="{{ url('/kelolaTransaksiAlat') }}">Transaksi Alat</a>
+                        <a href="{{ url('/transaksiAlat') }}">Riwayat Transaksi Alat</a>
                     </li>
                 </ul>
             </li>
             <li
-                class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaObat', 'kelolaObatGudang', 'kelolaTransaksiObat']) ? 'active' : '' }}">
+                class="sidebar-item  has-sub {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
                     <i data-feather="triangle" width="20"></i>
                     <span>Manajemen Obat</span>
                 </a>
                 <ul
-                    class="submenu {{ in_array($activeMenu, ['kelolaObatGudang', 'kelolaTransaksiObat']) ? 'active' : '' }}">
+                    class="submenu {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
                     <li>
-                        <a href="{{ url('/kelolaObatGudang') }}">Obat ke Gudang</a>
+                        <a href="{{ url('/obatGudang') }}">Data Obat</a>
                     </li>
                     <li>
-                        <a href="{{ url('/kelolaTransaksiObat') }}">Transaksi Obat</a>
+                        <a href="{{ url('/transaksiObat') }}">Riwayat Transaksi Obat</a>
                     </li>
                 </ul>
             </li>
-
         @elseif (auth()->user()->id_role == 3)
-        <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
-            <li
-                class="sidebar-item has-sub {{ in_array($activeMenu, ['Kolam']) ? 'active' : '' }}">
+            <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
+            <li class="sidebar-item has-sub {{ in_array($activeMenu, ['Kolam']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
                     <i data-feather="triangle" width="20"></i>
                     <span>Kelola Tambak</span>

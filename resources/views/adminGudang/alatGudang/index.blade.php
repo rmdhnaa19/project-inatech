@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Transaksi Alat')
+@section('title', 'Data Alat')
 @section('content')
     <div class="card">
         <div class="card-header">Data Alat</div>
@@ -17,17 +17,17 @@
                                     <div class="col-md-8 d-flex flex-column">
                                         <div class="card-body flex-grow-1">
                                             <h5 class="card-title">{{ $detailAlat->alat->nama }}</h5>
-                                            <p class="card-text m-0">{{ $detailAlat->alat->deskripsi }}</p>
-                                            <p class="card-text m-0">Rp
+                                            <p class="card-text m-0">Deskripsi : {{ $detailAlat->alat->deskripsi }}</p>
+                                            <p class="card-text m-0">Harga : Rp
                                                 {{ number_format($detailAlat->alat->harga_satuan, 0, ',', '.') }} per
                                                 {{ $detailAlat->alat->satuan }}
                                             </p>
-                                            <p class="card-text">Sisa stok
+                                            <p class="card-text">Sisa stok :
                                                 {{ number_format($detailAlat->stok_alat, 0, ',', '.') }}
                                             </p>
                                             <p class="card-text">
                                                 <small class="text-body-secondary">
-                                                    Last updated
+                                                    Terakhir Diperbarui :
                                                     {{ \Carbon\Carbon::parse($detailAlat->updated_at)->translatedFormat('l, j F Y') }}
                                                 </small>
                                             </p>
@@ -36,7 +36,7 @@
                                 </div>
                                 <button class="btn btn-primary mt-auto rounded-0"
                                     onclick="window.location.href='{{ route('user.transaksiAlat.create', ['id_detail_alat' => $detailAlat->id_detail_alat]) }}'">
-                                    Tambah
+                                    Tambah Transaksi
                                 </button>
 
                             </div>
