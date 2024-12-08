@@ -2,7 +2,7 @@
 @section('title', 'Data Obat')
 @section('content')
     <div class="card">
-        <div class="card-header">Data Alat</div>
+        <div class="card-header">Data Obat</div>
         <div class="card-body">
             <div class="container">
                 <div class="row">

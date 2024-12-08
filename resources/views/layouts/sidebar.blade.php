@@ -191,8 +191,7 @@
                     <i data-feather="triangle" width="20"></i>
                     <span>Manajemen Obat</span>
                 </a>
-                <ul
-                    class="submenu {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
+                <ul class="submenu {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
                     <li>
                         <a href="{{ url('/obatGudang') }}">Data Obat</a>
                     </li>
