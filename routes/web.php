@@ -189,6 +189,20 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [TransaksiObatController::class, 'update'])->name('admin.kelolaTransaksiObat.update');
         Route::delete('/{id}', [TransaksiObatController::class, 'destroy'])->name('admin.kelolaTransaksiObat.destroy');
     });
+
+    // MANAJEMEN BUDIDAYA
+// Route anco
+Route::group(['prefix' => 'anco'], function(){
+    Route::get('/', [AncoController::class, 'index'])->name('admin.anco.index');
+    Route::post('/list', [AncoController::class, 'list'])->name('admin.anco.list');
+    Route::get('/create', [AncoController::class, 'create'])->name('admin.anco.create');
+    Route::post('/', [AncoController::class, 'store'])->name('admin.anco.store');
+    Route::get('/{id}', [AncoController::class, 'show'])->name('admin.anco.show');
+    Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('admin.anco.edit');
+    Route::put('/{id}', [AncoController::class, 'update'])->name('admin.anco.update');
+    Route::delete('/{id}', [AncoController::class, 'destroy'])->name('admin.anco.destroy');
+});
+
 });
 
 // KELOLA TAMBAK
@@ -241,18 +255,7 @@ Route::group(['prefix' => 'pjTambak'], function(){
 });
 
 
-// MANAJEMEN BUDIDAYA
-// Route anco
-Route::group(['prefix' => 'anco'], function(){
-    Route::get('/', [AncoController::class, 'index'])->name('anco.index');
-    Route::post('/list', [AncoController::class, 'list'])->name('anco.list');
-    Route::get('/create', [AncoController::class, 'create'])->name('anco.create');
-    Route::post('/', [AncoController::class, 'store'])->name('anco.store');
-    Route::get('/{id}', [AncoController::class, 'show'])->name('anco.show');
-    Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('anco.edit');
-    Route::put('/{id}', [AncoController::class, 'update'])->name('anco.update');
-    Route::delete('/{id}', [AncoController::class, 'destroy'])->name('anco.destroy');
-});
+
 
 // Route kualitas air
 Route::group(['prefix' => 'kualitasair'], function(){
@@ -312,4 +315,19 @@ Route::group(['prefix' => 'kematianUdang'], function(){
     Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('kematianudang.edit');
     Route::post('/{id}', [KematianUdangController::class, 'update'])->name('kematianudang.update');
     Route::delete('/{id}', [KematianUdangController::class, 'destroy'])->name('kematianudang.destroy');
+});
+
+//Role User (Admin Tambak)
+Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
+    Route::group(['prefix' => 'anco'], function(){
+        // Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
+    });
+
+    Route::group(['prefix' => 'transaksiPakan'], function(){
+        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.transaksiPakan.index');
+        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.transaksiPakan.list');
+        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.transaksiPakan.create');
+        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.transaksiPakan.store');
+        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.transaksiPakan.show');
+    });
 });
