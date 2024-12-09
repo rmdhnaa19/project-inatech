@@ -272,7 +272,7 @@
             // Tambahkan event listener untuk tombol tambah 
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                // "{{ route('kolam.create') }}"
+                
                     "{{ url('sampling/create') }}"; // Arahkan ke halaman tambah pengguna
             });
             // Menambahkan placeholder pada kolom search

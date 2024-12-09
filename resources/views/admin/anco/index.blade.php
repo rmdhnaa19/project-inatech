@@ -110,7 +110,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                            var url = '{{ route('anco.show', ':id') }}';
+                            var url = '{{ route('admin.anco.show', ':id') }}';
                             url = url.replace(':id', row.id_anco);
                             return '<a href="javascript:void(0);" data-id="' + row.id_anco +
                                 '" class="view-user-details" data-url="' + url +
@@ -179,7 +179,7 @@
 
             $(document).on('click', '#btn-edit-anco', function() {
                 if (currentAncoId) {
-                    var editUrl = '{{ route('anco.edit', ':id') }}'.replace(':id', currentAncoId);
+                    var editUrl = '{{ route('admin.anco.edit', ':id') }}'.replace(':id', currentAncoId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID anco tidak ditemukan');
@@ -189,7 +189,7 @@
             $(document).on('click', '#btn-delete-anco', function() {
                 if (currentAncoId) {
                     if (confirm('Apakah Anda yakin ingin menghapus data anco ini?')) {
-                        var deleteUrl = '{{ route('anco.destroy', ':id') }}'.replace(':id',
+                        var deleteUrl = '{{ route('admin.anco.destroy', ':id') }}'.replace(':id',
                             currentAncoId);
 
                         $.ajax({

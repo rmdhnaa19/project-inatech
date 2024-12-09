@@ -15,17 +15,36 @@ class AncoController extends Controller
      */
     public function index()
     {
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Anco',
-            'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('anco.index')],
-                ['label' => 'Anco'],
-            ]
-        ];
-        $activeMenu = 'anco';
-        $fase_kolam = FaseKolamModel::all();
-        return view('admin.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+       
+        if(auth()->user()->id_role == 1){
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Anco',
+                'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Anco', 'url' => route('admin.anco.index')],
+                    ['label' => 'Anco'],
+                ]
+            ];
+            $activeMenu = 'anco';
+            $anco = AncoModel::all();
+            $fase_kolam = FaseKolamModel::all();
+            return view('admin.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'anco' => $anco]);
+        } elseif(auth()->user()->id_role == 3){
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Anco',
+                'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Anco'],
+                ]
+            ];
+            $activeMenu = 'anco';
+            $anco = AncoModel::all();
+            $fase_kolam = FaseKolamModel::all();
+            return view('adminTambak.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'anco' => $anco]);
+        }
+        
     }
 
     // menampilkan data table    
@@ -43,7 +62,7 @@ class AncoController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Anco', 'url' => route('anco.index')],
+                ['label' => 'Anco', 'url' => route('admin.anco.index')],
                 ['label' => 'Tambah'],
             ]
     ];

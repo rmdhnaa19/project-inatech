@@ -234,7 +234,7 @@
             // Tambahkan event listener untuk tombol tambah 
             $("#btn-tambah").on('click', function() {
                 window.location.href =
-                // "{{ route('kolam.create') }}"
+                    
                     "{{ url('kualitasair/create') }}"; // Arahkan ke halaman tambah 
             });
             // Menambahkan placeholder pada kolom search
