@@ -24,12 +24,15 @@
     <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiPakan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlatGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiAlat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObatGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiObat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -40,6 +43,7 @@
     <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fasekolamuser.css') }}">
     @stack('css')
 </head>
 

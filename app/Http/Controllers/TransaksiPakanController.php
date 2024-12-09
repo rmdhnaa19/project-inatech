@@ -83,7 +83,7 @@ class TransaksiPakanController extends Controller
                     return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
                 })
                 ->filterColumn('pakan_gudang', function($query, $keyword) {
-                    $query->whereRaw("CONCAT(pakan.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                    $query->whereRaw("CONCAT(pakan.nama) like ?", ["%{$keyword}%"]);
                 })
                 ->make(true);
         }
@@ -117,8 +117,6 @@ class TransaksiPakanController extends Controller
             $activeMenu = 'transaksiPakan';
             $pakanGudang = DetailPakanModel::with(['pakan', 'gudang'])->get();
             $selectedIdDetailPakan = $request->input('id_detail_pakan'); // Ambil ID dari URL
-            // $idDetailPakan = $request->query('id_detail_pakan');
-            // $pakanGudang = DetailPakanModel::findOrFail($idDetailPakan)->with(['pakan', 'gudang'])->get();
             return view('adminGudang.transaksiPakan.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'pakanGudang' => $pakanGudang, 'selectedIdDetailPakan' => $selectedIdDetailPakan]);
         }
     }
@@ -164,7 +162,7 @@ class TransaksiPakanController extends Controller
             return redirect()->route('admin.kelolaTransaksiPakan.index');
         }elseif (auth()->user()->id_role == 2) {
             Alert::toast('Data transaksi pakan berhasil ditambah', 'success');
-            return redirect()->route('user.TransaksiPakan.index');
+            return redirect()->route('user.transaksiPakan.index');
         }
     }
 

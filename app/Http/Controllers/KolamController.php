@@ -5,6 +5,7 @@ use App\Models\KolamModel;
 use App\Models\TambakModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -13,6 +14,7 @@ class KolamController extends Controller
     
     public function index()
     {
+    if (auth()->user()->id_role == 1) {
         $breadcrumb = (object) [
             'title' => 'Kelola Data Kolam',
             'paragraph' => 'Berikut ini merupakan data kolam yang terinput ke dalam sistem',
@@ -24,6 +26,21 @@ class KolamController extends Controller
         $activeMenu = 'manajemenKolam';
         $tambak = TambakModel::all();
         return view('admin.kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'tambak' => $tambak]);
+    }elseif (auth()->user()->id_role == 3) {
+        $breadcrumb = (object) [
+            'title' => 'Data Kolam',
+            'paragraph' => 'Berikut ini merupakan data kolam yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('admin.kolam.index')],
+                ['label' => 'Data Kolam'],
+            ]
+        ];
+        $activeMenu = 'Kolam';
+        $user = Auth::user();
+        $tambakIds = $user->userTambak->pluck('id_tambak'); // Ambil semua id_tambak
+        $kolam = KolamModel::whereIn('id_tambak', $tambakIds)->get();
+        return view('adminTambak.kolam.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'kolam' => $kolam, 'user' => $user, 'tambakIds' => $tambakIds]);
+    }
     }
 
 

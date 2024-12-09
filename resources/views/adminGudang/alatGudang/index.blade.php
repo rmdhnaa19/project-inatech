@@ -1,41 +1,41 @@
 @extends('layouts.template')
-@section('title', 'Data Pakan')
+@section('title', 'Data Alat')
 @section('content')
     <div class="card">
-        <div class="card-header">Data Pakan</div>
+        <div class="card-header">Data Alat</div>
         <div class="card-body">
             <div class="container">
                 <div class="row">
-                    @foreach ($pakanGudang as $detailPakan)
+                    @foreach ($alatGudang as $detailAlat)
                         <div class="col-md-6 mb-4">
                             <div class="card border border-primary" style="max-width: 540px;">
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <img src="{{ asset('storage/' . $detailPakan->pakan->foto) }}" alt="Foto Pakan"
+                                        <img src="{{ asset('storage/' . $detailAlat->alat->foto) }}" alt="Foto Alat"
                                             class="img-fluid mx-2 my-2 border" style="width: auto; height: 30vh;">
                                     </div>
                                     <div class="col-md-8 d-flex flex-column">
                                         <div class="card-body flex-grow-1">
-                                            <h5 class="card-title">{{ $detailPakan->pakan->nama }}</h5>
-                                            <p class="card-text m-0">Deskripsi : {{ $detailPakan->pakan->deskripsi }}</p>
+                                            <h5 class="card-title">{{ $detailAlat->alat->nama }}</h5>
+                                            <p class="card-text m-0">Deskripsi : {{ $detailAlat->alat->deskripsi }}</p>
                                             <p class="card-text m-0">Harga : Rp
-                                                {{ number_format($detailPakan->pakan->harga_satuan, 0, ',', '.') }} per
-                                                {{ $detailPakan->pakan->satuan }}
+                                                {{ number_format($detailAlat->alat->harga_satuan, 0, ',', '.') }} per
+                                                {{ $detailAlat->alat->satuan }}
                                             </p>
                                             <p class="card-text">Sisa stok :
-                                                {{ number_format($detailPakan->stok_pakan, 0, ',', '.') }}
+                                                {{ number_format($detailAlat->stok_alat, 0, ',', '.') }}
                                             </p>
                                             <p class="card-text">
                                                 <small class="text-body-secondary">
                                                     Terakhir Diperbarui :
-                                                    {{ \Carbon\Carbon::parse($detailPakan->updated_at)->translatedFormat('l, j F Y') }}
+                                                    {{ \Carbon\Carbon::parse($detailAlat->updated_at)->translatedFormat('l, j F Y') }}
                                                 </small>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary mt-auto rounded-0"
-                                    onclick="window.location.href='{{ route('user.transaksiPakan.create', ['id_detail_pakan' => $detailPakan->id_detail_pakan]) }}'">
+                                    onclick="window.location.href='{{ route('user.transaksiAlat.create', ['id_detail_alat' => $detailAlat->id_detail_alat]) }}'">
                                     Tambah Transaksi
                                 </button>
 

@@ -35,7 +35,7 @@ class PakanGudangController extends Controller
                 'paragraph' => 'Berikut ini merupakan data pakan yang terinput ke dalam sistem',
                 'list' => [
                     ['label' => 'Home', 'url' => route('dashboard.index')],
-                    ['label' => 'Kelola Pakan']
+                    ['label' => 'Data Pakan']
                 ]
             ];
             $activeMenu = 'pakanGudang';

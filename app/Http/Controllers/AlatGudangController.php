@@ -6,26 +6,43 @@ use App\Models\AlatModel;
 use App\Models\DetailAlatModel;
 use App\Models\GudangModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class AlatGudangController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Alat ke Gudang',
-            'paragraph' => 'Berikut ini merupakan data alat ke gudang yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
-                ['label' => 'Kelola Alat ke Gudang'],
-            ]
-        ];
-        $activeMenu = 'kelolaAlatGudang';
-        $alatGudang = DetailAlatModel::all();
-        $gudang = GudangModel::all();
-        $alat = AlatModel::all();
-        return view('admin.kelolaAlatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'alat' => $alat, 'gudang' => $gudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Alat ke Gudang',
+                'paragraph' => 'Berikut ini merupakan data alat ke gudang yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Alat', 'url' => route('admin.kelolaAlat.index')],
+                    ['label' => 'Kelola Alat ke Gudang'],
+                ]
+            ];
+            $activeMenu = 'kelolaAlatGudang';
+            $alatGudang = DetailAlatModel::all();
+            $gudang = GudangModel::all();
+            $alat = AlatModel::all();
+            return view('admin.kelolaAlatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'alat' => $alat, 'gudang' => $gudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Alat ke Gudang',
+                'paragraph' => 'Berikut ini merupakan data alat ke gudang yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Data Alat'],
+                ]
+            ];
+            $activeMenu = 'alatGudang';
+            $user = Auth::user();
+            $gudangIds = $user->detailUser->pluck('id_gudang'); // Ambil semua id_gudang
+            $alatGudang = DetailAlatModel::whereIn('id_gudang', $gudangIds)->get();
+            return view('adminGudang.alatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'gudangIds' => $gudangIds, 'user' => $user]);
+        }
     }
 
     public function list(Request $request)

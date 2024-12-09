@@ -150,41 +150,6 @@
                 }
             });
 
-            // $(document).on('click', '#btn-delete-alat', function() {
-            //     if (currentAlatId) {
-            //         if (confirm('Apakah Anda yakin ingin menghapus data alat ini?')) {
-            //             var deleteUrl = '{{ route('admin.kelolaAlat.destroy', ':id') }}'.replace(':id',
-            //                 currentAlatId);
-            //             $.ajax({
-            //                 url: deleteUrl,
-            //                 type: 'POST', // Masih POST karena perlu override
-            //                 data: {
-            //                     "_token": "{{ csrf_token() }}",
-            //                     "_method": "DELETE" // Override metode menjadi DELETE
-            //                 },
-            //                 success: function(response) {
-            //                     if (response.success) {
-            //                         alert(response.message);
-            //                         window.location.href =
-            //                             "{{ route('admin.kelolaAlat.index') }}"; // Redirect ke index
-            //                     } else {
-            //                         alert('Gagal menghapus alat: ' + response.message);
-            //                     }
-            //                 },
-            //                 error: function(xhr) {
-            //                     let errorMsg = 'Gagal menghapus alat.';
-            //                     if (xhr.responseJSON && xhr.responseJSON.message) {
-            //                         errorMsg += ' ' + xhr.responseJSON.message;
-            //                     }
-            //                     alert(errorMsg);
-            //                 }
-            //             });
-            //         }
-            //     } else {
-            //         alert('ID alat tidak ditemukan');
-            //     }
-            // });
-
             $(document).on('click', '#btn-delete-alat', function() {
                 if (currentAlatId) {
                     Swal.fire({
