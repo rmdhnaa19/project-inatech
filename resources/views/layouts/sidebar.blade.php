@@ -6,21 +6,21 @@
         @if (auth()->user()->id_role == 1)
             <li class="sidebar-item  {{ $activeMenu == 'dashboard' ? 'active' : '' }}">
                 <a href="{{ url('/dashboard') }}" class='sidebar-link'>
-                    <i data-feather="home" width="20"></i>
+                    <x-svg-icon icon="dashboard" />
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
             <li class="sidebar-item {{ $activeMenu == 'kelolaPengguna' ? 'active' : '' }}">
                 <a href="{{ url('/kelolaPengguna') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="user" />
                     <span>Kelola Pengguna</span>
                 </a>
             </li>
             <li
                 class="sidebar-item has-sub {{ in_array($activeMenu, ['kelolaGudang', 'kelolaPJGudang']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="gudang" />
                     <span>Kelola Gudang</span>
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['kelolaGudang', 'kelolaPJGudang']) ? 'active' : '' }}">
@@ -34,7 +34,7 @@
             </li>
             <li class="sidebar-item  has-sub">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="tambak" />
                     <span>Kelola Tambak</span>
                 </a>
                 <ul class="submenu ">
@@ -56,7 +56,7 @@
             <li
                 class="sidebar-item has-sub {{ in_array($activeMenu, ['kelolaPakan', 'kelolaPakanGudang', 'kelolaTransaksiPakan']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="pakan" />
                     <span>Manajemen Pakan</span>
                 </a>
                 <ul
@@ -75,7 +75,7 @@
             <li
                 class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaAlat', 'kelolaAlatGudang', 'kelolaTransaksiAlat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="briefcase" width="20"></i>
+                    <x-svg-icon icon="alat" />
                     <span>Manajemen Alat</span>
                 </a>
                 <ul
@@ -94,7 +94,7 @@
             <li
                 class="sidebar-item  has-sub {{ in_array($activeMenu, ['kelolaObat', 'kelolaObatGudang', 'kelolaTransaksiObat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="obat" />
                     <span>Manajemen Obat</span>
                 </a>
                 <ul
@@ -113,44 +113,44 @@
             <li class='sidebar-title'>MANAJEMEN BUDIDAYA</li>
             <li class="sidebar-item {{ $activeMenu == 'anco' ? 'active' : '' }}">
                 <a href="{{ url('/anco') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="anco" />
                     <span>Anco</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'kualitasAir' ? 'active' : '' }}">
                 <a href="{{ url('/kualitasair') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="kualitasAir" />
                     <span>Kualitas Air</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'penanganan' ? 'active' : '' }}">
                 <a href="{{ url('/penanganan') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="penanganan" />
                     <span>Penanganan</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'sampling' ? 'active' : '' }}">
                 <a href="{{ url('/sampling') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="sampling" />
                     <span>Sampling</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'pakanHarian' ? 'active' : '' }}">
                 <a href="{{ url('/pakanHarian') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="pakan" />
                     <span>Pakan Harian</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'kematianUdang' ? 'active' : '' }}">
                 <a href="{{ url('/kematianUdang') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="kematianUdang" />
                     <span>Kematian Udang</span>
                 </a>
             </li>
         @elseif (auth()->user()->id_role == 2)
             <li class="sidebar-item  {{ $activeMenu == 'dashboard' ? 'active' : '' }}">
                 <a href="{{ url('/dashboard') }}" class='sidebar-link'>
-                    <i data-feather="home" width="20"></i>
+                    <x-svg-icon icon="dashboard" />
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -158,7 +158,7 @@
             <li
                 class="sidebar-item has-sub {{ in_array($activeMenu, ['pakanGudang', 'transaksiPakan']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="pakan" />
                     <span>Manajemen Pakan</span>
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['pakanGudang', 'transaksiPakan']) ? 'active' : '' }}">
@@ -173,7 +173,7 @@
             <li
                 class="sidebar-item  has-sub {{ in_array($activeMenu, ['alatGudang', 'transaksiAlat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="briefcase" width="20"></i>
+                    <x-svg-icon icon="alat" />
                     <span>Manajemen Alat</span>
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['alatGudang', 'transaksiAlat']) ? 'active' : '' }}">
@@ -188,7 +188,7 @@
             <li
                 class="sidebar-item  has-sub {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="obat" />
                     <span>Manajemen Obat</span>
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['obatGudang', 'transaksiObat']) ? 'active' : '' }}">
@@ -204,7 +204,7 @@
             <li class='sidebar-title'>MANAJEMEN TAMBAK</li>
             <li class="sidebar-item has-sub {{ in_array($activeMenu, ['Kolam']) ? 'active' : '' }}">
                 <a href="#" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="tambak" />
                     <span>Kelola Tambak</span>
                 </a>
                 <ul class="submenu {{ in_array($activeMenu, ['Kolam', 'faseKolam']) ? 'active' : '' }}">
