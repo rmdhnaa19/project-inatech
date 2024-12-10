@@ -216,16 +216,10 @@
                     </li>
                 </ul>
             </li>
-        @elseif(auth()->user()->id_role == 3)
-            <li class="sidebar-item  {{ $activeMenu == 'dashboard' ? 'active' : '' }}">
-                <a href="{{ url('/dashboard') }}" class='sidebar-link'>
-                    <i data-feather="home" width="20"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
+            <!-- bagianmu -->
             <li class='sidebar-title'>MANAJEMEN BUDIDAYA</li>
             <li class="sidebar-item {{ $activeMenu == 'anco' ? 'active' : '' }}">
-                <a href="{{ url('/anco') }}" class='sidebar-link'>
+                <a href="{{ url('/adminTambak/anco') }}" class='sidebar-link'>
                     <i data-feather="triangle" width="20"></i>
                     <span>Anco</span>
                 </a>

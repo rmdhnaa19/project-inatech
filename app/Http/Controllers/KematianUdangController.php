@@ -13,18 +13,34 @@ class KematianUdangController extends Controller
 {
     public function index()
     {
+        if(auth()->user()->id_role == 1){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Kematian Udang',
             'paragraph' => 'Berikut ini merupakan data kematian udang yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('kematianudang.index')],
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'kematianUdang', 'url' => route('admin.kematianudang.index')],
                 ['label' => 'kematianUdang'],
             ]
         ];
         $activeMenu = 'kematianudang';
         $fase_kolam = FaseKolamModel::all();
         return view('admin.kematianudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    } elseif(auth()->user()->id_role == 3){
+        $breadcrumb = (object) [
+            'title' => 'Kelola Data Kematian Udang',
+            'paragraph' => 'Berikut ini merupakan data kematian udang yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'kematianUdang'],
+            ]
+        ];
+        $activeMenu = 'kematianudang';
+        $kematianudangs = KematianUdangModel::all();
+        $fase_kolam = FaseKolamModel::all();
+        return view('adminTambak.kematianudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'kematianudangs' => $kematianudangs]);
     }
+}
 
     // menampilkan data table    
     public function list(Request $request)
@@ -40,7 +56,7 @@ class KematianUdangController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data kematian udang yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'kematianUdang', 'url' => route('kematianudang.index')],
+                ['label' => 'kematianUdang', 'url' => route('admin.kematianudang.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -75,11 +91,9 @@ public function store(Request $request)
     }
 
     KematianUdangModel::create($validatedData);
-
     Alert::toast('Data kematian udang berhasil ditambahkan', 'success');
-
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('kematianudang.index')->with('success', 'Data kematian udang berhasil ditambahkan');
+    return redirect()->route('admin.kematianudang.index')->with('success', 'Data kematian udang berhasil ditambahkan');
 }
 
 
@@ -104,7 +118,7 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data Kematian Udang yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'kematianUdang', 'url' => route('kematianudang.index')],
+            ['label' => 'kematianUdang', 'url' => route('admin.kematianudang.index')],
             ['label' => 'Edit'],
         ]
     ];
@@ -125,26 +139,6 @@ public function update(Request $request, string $id){
 
     $kematianudangs = KematianUdangModel::findOrFail($id);
     
-    // $updateData = [
-        // 'kd_kematian_udang' => $request->kd_kematian_udang,
-        // 'size_udang' => $request->size_udang,
-        // 'berat_udang' => $request->berat_udang,
-        // 'catatan' => $request->catatan,
-        // 'gambar' => $request->gambar,
-        // 'id_fase_tambak' => $request->id_fase_tambak,
-    // ];
-
-    // if ($request->hasFile('gambar')) {
-    //     Storage::delete($request->gambar);
-    //     $path = $request->file('gambar')->store('foto_kematianudang', 'public');
-    //     $updateData['gambar'] = $path;// Tambahkan path foto ke validated data
-    // } 
-    
-
-
-    // $kematianudangs->update($updateData);
-    // return redirect()->route('kematianudang.index');
-
     if ($request->oldImage != '') {
         if ($request->file('gambar') == '') {
             $kematianudangs->update([
@@ -160,7 +154,7 @@ public function update(Request $request, string $id){
             $gambar = $request->file('gambar');
             $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs('gambar_kematianudang', $gambar, $namaGambar);
-            $updateGambar['foto'] = $path;
+            $updateGambar['gambar'] = $path;
             
             $kematianudangs->update([
                 'kd_kematian_udang' => $request->kd_kematian_udang,
@@ -175,47 +169,47 @@ public function update(Request $request, string $id){
         $gambar = $request->file('gambar');
         $namaGambar = time() . '.' . $gambar->getClientOriginalExtension();
         $path = Storage::disk('public')->putFileAs('gambar_kematianudang', $gambar, $namaGambar);
-        $updateGambar['foto'] = $path;
+        $updateGambar['gambar'] = $path;
         
         $kematianudangs->update([
             'kd_kematian_udang' => $request->kd_kematian_udang,
             'size_udang' => $request->size_udang,
             'berat_udang' => $request->berat_udang,
             'catatan' => $request->catatan,
-            'gambar' => $updateGambar['foto'],
+            'gambar' => $updateGambar['gambar'],
             'id_fase_tambak' => $request->id_fase_tambak,
         ]);
     }
     Alert::toast('Data kematian udang berhasil diubah', 'success');
-    return redirect()->route('kematianudang.index');
+    return redirect()->route('admin.kematianudang.index');
 }
 
-// public function destroy($id) {
-//     $kematianudangs = KematianUdangModel::findOrFail($id);
-//     // AncoModel::destroy($id);
-//     $kematianudangs->delete();
-//     return redirect()->route('kematianudang.index');
-// }
+
 
 public function destroy($id) {
-    $check = KematianUdangModel::find($id);
-    if (!$check) {
-        Alert::toast('Data kematian udang tidak ditemukan', 'error');
-        return redirect('/kematianUdang');
-    }
-    try{
-        $kelolaKematianUdang = KematianUdangModel::find($id);
-        if ($kelolaKematianUdang->foto != '') {
-            Storage::disk('public')->delete($kelolaKematianUdang->gambar);
-            KematianUdangModel::destroy($id);
-        } else {
-            KematianUdangModel::destroy($id);
+    $kematianudangs = KematianUdangModel::find($id);
+        if (!$kematianudangs) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data kematian udang tidak ditemukan.'
+            ], 404);
         }
-        Alert::toast('Data kematian udang berhasil dihapus', 'success');
-        return redirect('/kematianUdang');
-    }catch(\Illuminate\Database\QueryException $e){
-        Alert::toast('Data kematian udang gagal dihapus', 'error');
-        return redirect('/kematianUdang');
-    }
+    
+        try {
+            if ($kematianudangs->gambar) {
+                Storage::disk('public')->delete($kematianudangs->gambar);
+            }
+            $kematianudangs->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Data kematian udang berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus kematian udang: ' . $e->getMessage()
+            ], 500); 
+        }
 }
 }

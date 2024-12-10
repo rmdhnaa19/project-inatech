@@ -137,7 +137,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                        var url = '{{ route('sampling.show', ':id') }}';
+                        var url = '{{ route('admin.sampling.show', ':id') }}';
                         url = url.replace(':id', row.id_sampling);
                         return '<a href="javascript:void(0);" data-id="' + row.id_sampling +
                             '" class="view-user-details" data-url="' + url +
@@ -223,7 +223,7 @@
 
             $(document).on('click', '#btn-edit-sampling', function() {
                 if (currentSamplingId) {
-                    var editUrl = '{{ route('sampling.edit', ':id') }}'.replace(':id', currentSamplingId);
+                    var editUrl = '{{ route('admin.sampling.edit', ':id') }}'.replace(':id', currentSamplingId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID sampling tidak ditemukan');
@@ -232,29 +232,67 @@
 
             $(document).on('click', '#btn-delete-sampling', function() {
                 if (currentSamplingId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data sampling ini?')) {
-                        var deleteUrl = '{{ route('sampling.destroy', ':id') }}'.replace(':id',
-                            currentSamplingId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#samplingDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_sampling').DataTable().ajax.reload();
-                                alert('Data Sampling berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus data sampling: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data sampling ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.sampling.destroy', ':id') }}'
+                                .replace(':id', currentSamplingId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.sampling.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus sampling: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus sampling.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('Data Sampling tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID sampling tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

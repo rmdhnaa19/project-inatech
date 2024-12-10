@@ -100,43 +100,14 @@
                             <span class="text-danger">{{ $errors->first('catatan') }}</span>
                         @endif
                     </div>
-
-                    <div class="form-group">
+                    <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-sm btn-danger"
-                        onclick="window.location.href='{{ url('pakanharian') }}'"
+                        onclick="window.location.href='{{ url('pakanHarian') }}'"
                         style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
-                        <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
                 </div>
-
-                {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
-                                    </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
-                                </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                </div>
             </div>
         </form>
     </div>

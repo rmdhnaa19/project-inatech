@@ -15,18 +15,34 @@ class KualitasAirController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->id_role == 1){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Kualitas Air',
             'paragraph' => 'Berikut ini merupakan data kualitas air yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('kualitasair.index')],
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'KualitasAir', 'url' => route('admin.kualitasair.index')],
                 ['label' => 'kualitasAir'],
             ]
         ];
         $activeMenu = 'kualitasair';
         $fase_kolam = FaseKolamModel::all();
         return view('admin.kualitasair.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    } elseif(auth()->user()->id_role == 3){
+        $breadcrumb = (object) [
+            'title' => 'Kelola Data Kualitas Air',
+            'paragraph' => 'Berikut ini merupakan data kualitas air yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'KualitasAir'],
+            ]
+        ];
+        $activeMenu = 'kualitasair';
+        $kualitasairs = KualitasAirModel::all();
+        $fase_kolam = FaseKolamModel::all();
+        return view('adminTambak.kualitasair.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'kualitasairs' => $kualitasairs]);
     }
+}
 
     // menampilkan data table    
     public function list(Request $request)
@@ -43,7 +59,7 @@ class KualitasAirController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data kualitas air yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kualitas Air', 'url' => route('kualitasair.index')],
+                ['label' => 'Kualitas Air', 'url' => route('admin.kualitasair.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -88,7 +104,7 @@ public function store(Request $request)
     Alert::toast('Data Kualitas Air berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('kualitasair.index')->with('success', 'Data Kualitas Air berhasil ditambahkan.');
+    return redirect()->route('admin.kualitasair.index')->with('success', 'Data Kualitas Air berhasil ditambahkan.');
 }
 
 public function show($id)
@@ -112,13 +128,13 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data kualitas air yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Kualitas Air', 'url' => route('kualitasair.index')],
+            ['label' => 'Kualitas Air', 'url' => route('admin.kualitasair.index')],
             ['label' => 'Edit'],
         ]
     ];
     $activeMenu = 'admin.kualitasAir';
 
-    return view('kualitasair.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kualitasairs' => $kualitasairs, 'faseKolam' => $faseKolam]);
+    return view('admin.kualitasair.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'kualitasairs' => $kualitasairs, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){
@@ -153,14 +169,26 @@ public function update(Request $request, string $id){
     ];
     
     $kualitasairs->update($updateData);
-    return redirect()->route('kualitasair.index');
+    return redirect()->route('admin.kualitasair.index');
 }
 
 public function destroy($id) {
     $kualitasairs = KualitasAirModel::findOrFail($id);
     // AncoModel::destroy($id);
-    $kualitasairs->delete();
-    return redirect()->route('kualitasair.index');
+    // $kualitasairs->delete();
+    // return redirect()->route('kualitasair.index');
+    try {
+        $kualitasairs->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data kualitas air berhasil dihapus.'
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus kualitas: ' . $th->getMessage()
+        ], 500);
+    }
 }
 
 }
