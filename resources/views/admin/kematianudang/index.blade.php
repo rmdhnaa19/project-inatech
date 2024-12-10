@@ -93,7 +93,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                        var url = '{{ route('kematianudang.show', ':id') }}';
+                        var url = '{{ route('admin.kematianudang.show', ':id') }}';
                         url = url.replace(':id', row.id_kematian_udang);
                         return '<a href="javascript:void(0);" data-id="' + row.id_kematian_udang +
                             '" class="view-user-details" data-url="' + url +
@@ -142,7 +142,7 @@
                             $('#kematianudangDetailModal').modal('show');
 
                             // Setel action form penghapusan sesuai dengan ID pengguna
-                            var deleteUrl = '{{ route('kematianudang.destroy', ':id') }}';
+                            var deleteUrl = '{{ route('admin.kematianudang.destroy', ':id') }}';
                             deleteUrl = deleteUrl.replace(':id', id_kematian_udang);
                             $('#form-delete-kematianudang').attr('action',
                                 deleteUrl); // Setel action form
@@ -159,7 +159,7 @@
 
             $(document).on('click', '#btn-edit-kematianudang', function() {
                 if (currentKematianUdangId) {
-                    var editUrl = '{{ route('kematianudang.edit', ':id') }}'.replace(':id', currentKematianUdangId);
+                    var editUrl = '{{ route('admin.kematianudang.edit', ':id') }}'.replace(':id', currentKematianUdangId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID Kematian Udang tidak ditemukan');
@@ -168,29 +168,67 @@
 
             $(document).on('click', '#btn-delete-kematianudang', function() {
                 if (currentKematianUdangId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data kematian udang ini?')) {
-                        var deleteUrl = '{{ route('kematianudang.destroy', ':id') }}'.replace(':id',
-                            currentKematianUdangId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#kematianudangDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kematianudang').DataTable().ajax.reload();
-                                alert('Data Kematian Udang berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus data kematian udang: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data kematian udang ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kematianudang.destroy', ':id') }}'
+                                .replace(':id', currentKematianUdangId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kematianudang.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus kematian udang: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus kematian udang.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('Data Kematian Udang tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID kematian udang tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

@@ -112,7 +112,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                        var url = '{{ route('penanganan.show', ':id') }}';
+                        var url = '{{ route('admin.penanganan.show', ':id') }}';
                         url = url.replace(':id', row.id_penanganan);
                         return '<a href="javascript:void(0);" data-id="' + row.id_penanganan +
                             '" class="view-user-details" data-url="' + url +
@@ -191,7 +191,7 @@
 
             $(document).on('click', '#btn-edit-penanganan', function() {
                 if (currentPenangananId) {
-                    var editUrl = '{{ route('penanganan.edit', ':id') }}'.replace(':id', currentPenangananId);
+                    var editUrl = '{{ route('admin.penanganan.edit', ':id') }}'.replace(':id', currentPenangananId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID Penanganan tidak ditemukan');
@@ -200,29 +200,67 @@
 
             $(document).on('click', '#btn-delete-penanganan', function() {
                 if (currentPenangananId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data penanganan ini?')) {
-                        var deleteUrl = '{{ route('penanganan.destroy', ':id') }}'.replace(':id',
-                            currentPenangananId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#penangananDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_penanganan').DataTable().ajax.reload();
-                                alert('Data Penanganan berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus data penanganan: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data penanganan ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.penanganan.destroy', ':id') }}'
+                                .replace(':id', currentPenangananId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.penanganan.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus penanganan: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus penanganan.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('Data Penanganan tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID penanganan tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

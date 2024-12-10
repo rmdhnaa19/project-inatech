@@ -76,43 +76,17 @@
                         @endif
                     </div>
 
-                    <div class="form-group">
-                        <button type="button" class="btn btn-sm btn-danger"
+                    <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-sm btn-danger"
                         onclick="window.location.href='{{ url('kematianUdang') }}'"
                         style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
-                        <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
                     </div>
                 </div>
 
                 {{-- Tambahkan foto di sini --}}
-                    <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                        <div class="form-group">
-                            <div class="col">
-                                <div class="row mb-1">
-                                    <div class="drop-zone px-5">
-                                        <div class="text-center">
-                                            <i class="fa-solid fa-cloud-arrow-up"
-                                                style="height: 50px; font-size: 50px"></i>
-                                            <p>Seret lalu letakkan file di sini</p>
-                                        </div>
-                                        <input type="file" class="drop-zone__input" id="gambar" name="gambar">
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <span class="text-center">Atau</span>
-                                </div>
-                                <div class="row">
-                                    <div class="form-file"> -->
-                                        <!-- <input type="file" class="form-file-input" id="foto" name="foto"> -->
-                                        <!-- <label class="form-file-label" for="gambar">
-                                            <span class="form-file-text">Choose file...</span>
-                                            <span class="form-file-button">Browse</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+
 
                     <div class="col-md-6 d-flex justify-content-center align-items-center mt-3">
                         <div class="form-group">

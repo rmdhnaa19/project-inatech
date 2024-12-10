@@ -42,7 +42,7 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 
-// Interface Admin
+// ROUTE SUPER ADMIN
 Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
     Route::group(['prefix' => 'kelolaPengguna'], function(){
         Route::get('/', [UserController::class, 'index'])->name('admin.kelolaPengguna.index');
@@ -222,7 +222,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [PjTambakController::class, 'update'])->name('admin.pjTambak.update');
         Route::delete('/{id}', [PjTambakController::class, 'destroy'])->name('admin.pjTambak.destroy');
     });
-
+    
     Route::group(['prefix' => 'anco'], function(){
         Route::get('/', [AncoController::class, 'index'])->name('admin.anco.index');
         Route::post('/list', [AncoController::class, 'list'])->name('admin.anco.list');
@@ -233,8 +233,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [AncoController::class, 'update'])->name('admin.anco.update');
         Route::delete('/{id}', [AncoController::class, 'destroy'])->name('admin.anco.destroy');
     });
-    
-    // Route kualitas air
+
     Route::group(['prefix' => 'kualitasair'], function(){
         Route::get('/', [KualitasAirController::class, 'index'])->name('admin.kualitasair.index');
         Route::post('/list', [KualitasAirController::class, 'list'])->name('admin.kualitasair.list');
@@ -245,8 +244,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [KualitasAirController::class, 'update'])->name('admin.kualitasair.update');
         Route::delete('/{id}', [KualitasAirController::class, 'destroy'])->name('admin.kualitasair.destroy');
     });
-    
-    // Route penanganan
+
     Route::group(['prefix' => 'penanganan'], function(){
         Route::get('/', [PenangananController::class, 'index'])->name('admin.penanganan.index');
         Route::post('/list', [PenangananController::class, 'list'])->name('admin.penanganan.list');
@@ -257,8 +255,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [PenangananController::class, 'update'])->name('admin.penanganan.update');
         Route::delete('/{id}', [PenangananController::class, 'destroy'])->name('admin.penanganan.destroy');
     });
-    
-    // Route sampling
+
     Route::group(['prefix' => 'sampling'], function(){
         Route::get('/', [SamplingController::class, 'index'])->name('admin.sampling.index');
         Route::post('/list', [SamplingController::class, 'list'])->name('admin.sampling.list');
@@ -269,8 +266,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [SamplingController::class, 'update'])->name('admin.sampling.update');
         Route::delete('/{id}', [SamplingController::class, 'destroy'])->name('admin.sampling.destroy');
     });
-    
-    // Route pakan harian
+
     Route::group(['prefix' => 'pakanHarian'], function(){
         Route::get('/', [PakanHarianController::class, 'index'])->name('admin.pakanharian.index');
         Route::post('/list', [PakanHarianController::class, 'list'])->name('admin.pakanharian.list');
@@ -280,9 +276,8 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('admin.pakanharian.edit');
         Route::put('/{id}', [PakanHarianController::class, 'update'])->name('admin.pakanharian.update');
         Route::delete('/{id}', [PakanHarianController::class, 'destroy'])->name('admin.pakanharian.destroy');
-    });
-    
-    // Route kematian udang
+    }); 
+
     Route::group(['prefix' => 'kematianUdang'], function(){
         Route::get('/', [KematianUdangController::class, 'index'])->name('admin.kematianudang.index');
         Route::post('/list', [KematianUdangController::class, 'list'])->name('admin.kematianudang.list');
@@ -295,6 +290,7 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
     });
 });
 
+// ROUTE USER GUDANG
 Route::middleware(['auth', 'no-back', 'role:2'])->group(function () {
     Route::group(['prefix' => 'pakanGudang'], function(){
         Route::get('/', [PakanGudangController::class, 'index'])->name('user.pakanGudang.index');
@@ -333,6 +329,7 @@ Route::middleware(['auth', 'no-back', 'role:2'])->group(function () {
     });
 });
 
+// ROUTE USER TAMBAK
 Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
     Route::group(['prefix' => 'Kolam'], function(){
         Route::get('/', [KolamController::class, 'index'])->name('user.kolam.index');
@@ -346,6 +343,10 @@ Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
     });
 
     Route::group(['prefix' => 'anco'], function(){
+        Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
+    });
+
+    Route::group(['prefix' => 'adminTambak/anco'], function(){
         Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
     });
 });
