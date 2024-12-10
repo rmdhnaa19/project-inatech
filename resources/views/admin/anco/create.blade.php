@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Kelola Anco')
+@section('title', 'Kelola Anco') 
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -120,12 +120,13 @@
                     </div>
 
                     {{-- Tombol kembali dan simpan --}}
-                    <div class="form-group">
+                    <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-sm btn-danger"
                         onclick="window.location.href='{{ url('anco') }}'"
                         style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
-                        <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
+                </div>
                 </div>
 
                 {{-- Tambahkan foto di sini --}}

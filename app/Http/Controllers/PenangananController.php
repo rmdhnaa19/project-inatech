@@ -15,18 +15,34 @@ class PenangananController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->id_role == 1){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Penanganan',
             'paragraph' => 'Berikut ini merupakan data penanganan yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('penanganan.index')],
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'penanganan', 'url' => route('admin.penanganan.index')],
                 ['label' => 'penanganan'],
             ]
         ];
         $activeMenu = 'penanganan';
         $fase_kolam = FaseKolamModel::all();
         return view('admin.penanganan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    } elseif(auth()->user()->id_role == 3){
+        $breadcrumb = (object) [
+            'title' => 'Kelola Data Penanganan',
+            'paragraph' => 'Berikut ini merupakan data penanganan yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'penanganan'],
+            ]
+        ];
+        $activeMenu = 'penanganan';
+        $penanganans = PenangananModel::all();
+        $fase_kolam = FaseKolamModel::all();
+        return view('adminTambak.penanganan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'penanganans' => $penanganans]);
     }
+}
 
     // menampilkan data table    
     public function list(Request $request)
@@ -43,7 +59,7 @@ class PenangananController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data penanganan yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'penanganan', 'url' => route('penanganan.index')],
+                ['label' => 'penanganan', 'url' => route('admin.penanganan.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -86,7 +102,7 @@ public function store(Request $request)
     Alert::toast('Data penanganan berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('penanganan.index')->with('success', 'Data penanganan berhasil ditambahkan');
+    return redirect()->route('admin.penanganan.index')->with('success', 'Data penanganan berhasil ditambahkan');
 }
 
 public function show($id)
@@ -110,13 +126,13 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data Penanganan yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Penanganan', 'url' => route('penanganan.index')],
+            ['label' => 'Penanganan', 'url' => route('admin.penanganan.index')],
             ['label' => 'Edit'],
         ]
     ];
     $activeMenu = 'penanganan';
 
-    return view('penanganan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'penanganans' => $penanganans, 'faseKolam' => $faseKolam]);
+    return view('admin.penanganan.edit', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'penanganans' => $penanganans, 'faseKolam' => $faseKolam]);
 }
 
 public function update(Request $request, string $id){
@@ -149,14 +165,26 @@ public function update(Request $request, string $id){
     ];
     
     $penanganans->update($updateData);
-    return redirect()->route('penanganan.index');
+    return redirect()->route('admin.penanganan.index');
 }
 
 public function destroy($id) {
     $penanganans = PenangananModel::findOrFail($id);
     // AncoModel::destroy($id);
-    $penanganans->delete();
-    return redirect()->route('penanganan.index');
+    // $penanganans->delete();
+    // return redirect()->route('penanganan.index');
+    try {
+        $penanganans->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data penanganan berhasil dihapus.'
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus penanganan: ' . $th->getMessage()
+        ], 500);
+    }
 }
 
 }
