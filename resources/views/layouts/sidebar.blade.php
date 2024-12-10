@@ -220,37 +220,37 @@
             <li class='sidebar-title'>MANAJEMEN BUDIDAYA</li>
             <li class="sidebar-item {{ $activeMenu == 'anco' ? 'active' : '' }}">
                 <a href="{{ url('/adminTambak/anco') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                    <x-svg-icon icon="anco" />
                     <span>Anco</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'kualitasAir' ? 'active' : '' }}">
-                <a href="{{ url('/kualitasair') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                <a href="{{ url('/adminTambak/kualitasair') }}" class='sidebar-link'>
+                    <x-svg-icon icon="kualitasAir" />
                     <span>Kualitas Air</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'penanganan' ? 'active' : '' }}">
-                <a href="{{ url('/penanganan') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                <a href="{{ url('/adminTambak/penanganan') }}" class='sidebar-link'>
+                    <x-svg-icon icon="penanganan" />
                     <span>Penanganan</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'sampling' ? 'active' : '' }}">
-                <a href="{{ url('/sampling') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                <a href="{{ url('/adminTambak/sampling') }}" class='sidebar-link'>
+                    <x-svg-icon icon="sampling" />
                     <span>Sampling</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'pakanHarian' ? 'active' : '' }}">
-                <a href="{{ url('/pakanHarian') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                <a href="{{ url('/adminTambak/pakanHarian') }}" class='sidebar-link'>
+                    <x-svg-icon icon="pakan" />
                     <span>Pakan Harian</span>
                 </a>
             </li>
             <li class="sidebar-item {{ $activeMenu == 'kematianUdang' ? 'active' : '' }}">
-                <a href="{{ url('/kematianUdang') }}" class='sidebar-link'>
-                    <i data-feather="triangle" width="20"></i>
+                <a href="{{ url('/adminTambak/kematianUdang') }}" class='sidebar-link'>
+                    <x-svg-icon icon="kematianUdang" />
                     <span>Kematian Udang</span>
                 </a>
             </li>

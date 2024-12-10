@@ -42,7 +42,7 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
 
-// Interface Admin
+// ROUTE SUPER ADMIN
 Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
     Route::group(['prefix' => 'kelolaPengguna'], function(){
         Route::get('/', [UserController::class, 'index'])->name('admin.kelolaPengguna.index');
@@ -175,7 +175,6 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [TransaksiObatController::class, 'update'])->name('admin.kelolaTransaksiObat.update');
         Route::delete('/{id}', [TransaksiObatController::class, 'destroy'])->name('admin.kelolaTransaksiObat.destroy');
     });
-});
 
     Route::group(['prefix' => 'tambak'], function(){
         Route::get('/', [TambakController::class, 'index'])->name('admin.tambak.index');
@@ -223,92 +222,131 @@ Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
         Route::put('/{id}', [PjTambakController::class, 'update'])->name('admin.pjTambak.update');
         Route::delete('/{id}', [PjTambakController::class, 'destroy'])->name('admin.pjTambak.destroy');
     });
+    
+    Route::group(['prefix' => 'anco'], function(){
+        Route::get('/', [AncoController::class, 'index'])->name('admin.anco.index');
+        Route::post('/list', [AncoController::class, 'list'])->name('admin.anco.list');
+        Route::get('/create', [AncoController::class, 'create'])->name('admin.anco.create');
+        Route::post('/', [AncoController::class, 'store'])->name('admin.anco.store');
+        Route::get('/{id}', [AncoController::class, 'show'])->name('admin.anco.show');
+        Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('admin.anco.edit');
+        Route::put('/{id}', [AncoController::class, 'update'])->name('admin.anco.update');
+        Route::delete('/{id}', [AncoController::class, 'destroy'])->name('admin.anco.destroy');
+    });
 
+    Route::group(['prefix' => 'kualitasair'], function(){
+        Route::get('/', [KualitasAirController::class, 'index'])->name('admin.kualitasair.index');
+        Route::post('/list', [KualitasAirController::class, 'list'])->name('admin.kualitasair.list');
+        Route::get('/create', [KualitasAirController::class, 'create'])->name('admin.kualitasair.create');
+        Route::post('/', [KualitasAirController::class, 'store'])->name('admin.kualitasair.store');
+        Route::get('/{id}', [KualitasAirController::class, 'show'])->name('admin.kualitasair.show');
+        Route::get('/{id}/edit', [KualitasAirController::class, 'edit'])->name('admin.kualitasair.edit');
+        Route::put('/{id}', [KualitasAirController::class, 'update'])->name('admin.kualitasair.update');
+        Route::delete('/{id}', [KualitasAirController::class, 'destroy'])->name('admin.kualitasair.destroy');
+    });
 
-// MANAJEMEN BUDIDAYA
-// Route anco
-Route::group(['prefix' => 'anco'], function(){
-    Route::get('/', [AncoController::class, 'index'])->name('admin.anco.index');
-    Route::post('/list', [AncoController::class, 'list'])->name('admin.anco.list');
-    Route::get('/create', [AncoController::class, 'create'])->name('admin.anco.create');
-    Route::post('/', [AncoController::class, 'store'])->name('admin.anco.store');
-    Route::get('/{id}', [AncoController::class, 'show'])->name('admin.anco.show');
-    Route::get('/{id}/edit', [AncoController::class, 'edit'])->name('admin.anco.edit');
-    Route::put('/{id}', [AncoController::class, 'update'])->name('admin.anco.update');
-    Route::delete('/{id}', [AncoController::class, 'destroy'])->name('admin.anco.destroy');
+    Route::group(['prefix' => 'penanganan'], function(){
+        Route::get('/', [PenangananController::class, 'index'])->name('admin.penanganan.index');
+        Route::post('/list', [PenangananController::class, 'list'])->name('admin.penanganan.list');
+        Route::get('/create', [PenangananController::class, 'create'])->name('admin.penanganan.create');
+        Route::post('/', [PenangananController::class, 'store'])->name('admin.penanganan.store');
+        Route::get('/{id}', [PenangananController::class, 'show'])->name('admin.penanganan.show');
+        Route::get('/{id}/edit', [PenangananController::class, 'edit'])->name('admin.penanganan.edit');
+        Route::put('/{id}', [PenangananController::class, 'update'])->name('admin.penanganan.update');
+        Route::delete('/{id}', [PenangananController::class, 'destroy'])->name('admin.penanganan.destroy');
+    });
+
+    Route::group(['prefix' => 'sampling'], function(){
+        Route::get('/', [SamplingController::class, 'index'])->name('admin.sampling.index');
+        Route::post('/list', [SamplingController::class, 'list'])->name('admin.sampling.list');
+        Route::get('/create', [SamplingController::class, 'create'])->name('admin.sampling.create');
+        Route::post('/', [SamplingController::class, 'store'])->name('admin.sampling.store');
+        Route::get('/{id}', [SamplingController::class, 'show'])->name('admin.sampling.show');
+        Route::get('/{id}/edit', [SamplingController::class, 'edit'])->name('admin.sampling.edit');
+        Route::put('/{id}', [SamplingController::class, 'update'])->name('admin.sampling.update');
+        Route::delete('/{id}', [SamplingController::class, 'destroy'])->name('admin.sampling.destroy');
+    });
+
+    Route::group(['prefix' => 'pakanHarian'], function(){
+        Route::get('/', [PakanHarianController::class, 'index'])->name('admin.pakanharian.index');
+        Route::post('/list', [PakanHarianController::class, 'list'])->name('admin.pakanharian.list');
+        Route::get('/create', [PakanHarianController::class, 'create'])->name('admin.pakanharian.create');
+        Route::post('/', [PakanHarianController::class, 'store'])->name('admin.pakanharian.store');
+        Route::get('/{id}', [PakanHarianController::class, 'show'])->name('admin.pakanharian.show');
+        Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('admin.pakanharian.edit');
+        Route::put('/{id}', [PakanHarianController::class, 'update'])->name('admin.pakanharian.update');
+        Route::delete('/{id}', [PakanHarianController::class, 'destroy'])->name('admin.pakanharian.destroy');
+    }); 
+
+    Route::group(['prefix' => 'kematianUdang'], function(){
+        Route::get('/', [KematianUdangController::class, 'index'])->name('admin.kematianudang.index');
+        Route::post('/list', [KematianUdangController::class, 'list'])->name('admin.kematianudang.list');
+        Route::get('/create', [KematianUdangController::class, 'create'])->name('admin.kematianudang.create');
+        Route::post('/', [KematianUdangController::class, 'store'])->name('admin.kematianudang.store');
+        Route::get('/{id}', [KematianUdangController::class, 'show'])->name('admin.kematianudang.show');
+        Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('admin.kematianudang.edit');
+        Route::post('/{id}', [KematianUdangController::class, 'update'])->name('admin.kematianudang.update');
+        Route::delete('/{id}', [KematianUdangController::class, 'destroy'])->name('admin.kematianudang.destroy');
+    });
 });
 
-// Route kualitas air
-Route::group(['prefix' => 'kualitasair'], function(){
-    Route::get('/', [KualitasAirController::class, 'index'])->name('admin.kualitasair.index');
-    Route::post('/list', [KualitasAirController::class, 'list'])->name('admin.kualitasair.list');
-    Route::get('/create', [KualitasAirController::class, 'create'])->name('admin.kualitasair.create');
-    Route::post('/', [KualitasAirController::class, 'store'])->name('admin.kualitasair.store');
-    Route::get('/{id}', [KualitasAirController::class, 'show'])->name('admin.kualitasair.show');
-    Route::get('/{id}/edit', [KualitasAirController::class, 'edit'])->name('admin.kualitasair.edit');
-    Route::put('/{id}', [KualitasAirController::class, 'update'])->name('admin.kualitasair.update');
-    Route::delete('/{id}', [KualitasAirController::class, 'destroy'])->name('admin.kualitasair.destroy');
+// ROUTE USER GUDANG
+Route::middleware(['auth', 'no-back', 'role:2'])->group(function () {
+    Route::group(['prefix' => 'pakanGudang'], function(){
+        Route::get('/', [PakanGudangController::class, 'index'])->name('user.pakanGudang.index');
+    });
+    
+    Route::group(['prefix' => 'transaksiPakan'], function(){
+        Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.transaksiPakan.index');
+        Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.transaksiPakan.list');
+        Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.transaksiPakan.create');
+        Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.transaksiPakan.store');
+        Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.transaksiPakan.show');
+    });
+
+    Route::group(['prefix' => 'alatGudang'], function(){
+        Route::get('/', [AlatGudangController::class, 'index'])->name('user.alatGudang.index');
+    });
+
+    Route::group(['prefix' => 'transaksiAlat'], function(){
+        Route::get('/', [TransaksiAlatController::class, 'index'])->name('user.transaksiAlat.index');
+        Route::post('/list', [TransaksiAlatController::class, 'list'])->name('user.transaksiAlat.list');
+        Route::get('/create', [TransaksiAlatController::class, 'create'])->name('user.transaksiAlat.create');
+        Route::post('/', [TransaksiAlatController::class, 'store'])->name('user.transaksiAlat.store');
+        Route::get('/{id}', [TransaksiAlatController::class, 'show'])->name('user.transaksiAlat.show');
+    });
+
+    Route::group(['prefix' => 'obatGudang'], function(){
+        Route::get('/', [ObatGudangController::class, 'index'])->name('user.obatGudang.index');
+    });
+
+    Route::group(['prefix' => 'transaksiObat'], function(){
+        Route::get('/', [TransaksiObatController::class, 'index'])->name('user.transaksiObat.index');
+        Route::post('/list', [TransaksiObatController::class, 'list'])->name('user.transaksiObat.list');
+        Route::get('/create', [TransaksiObatController::class, 'create'])->name('user.transaksiObat.create');
+        Route::post('/', [TransaksiObatController::class, 'store'])->name('user.transaksiObat.store');
+        Route::get('/{id}', [TransaksiObatController::class, 'show'])->name('user.transaksiObat.show');
+    });
 });
 
-// Route penanganan
-Route::group(['prefix' => 'penanganan'], function(){
-    Route::get('/', [PenangananController::class, 'index'])->name('admin.penanganan.index');
-    Route::post('/list', [PenangananController::class, 'list'])->name('admin.penanganan.list');
-    Route::get('/create', [PenangananController::class, 'create'])->name('admin.penanganan.create');
-    Route::post('/', [PenangananController::class, 'store'])->name('admin.penanganan.store');
-    Route::get('/{id}', [PenangananController::class, 'show'])->name('admin.penanganan.show');
-    Route::get('/{id}/edit', [PenangananController::class, 'edit'])->name('admin.penanganan.edit');
-    Route::put('/{id}', [PenangananController::class, 'update'])->name('admin.penanganan.update');
-    Route::delete('/{id}', [PenangananController::class, 'destroy'])->name('admin.penanganan.destroy');
-});
-
-// Route sampling
-Route::group(['prefix' => 'sampling'], function(){
-    Route::get('/', [SamplingController::class, 'index'])->name('admin.sampling.index');
-    Route::post('/list', [SamplingController::class, 'list'])->name('admin.sampling.list');
-    Route::get('/create', [SamplingController::class, 'create'])->name('admin.sampling.create');
-    Route::post('/', [SamplingController::class, 'store'])->name('admin.sampling.store');
-    Route::get('/{id}', [SamplingController::class, 'show'])->name('admin.sampling.show');
-    Route::get('/{id}/edit', [SamplingController::class, 'edit'])->name('admin.sampling.edit');
-    Route::put('/{id}', [SamplingController::class, 'update'])->name('admin.sampling.update');
-    Route::delete('/{id}', [SamplingController::class, 'destroy'])->name('admin.sampling.destroy');
-});
-
-// Route pakan harian
-Route::group(['prefix' => 'pakanHarian'], function(){
-    Route::get('/', [PakanHarianController::class, 'index'])->name('admin.pakanharian.index');
-    Route::post('/list', [PakanHarianController::class, 'list'])->name('admin.pakanharian.list');
-    Route::get('/create', [PakanHarianController::class, 'create'])->name('admin.pakanharian.create');
-    Route::post('/', [PakanHarianController::class, 'store'])->name('admin.pakanharian.store');
-    Route::get('/{id}', [PakanHarianController::class, 'show'])->name('admin.pakanharian.show');
-    Route::get('/{id}/edit', [PakanHarianController::class, 'edit'])->name('admin.pakanharian.edit');
-    Route::put('/{id}', [PakanHarianController::class, 'update'])->name('admin.pakanharian.update');
-    Route::delete('/{id}', [PakanHarianController::class, 'destroy'])->name('admin.pakanharian.destroy');
-}); 
-
-// Route kematian udang
-Route::group(['prefix' => 'kematianUdang'], function(){
-    Route::get('/', [KematianUdangController::class, 'index'])->name('admin.kematianudang.index');
-    Route::post('/list', [KematianUdangController::class, 'list'])->name('admin.kematianudang.list');
-    Route::get('/create', [KematianUdangController::class, 'create'])->name('admin.kematianudang.create');
-    Route::post('/', [KematianUdangController::class, 'store'])->name('admin.kematianudang.store');
-    Route::get('/{id}', [KematianUdangController::class, 'show'])->name('admin.kematianudang.show');
-    Route::get('/{id}/edit', [KematianUdangController::class, 'edit'])->name('admin.kematianudang.edit');
-    Route::post('/{id}', [KematianUdangController::class, 'update'])->name('admin.kematianudang.update');
-    Route::delete('/{id}', [KematianUdangController::class, 'destroy'])->name('admin.kematianudang.destroy');
-});
-
-//Role User (Admin Tambak)
+// ROUTE USER TAMBAK
 Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
-    Route::group(['prefix' => 'adminTambak/anco'], function(){
+    Route::group(['prefix' => 'Kolam'], function(){
+        Route::get('/', [KolamController::class, 'index'])->name('user.kolam.index');
+    });
+
+    Route::group(['prefix' => 'faseKolam'], function(){
+        Route::get('/', [FaseKolamController::class, 'index'])->name('user.fasekolam.index');
+        Route::get('/create', [FaseKolamController::class, 'create'])->name('user.fasekolam.create');
+        Route::post('/list', [FaseKolamController::class, 'list'])->name('user.fasekolam.list');
+        Route::post('/', [FaseKolamController::class, 'store'])->name('user.fasekolam.store');
+    });
+
+    Route::group(['prefix' => 'anco'], function(){
         Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
     });
 
-    // Route::group(['prefix' => 'transaksiPakan'], function(){
-    //     Route::get('/', [TransaksiPakanController::class, 'index'])->name('user.transaksiPakan.index');
-    //     Route::post('/list', [TransaksiPakanController::class, 'list'])->name('user.transaksiPakan.list');
-    //     Route::get('/create', [TransaksiPakanController::class, 'create'])->name('user.transaksiPakan.create');
-    //     Route::post('/', [TransaksiPakanController::class, 'store'])->name('user.transaksiPakan.store');
-    //     Route::get('/{id}', [TransaksiPakanController::class, 'show'])->name('user.transaksiPakan.show');
-    // });
+    Route::group(['prefix' => 'adminTambak/anco'], function(){
+        Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
+    });
 });
