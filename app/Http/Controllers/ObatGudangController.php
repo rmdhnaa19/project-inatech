@@ -6,6 +6,7 @@ use App\Models\DetailObatModel;
 use App\Models\GudangModel;
 use App\Models\ObatModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -36,11 +37,11 @@ class ObatGudangController extends Controller
                     ['label' => 'Data Obat'],
                 ]
             ];
-            $activeMenu = 'alatGudang';
+            $activeMenu = 'obatGudang';
             $user = Auth::user();
             $gudangIds = $user->detailUser->pluck('id_gudang'); // Ambil semua id_gudang
-            $alatGudang = DetailAlatModel::whereIn('id_gudang', $gudangIds)->get();
-            return view('adminGudang.alatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'alatGudang' => $alatGudang, 'gudangIds' => $gudangIds, 'user' => $user]);
+            $obatGudang = DetailObatModel::whereIn('id_gudang', $gudangIds)->get();
+            return view('adminGudang.obatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'gudangIds' => $gudangIds, 'user' => $user]);
         }
     }
 

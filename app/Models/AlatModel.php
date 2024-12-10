@@ -13,4 +13,8 @@ class AlatModel extends Model
     protected $primaryKey = 'id_alat';
 
     protected $fillable = ['nama', 'harga_satuan', 'satuan', 'deskripsi', 'foto','created_at', 'updated_at'];
+
+    public function detailAlat(){
+        return $this->hasMany(DetailAlatModel::class, 'id_alat', 'id_alat');
+    }
 }

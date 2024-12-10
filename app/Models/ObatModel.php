@@ -13,4 +13,8 @@ class ObatModel extends Model
     protected $primaryKey = 'id_obat';
 
     protected $fillable = ['nama', 'harga_satuan', 'satuan', 'deskripsi', 'foto', 'created_at', 'updated_at'];
+
+    public function detailObat(){
+        return $this->hasMany(DetailObatModel::class, 'id_obat', 'id_obat');
+    }
 }
