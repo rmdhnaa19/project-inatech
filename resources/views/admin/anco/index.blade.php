@@ -110,7 +110,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                            var url = '{{ route('anco.show', ':id') }}';
+                            var url = '{{ route('admin.anco.show', ':id') }}';
                             url = url.replace(':id', row.id_anco);
                             return '<a href="javascript:void(0);" data-id="' + row.id_anco +
                                 '" class="view-user-details" data-url="' + url +
@@ -179,7 +179,7 @@
 
             $(document).on('click', '#btn-edit-anco', function() {
                 if (currentAncoId) {
-                    var editUrl = '{{ route('anco.edit', ':id') }}'.replace(':id', currentAncoId);
+                    var editUrl = '{{ route('admin.anco.edit', ':id') }}'.replace(':id', currentAncoId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID anco tidak ditemukan');
@@ -188,29 +188,67 @@
 
             $(document).on('click', '#btn-delete-anco', function() {
                 if (currentAncoId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data anco ini?')) {
-                        var deleteUrl = '{{ route('anco.destroy', ':id') }}'.replace(':id',
-                            currentAncoId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#ancoDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_anco').DataTable().ajax.reload();
-                                alert('Data Anco berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus data anco: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data anco ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.anco.destroy', ':id') }}'
+                                .replace(':id', currentAncoId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.anco.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus anco: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus anco.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('Data Anco tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID anco tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 

@@ -177,7 +177,7 @@ class GudangController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus gudang: ' . $e->getMessage()
-            ], 500);
+            ], 500); 
         }
     }
 }

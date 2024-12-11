@@ -118,7 +118,7 @@
                         orderable: true,
                         searchable: true,
                         render: function(data, type, row) {
-                        var url = '{{ route('kualitasair.show', ':id') }}';
+                        var url = '{{ route('admin.kualitasair.show', ':id') }}';
                         url = url.replace(':id', row.id_kualitas_air);
                         return '<a href="javascript:void(0);" data-id="' + row.id_kualitas_air +
                             '" class="view-user-details" data-url="' + url +
@@ -186,7 +186,7 @@
 
             $(document).on('click', '#btn-edit-kualitasair', function() {
                 if (currentKualitasAirId) {
-                    var editUrl = '{{ route('kualitasair.edit', ':id') }}'.replace(':id', currentKualitasAirId);
+                    var editUrl = '{{ route('admin.kualitasair.edit', ':id') }}'.replace(':id', currentKualitasAirId);
                     window.location.href = editUrl;
                 } else {
                     alert('ID Kualitas Air tidak ditemukan');
@@ -195,29 +195,67 @@
 
             $(document).on('click', '#btn-delete-kualitasair', function() {
                 if (currentKualitasAirId) {
-                    if (confirm('Apakah Anda yakin ingin menghapus data kualitas air ini?')) {
-                        var deleteUrl = '{{ route('kualitasair.destroy', ':id') }}'.replace(':id',
-                            currentKualitasAirId);
-
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                            },
-                            success: function(response) {
-                                $('#kualitasairDetailModal').modal('hide');
-                                // Reload DataTable
-                                $('#table_kualitasAir').DataTable().ajax.reload();
-                                alert('Data Kualitas Air berhasil dihapus');
-                            },
-                            error: function(xhr) {
-                                alert('Gagal menghapus data kualitas air: ' + xhr.responseText);
-                            }
-                        });
-                    }
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: 'Data kualitas air ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var deleteUrl = '{{ route('admin.kualitasair.destroy', ':id') }}'
+                                .replace(':id', currentKualitasAirId);
+                            $.ajax({
+                                url: deleteUrl,
+                                type: 'POST',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "_method": "DELETE"
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: true
+                                        }).then(() => {
+                                            window.location.href =
+                                                "{{ route('admin.kualitasair.index') }}"; // Redirect ke index
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Gagal!',
+                                            text: 'Gagal menghapus kualitas air: ' +
+                                                response.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'Gagal menghapus kualitas air.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMsg += ' ' + xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: errorMsg,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                        }
+                    });
                 } else {
-                    alert('Data Kualitas Air tidak ditemukan');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'ID gudang tidak ditemukan',
+                        icon: 'error'
+                    });
                 }
             });
 
@@ -233,8 +271,8 @@
 
             // Tambahkan event listener untuk tombol tambah 
             $("#btn-tambah").on('click', function() {
-                window.location.href =
-                // "{{ route('kolam.create') }}"
+                window.location.href = 
+                    
                     "{{ url('kualitasair/create') }}"; // Arahkan ke halaman tambah 
             });
             // Menambahkan placeholder pada kolom search

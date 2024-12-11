@@ -15,18 +15,34 @@ class SamplingController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->id_role == 1){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Sampling',
             'paragraph' => 'Berikut ini merupakan data sampling yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('sampling.index')],
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'sampling', 'url' => route('admin.sampling.index')],
                 ['label' => 'sampling'],
             ]
         ];
         $activeMenu = 'sampling';
         $fase_kolam = FaseKolamModel::all();
         return view('admin.sampling.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    } elseif(auth()->user()->id_role == 3){
+        $breadcrumb = (object) [
+            'title' => 'Kelola Data Sampling',
+            'paragraph' => 'Berikut ini merupakan data sampling yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'sampling'],
+            ]
+        ];
+        $activeMenu = 'sampling';
+        $samplings = SamplingModel::all();
+        $fase_kolam = FaseKolamModel::all();
+        return view('adminTambak.sampling.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'samplings' => $samplings]);
     }
+}
 
     // menampilkan data table    
     public function list(Request $request)
@@ -43,7 +59,7 @@ class SamplingController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data sampling yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Sampling', 'url' => route('sampling.index')],
+                ['label' => 'Sampling', 'url' => route('admin.sampling.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -97,7 +113,7 @@ public function store(Request $request)
     Alert::toast('Data sampling berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('sampling.index')->with('success', 'Data sampling berhasil ditambahkan');
+    return redirect()->route('admin.sampling.index')->with('success', 'Data sampling berhasil ditambahkan');
 }
 
 public function show($id)
@@ -121,7 +137,7 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data Sampling yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Sampling', 'url' => route('sampling.index')],
+            ['label' => 'Sampling', 'url' => route('admin.sampling.index')],
             ['label' => 'Edit'],
         ]
     ];
@@ -170,14 +186,26 @@ public function update(Request $request, string $id){
     ];
     
     $samplings->update($updateData);
-    return redirect()->route('sampling.index');
+    return redirect()->route('admin.sampling.index');
 }
 
 public function destroy($id) {
     $samplings = SamplingModel::findOrFail($id);
     // AncoModel::destroy($id);
-    $samplings->delete();
-    return redirect()->route('sampling.index');
+    // $samplings->delete();
+    // return redirect()->route('sampling.index');
+    try {
+        $samplings->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data sampling berhasil dihapus.'
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus sampling: ' . $th->getMessage()
+        ], 500);
+    }
 }
 
 }

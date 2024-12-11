@@ -6,26 +6,43 @@ use App\Models\DetailObatModel;
 use App\Models\GudangModel;
 use App\Models\ObatModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class ObatGudangController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Obat ke Gudang',
-            'paragraph' => 'Berikut ini merupakan data obat ke gudang yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
-                ['label' => 'Kelola Obat ke Gudang'],
-            ]
-        ];
-        $activeMenu = 'kelolaObatGudang';
-        $obatGudang = DetailObatModel::all();
-        $gudang = GudangModel::all();
-        $obat = ObatModel::all();
-        return view('admin.kelolaObatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'obat' => $obat, 'gudang' => $gudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Obat ke Gudang',
+                'paragraph' => 'Berikut ini merupakan data obat ke gudang yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
+                    ['label' => 'Kelola Obat ke Gudang'],
+                ]
+            ];
+            $activeMenu = 'kelolaObatGudang';
+            $obatGudang = DetailObatModel::all();
+            $gudang = GudangModel::all();
+            $obat = ObatModel::all();
+            return view('admin.kelolaObatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'obat' => $obat, 'gudang' => $gudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Data Obat',
+                'paragraph' => 'Berikut ini merupakan data obat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Data Obat'],
+                ]
+            ];
+            $activeMenu = 'obatGudang';
+            $user = Auth::user();
+            $gudangIds = $user->detailUser->pluck('id_gudang'); // Ambil semua id_gudang
+            $obatGudang = DetailObatModel::whereIn('id_gudang', $gudangIds)->get();
+            return view('adminGudang.obatGudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'gudangIds' => $gudangIds, 'user' => $user]);
+        }
     }
 
     public function list(Request $request)

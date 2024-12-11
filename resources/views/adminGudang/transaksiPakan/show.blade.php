@@ -1,7 +1,6 @@
 <div class="container-fluid">
     <div class="text-center mb-3">
-        <h4 class="mb-4">Transaksi {{ $transaksiPakan->detailPakan->pakan->nama }} -
-            {{ $transaksiPakan->detailPakan->gudang->nama }}</h4>
+        <h4 class="mb-4">Transaksi {{ $transaksiPakan->detailPakan->pakan->nama }}</h4>
     </div>
     <div class="row">
         <div class="col-md-5">

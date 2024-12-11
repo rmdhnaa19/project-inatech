@@ -12,61 +12,113 @@ use Yajra\DataTables\Facades\DataTables;
 class TransaksiObatController extends Controller
 {
     public function index(){
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Transaksi Obat',
-            'paragraph' => 'Berikut ini merupakan data transaksi obat yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
-                ['label' => 'Kelola Obat ke Gudang', 'url' => route('admin.kelolaObatGudang.index')],
-                ['label' => 'Kelola Transaksi Obat'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiObat';
-        $obatGudang = DetailObatModel::all();
-        return view('admin.kelolaTransaksiObat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang]);
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Transaksi Obat',
+                'paragraph' => 'Berikut ini merupakan data transaksi obat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
+                    ['label' => 'Kelola Obat ke Gudang', 'url' => route('admin.kelolaObatGudang.index')],
+                    ['label' => 'Kelola Transaksi Obat'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiObat';
+            $obatGudang = DetailObatModel::all();
+            return view('admin.kelolaTransaksiObat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Riwayat Transaksi Obat',
+                'paragraph' => 'Berikut ini merupakan data transaksi obat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Riwayat Transaksi Obat'],
+                ]
+            ];
+            $activeMenu = 'transaksiObat';
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+            $obatGudang = DetailObatModel::where('id_gudang', $gudangIds)->get();
+            return view('adminGudang.transaksiObat.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'gudangIds' => $gudangIds]);
+        }
     }
 
     public function list(Request $request)
     {
-        $transaksiObats = TransaksiObatModel::with(['detailObat.gudang', 'detailObat.obat'])
-            ->select('transaksi_obat.*', 'obat.nama as nama_obat', 'gudang.nama as nama_gudang')
-            ->join('detail_obat', 'transaksi_obat.id_detail_obat', '=', 'detail_obat.id_detail_obat')
-            ->join('obat', 'detail_obat.id_obat', '=', 'obat.id_obat')
-            ->join('gudang', 'detail_obat.id_gudang', '=', 'gudang.id_gudang');
+        if (auth()->user()->id_role == 1) {
+            $transaksiObats = TransaksiObatModel::with(['detailObat.gudang', 'detailObat.obat'])
+                ->select('transaksi_obat.*', 'obat.nama as nama_obat', 'gudang.nama as nama_gudang')
+                ->join('detail_obat', 'transaksi_obat.id_detail_obat', '=', 'detail_obat.id_detail_obat')
+                ->join('obat', 'detail_obat.id_obat', '=', 'obat.id_obat')
+                ->join('gudang', 'detail_obat.id_gudang', '=', 'gudang.id_gudang');
 
-        return DataTables::of($transaksiObats)
-            ->addColumn('obat_gudang', function ($transaksi) {
-                return $transaksi->nama_obat . ' - ' . $transaksi->nama_gudang;
-            })
-            ->addColumn('created_at_formatted', function ($transaksi) {
-                return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
-            })
-            ->filterColumn('obat_gudang', function($query, $keyword) {
-                $query->whereRaw("CONCAT(obat.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
-            })
-            ->make(true);
+            return DataTables::of($transaksiObats)
+                ->addColumn('obat_gudang', function ($transaksi) {
+                    return $transaksi->nama_obat . ' - ' . $transaksi->nama_gudang;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('obat_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(obat.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }elseif (auth()->user()->id_role == 2) {
+            $gudangIds = auth()->user()->detailUser()->pluck('id_gudang');
+            $transaksiObats = TransaksiObatModel::with(['detailObat.gudang', 'detailObat.obat'])
+                ->select('transaksi_obat.*', 'obat.nama as nama_obat', 'gudang.nama as nama_gudang')
+                ->join('detail_obat', 'transaksi_obat.id_detail_obat', '=', 'detail_obat.id_detail_obat')
+                ->join('obat', 'detail_obat.id_obat', '=', 'obat.id_obat')
+                ->join('gudang', 'detail_obat.id_gudang', '=', 'gudang.id_gudang')
+                ->whereIn('detail_obat.id_gudang', $gudangIds);
+
+            return DataTables::of($transaksiObats)
+                ->addColumn('obat_gudang', function ($transaksi) {
+                    return $transaksi->nama_obat;
+                })
+                ->addColumn('created_at_formatted', function ($transaksi) {
+                    return Carbon::parse($transaksi->created_at)->translatedFormat('l, j F Y');
+                })
+                ->filterColumn('obat_gudang', function($query, $keyword) {
+                    $query->whereRaw("CONCAT(obat.nama, ' - ', gudang.nama) like ?", ["%{$keyword}%"]);
+                })
+                ->make(true);
+        }
     }
 
-    public function create(){
-        $breadcrumb = (object) [
-            'title' => 'Tambah Data Transaksi Obat',
-            'paragraph' => 'Berikut ini merupakan form tambah data transaksi obat yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
-                ['label' => 'Kelola Obat ke Gudang', 'url' => route('admin.kelolaObatGudang.index')],
-                ['label' => 'Kelola Transaksi Obat', 'url' => route('admin.kelolaTransaksiObat.index')],
-                ['label' => 'Tambah'],
-            ]
-        ];
-        $activeMenu = 'kelolaTransaksiObat';
-        $obatGudang = DetailObatModel::with(['obat', 'gudang'])->get();
-        return view('admin.kelolaTransaksiObat.create', [
-            'breadcrumb' => $breadcrumb, 
-            'activeMenu' => $activeMenu, 
-            'obatGudang' => $obatGudang
-        ]);
+    public function create(Request $request){
+        if (auth()->user()->id_role == 1) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Data Transaksi Obat',
+                'paragraph' => 'Berikut ini merupakan form tambah data transaksi obat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Kelola Obat', 'url' => route('admin.kelolaObat.index')],
+                    ['label' => 'Kelola Obat ke Gudang', 'url' => route('admin.kelolaObatGudang.index')],
+                    ['label' => 'Kelola Transaksi Obat', 'url' => route('admin.kelolaTransaksiObat.index')],
+                    ['label' => 'Tambah'],
+                ]
+            ];
+            $activeMenu = 'kelolaTransaksiObat';
+            $obatGudang = DetailObatModel::with(['obat', 'gudang'])->get();
+            return view('admin.kelolaTransaksiObat.create', [
+                'breadcrumb' => $breadcrumb, 
+                'activeMenu' => $activeMenu, 
+                'obatGudang' => $obatGudang
+            ]);
+        }elseif (auth()->user()->id_role == 2) {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Transaksi Obat',
+                'paragraph' => 'Berikut ini merupakan form tambah data transaksi obat yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Tambah Transaksi Obat'],
+                ]
+            ];
+            $activeMenu = 'transaksiObat';
+            $obatGudang = DetailObatModel::with(['obat', 'gudang'])->get();
+            $selectedIdDetailObat = $request->input('id_detail_obat'); // Ambil ID dari URL
+            return view('adminGudang.transaksiObat.create', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu, 'obatGudang' => $obatGudang, 'selectedIdDetailObat' => $selectedIdDetailObat]);
+        }
     }
     
     public function store(Request $request)
@@ -105,8 +157,13 @@ class TransaksiObatController extends Controller
             'id_detail_obat' => $id_obatGudang
         ]);
 
-        Alert::toast('Data transaksi obat berhasil ditambah', 'success');
-        return redirect()->route('admin.kelolaTransaksiObat.index');
+        if (auth()->user()->id_role == 1) {
+            Alert::toast('Data transaksi obat berhasil ditambah', 'success');
+            return redirect()->route('admin.kelolaTransaksiObat.index');
+        }elseif (auth()->user()->id_role == 2) {
+            Alert::toast('Data transaksi obat berhasil ditambah', 'success');
+            return redirect()->route('user.transaksiObat.index');
+        }
     }
 
     public function show($id)

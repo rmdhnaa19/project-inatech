@@ -24,12 +24,15 @@
     <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiPakan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiPakan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaAlatGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiAlat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiAlat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaObatGudang.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiObat.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaksiObat.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
     <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
     <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
@@ -78,7 +81,6 @@
     <script src="{{ asset('voler-master/dist/assets/js/vendors.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/js/main.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/vendors/chartjs/Chart.min.js') }}"></script>
-    <script src="{{ asset('voler-master/dist/assets/vendors/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('voler-master/dist/assets/bootstrap-4.0.0-dist/js/bootstrap.min.js') }}"></script>
@@ -90,7 +92,6 @@
     <script src="{{ asset('voler-master/dist/assets/vendors/choices.js/choices.min.js') }}"></script>
     <!-- Bootstrap JS (versi yang sesuai) -->
     <script src="{{ asset('javascript/bootstrap.min.js') }}"></script>
-
     <!-- SweetAlert2 -->
     <script src="{{ asset('javascript/sweetalert2@11.js') }}"></script>
 

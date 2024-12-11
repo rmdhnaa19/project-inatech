@@ -44,15 +44,15 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="id_detail_pakan" class="form-label">Pakan & Gudang</label>
+                        <label for="id_detail_pakan" class="form-label">Nama Pakan</label>
                         <div class="form-group">
                             <select class="choices form-select @error('id_detail_pakan') is-invalid @enderror"
                                 name="id_detail_pakan" id="id_detail_pakan" disabled required>
-                                <option value="">- Pilih Pakan & Gudang -</option>
+                                <option value="">- Pilih Nama Pakan -</option>
                                 @foreach ($pakanGudang as $item)
                                     <option value="{{ $item->id_detail_pakan }}"
                                         @if (old('id_detail_pakan', $selectedIdDetailPakan) == $item->id_detail_pakan) selected @endif>
-                                        {{ $item->pakan->nama }} - {{ $item->gudang->nama }}
+                                        {{ $item->pakan->nama }}
                                     </option>
                                 @endforeach
                             </select>

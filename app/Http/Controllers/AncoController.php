@@ -15,17 +15,36 @@ class AncoController extends Controller
      */
     public function index()
     {
-        $breadcrumb = (object) [
-            'title' => 'Kelola Data Anco',
-            'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('anco.index')],
-                ['label' => 'Anco'],
-            ]
-        ];
-        $activeMenu = 'anco';
-        $fase_kolam = FaseKolamModel::all();
-        return view('admin.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+       
+        if(auth()->user()->id_role == 1){
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Anco',
+                'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Anco', 'url' => route('admin.anco.index')],
+                    ['label' => 'Anco'],
+                ]
+            ];
+            $activeMenu = 'anco';
+            $anco = AncoModel::all();
+            $fase_kolam = FaseKolamModel::all();
+            return view('admin.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'anco' => $anco]);
+        } elseif(auth()->user()->id_role == 3){
+            $breadcrumb = (object) [
+                'title' => 'Kelola Data Anco',
+                'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Anco'],
+                ]
+            ];
+            $activeMenu = 'anco';
+            $anco = AncoModel::all();
+            $fase_kolam = FaseKolamModel::all();
+            return view('adminTambak.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'anco' => $anco]);
+        }
+        
     }
 
     // menampilkan data table    
@@ -43,7 +62,7 @@ class AncoController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Anco', 'url' => route('anco.index')],
+                ['label' => 'Anco', 'url' => route('admin.anco.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -92,7 +111,7 @@ public function store(Request $request)
     Alert::toast('Data anco berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('anco.index')->with('success', 'Data anco berhasil ditambahkan');
+    return redirect()->route('admin.anco.index')->with('success', 'Data anco berhasil ditambahkan');
 }
 
 public function show($id)
@@ -116,7 +135,7 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data anco yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'Anco', 'url' => route('anco.index')],
+            ['label' => 'Anco', 'url' => route('admin.anco.index')],
             ['label' => 'Edit'],
         ]
     ];
@@ -153,14 +172,26 @@ public function update(Request $request, string $id){
     ];
     
     $anco->update($updateData);
-    return redirect()->route('anco.index');
+    return redirect()->route('admin.anco.index');
 }
 
 public function destroy($id) {
     $anco = AncoModel::findOrFail($id);
-    // AncoModel::destroy($id);
-    $anco->delete();
-    return redirect()->route('anco.index');
+    // // AncoModel::destroy($id);
+    // $anco->delete();
+    // return redirect()->route('admin.anco.index');
+    try {
+        $anco->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data anco berhasil dihapus.'
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus anco: ' . $th->getMessage()
+        ], 500);
+    }
 }
 
 }

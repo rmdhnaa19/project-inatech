@@ -157,10 +157,6 @@
 
             // Menambahkan placeholder pada kolom search
             $('input[type="search"]').attr('placeholder', 'Cari data transaksi pakan...');
-
-            $('#id_role').on('change', function() {
-                dataKelolaTransaksiPakan.ajax.reload();
-            })
         });
     </script>
 @endpush

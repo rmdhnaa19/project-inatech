@@ -17,11 +17,13 @@ class PakanHarianController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->id_role == 1){
         $breadcrumb = (object) [
             'title' => 'Kelola Data Pakan Harian',
             'paragraph' => 'Berikut ini merupakan data pakan harian yang terinput ke dalam sistem',
             'list' => [
-                ['label' => 'Home', 'url' => route('pakanharian.index')],
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'pakanHarian', 'url' => route('admin.pakanharian.index')],
                 ['label' => 'pakanHarian'],
             ]
         ];
@@ -29,7 +31,21 @@ class PakanHarianController extends Controller
         $fase_kolam = FaseKolamModel::all();
         $detail_pakan = DetailPakanModel::all();
         return view('admin.pakanharian.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'detail_pakan' => $detail_pakan]);
+    } elseif(auth()->user()->id_role == 3){
+        $breadcrumb = (object) [
+            'title' => 'Kelola Data Pakan Harian',
+            'paragraph' => 'Berikut ini merupakan data pakan harian yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home', 'url' => route('dashboard.index')],
+                ['label' => 'pakanHarian'],
+            ]
+        ];
+        $activeMenu = 'pakanHarian';
+        $pakan_harians = PakanHarianModel::all();
+        $fase_kolam = FaseKolamModel::all();
+        return view('adminTambak.pakanharian.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'pakan_harians' => $pakan_harians]);
     }
+}
 
     // menampilkan data table    
     public function list(Request $request)
@@ -46,7 +62,7 @@ class PakanHarianController extends Controller
             'paragraph' => 'Berikut ini merupakan form tambah data pakan harian yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'pakanHarian', 'url' => route('pakanharian.index')],
+                ['label' => 'pakanHarian', 'url' => route('admin.pakanharian.index')],
                 ['label' => 'Tambah'],
             ]
     ];
@@ -89,7 +105,7 @@ public function store(Request $request)
     Alert::toast('Data pakan harian berhasil ditambahkan', 'success');
 
     // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
+    return redirect()->route('admin.pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
 }
 
 public function show($id)
@@ -113,7 +129,7 @@ public function edit(string $id){
         'paragraph' => 'Berikut ini merupakan form edit data Pakan Harian yang terinput ke dalam sistem',
         'list' => [
             ['label' => 'Home', 'url' => route('dashboard.index')],
-            ['label' => 'pakanHarian', 'url' => route('pakanharian.index')],
+            ['label' => 'pakanHarian', 'url' => route('admin.pakanharian.index')],
             ['label' => 'Edit'],
         ]
     ];
@@ -150,14 +166,26 @@ public function update(Request $request, string $id){
     ];
     
     $pakan_harians->update($updateData);
-    return redirect()->route('pakanharian.index');
+    return redirect()->route('admin.pakanharian.index');
 }
 
 public function destroy($id) {
     $pakan_harians = PakanHarianModel::findOrFail($id);
     // AncoModel::destroy($id);
-    $pakan_harians->delete();
-    return redirect()->route('pakanharian.index');
+    // $pakan_harians->delete();
+    // return redirect()->route('pakanharian.index');
+    try {
+        $pakan_harians->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pakan harian berhasil dihapus.'
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus pakan harian: ' . $th->getMessage()
+        ], 500);
+    }
 }
 
 }

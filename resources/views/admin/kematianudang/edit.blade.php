@@ -108,12 +108,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <button type="button" class="btn btn-sm btn-danger"
+                    <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-sm btn-danger"
                         onclick="window.location.href='{{ url('kematianUdang') }}'"
                         style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
-                        <button type="submit" class="btn btn-warning btn-sm">Simpan</button>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
                     </div>
             </div>
         </form>
