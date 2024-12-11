@@ -141,15 +141,25 @@ $fasekolams = FaseKolamModel::select('id_fase_tambak', 'kd_fase_tambak', 'tangga
 
     public function show($id)
     {
+        if (auth()->user()->id_role == 1) {
+            $fasekolam = FaseKolamModel::with('kolam')->find($id); // Ambil data fase kolam dengan relasi kolam
+            if (!$fasekolam) {
+                return response()->json(['error' => ' Fase kolam tidak ditemukan.'], 404);
+            }
+        // Render view dengan data 
+        $view = view('admin.fasekolam.show', compact('fasekolam'))->render();
+    return response()->json(['html' => $view]);
+    
+    }elseif (auth()->user()->id_role == 3) {
         $fasekolam = FaseKolamModel::with('kolam')->find($id); // Ambil data fase kolam dengan relasi kolam
         if (!$fasekolam) {
             return response()->json(['error' => ' Fase kolam tidak ditemukan.'], 404);
     }
-
     // Render view dengan data 
-    $view = view('admin.fasekolam.show', compact('fasekolam'))->render();
+    $view = view('user.fasekolam.show', compact('fasekolam'))->render();
     return response()->json(['html' => $view]);
     }
+}
 
 
     public function edit($id)

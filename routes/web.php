@@ -248,6 +248,7 @@ Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
             Route::get('/create', [FaseKolamController::class, 'create'])->name('user.fasekolam.create');
             Route::post('/list', [FaseKolamController::class, 'list'])->name('user.fasekolam.list');
             Route::post('/', [FaseKolamController::class, 'store'])->name('user.fasekolam.store');
+            Route::get('/{id}', [FaseKolamController::class, 'show'])->name('user.fasekolam.show');
         });
     });
 

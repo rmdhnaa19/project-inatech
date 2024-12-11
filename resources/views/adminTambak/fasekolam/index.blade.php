@@ -94,7 +94,7 @@
                     orderable: true,
                     searchable: true,
                     render: function(data, type, row) {
-                        var url = '{{ route('admin.fasekolam.show', ':id') }}';
+                        var url = '{{ route('user.fasekolam.show', ':id') }}';
                         url = url.replace(':id', row.id_fase_tambak);
                         return '<a href="javascript:void(0);" data-id="' + row.id_fase_tambak +
                         '" class="view-user-details" data-url="' + url +
