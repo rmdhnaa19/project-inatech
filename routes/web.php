@@ -43,7 +43,9 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
 Route::group(['prefix' => 'profile'], function(){
     Route::get('/{id}/edit', [EditProfileController::class, 'edit'])->name('profile.edit')->middleware(['auth', 'no-back']);
-    Route::put('/{id}', [UserController::class, 'update'])->name('profile.update')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [EditProfileController::class, 'update'])->name('profile.update')->middleware(['auth', 'no-back']);
+    Route::get('/logout-notice', [EditProfileController::class, 'logoutNotice'])->name('profile.logout-notice')->middleware(['auth', 'no-back']);
+
 });
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

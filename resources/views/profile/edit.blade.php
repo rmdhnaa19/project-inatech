@@ -30,6 +30,7 @@
                                 </div>
                                 <form class="form" method="POST" action="{{ url('/profile/' . $user->id_user) }}"
                                     enctype="multipart/form-data" id="editProfile">
+                                    @csrf {!! method_field('PUT') !!}
                                     <div class="row">
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
@@ -94,7 +95,7 @@
                                                 <label for="role" class="form-label">Role</label>
                                                 <div class="form-group">
                                                     <select class="choices form-select @error('id_role') is-invalid @enderror"
-                                                        name="id_role" id="id_role" required disabled>
+                                                        name="id_role" id="id_role" disabled>
                                                         <option value="">- Pilih Role -</option>
                                                         @foreach ($role as $item)
                                                             <option value="{{ $item->id_role }}"
@@ -103,7 +104,6 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <p><small class="text-muted">Wajib Diisi!</small></p>
                                                 </div>
                                                 <input type="hidden" name="id_role" id="id_role"
                                                     value="{{ old('id_role', $user->id_role) }}">
@@ -114,27 +114,98 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="form-group">
-                                                <label for="no_hp" class="form-label">Update Foto</label>
-                                                <input type="file"
-                                                    class="form-file-input @error('foto') is-invalid @enderror" id="foto"
-                                                    name="foto" value="{{ old('no_hp', $user->no_hp) }}"
-                                                    placeholder="Masukkan Nomor Hp Pengguna">
-                                                <p><small class="text-muted">Boleh Dikosongi.</small></p>
-                                                @if ($errors->has('no_hp'))
-                                                    <span class="text-danger">{{ $errors->first('no_hp') }}</span>
+                                                <label for="posisi" class="form-label">Posisi</label>
+                                                <div class="form-group">
+                                                    <select class="choices form-select @error('posisi') is-invalid @enderror"
+                                                        name="posisi" id="posisi" required disabled>
+                                                        <option value="">- Pilih Posisi -</option>
+                                                        <option value="Manager"
+                                                            {{ old('posisi', $user->posisi) == 'Manager' ? 'selected' : '' }}>
+                                                            Manager
+                                                        </option>
+                                                        <option value="Teknisi"
+                                                            {{ old('posisi', $user->posisi) == 'Teknisi' ? 'selected' : '' }}>
+                                                            Teknisi
+                                                        </option>
+                                                        <option value="Analis Tambak"
+                                                            {{ old('posisi', $user->posisi) == 'Analis Tambak' ? 'selected' : '' }}>
+                                                            Analis
+                                                            Tambak
+                                                        </option>
+                                                        <option value="Pemilik Tambak"
+                                                            {{ old('posisi', $user->posisi) == 'Pemilik Tambak' ? 'selected' : '' }}>
+                                                            Pemilik
+                                                            Tambak
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="posisi" id="posisi"
+                                                    value="{{ old('posisi', $user->posisi) }}">
+                                                @if ($errors->has('posisi'))
+                                                    <span class="text-danger">{{ $errors->first('posisi') }}</span>
                                                 @endif
                                             </div>
-                                            <p>Upload Foto</p>
-                                            <div class="form-file">
-                                                <input type="file" class="form-file-input" id="customFile">
-                                                <label class="form-file-label" for="customFile">
-                                                    <span class="form-file-text">Choose file...</span>
-                                                    <span class="form-file-button btn-primary "><i
-                                                            data-feather="upload"></i></span>
-                                                </label>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="gaji_pokok" class="form-label">Gaji Pokok</label>
+                                                <input type="number"
+                                                    class="form-control @error('gaji_pokok') is-invalid @enderror"
+                                                    id="gaji_pokok" name="gaji_pokok"
+                                                    value="{{ old('gaji_pokok', $user->gaji_pokok) }}"
+                                                    placeholder="Masukkan Gaji Pokok Pengguna" disabled required>
+                                                <input type="hidden" name="gaji_pokok" id="gaji_pokok"
+                                                    value="{{ old('gaji_pokok', $user->gaji_pokok) }}">
+                                                @if ($errors->has('gaji_pokok'))
+                                                    <span class="text-danger">{{ $errors->first('gaji_pokok') }}</span>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-between">
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="komisi" class="form-label">Komisi</label>
+                                                <input type="number"
+                                                    class="form-control @error('komisi') is-invalid @enderror" id="komisi"
+                                                    name="komisi" value="{{ old('komisi', $user->komisi) }}"
+                                                    placeholder="Masukkan Komisi Pengguna" disabled>
+                                                <input type="hidden" name="komisi" id="komisi"
+                                                    value="{{ old('komisi', $user->komisi) }}">
+                                                @if ($errors->has('komisi'))
+                                                    <span class="text-danger">{{ $errors->first('komisi') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="tunjangan" class="form-label">Tunjangan</label>
+                                                <input type="number"
+                                                    class="form-control @error('tunjangan') is-invalid @enderror"
+                                                    id="tunjangan" name="tunjangan"
+                                                    value="{{ old('tunjangan', $user->tunjangan) }}"
+                                                    placeholder="Masukkan Tunjangan Pengguna" disabled>
+                                                <input type="hidden" name="tunjangan" id="tunjangan"
+                                                    value="{{ old('tunjangan', $user->tunjangan) }}">
+                                                @if ($errors->has('tunjangan'))
+                                                    <span class="text-danger">{{ $errors->first('tunjangan') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="potongan_gaji" class="form-label">Potongan Gaji</label>
+                                                <input type="number"
+                                                    class="form-control @error('potongan_gaji') is-invalid @enderror"
+                                                    id="potongan_gaji" name="potongan_gaji"
+                                                    value="{{ old('potongan_gaji', $user->potongan_gaji) }}"
+                                                    placeholder="Masukkan Potongan Gaji Pengguna" disabled>
+                                                <input type="hidden" name="potongan_gaji" id="potongan_gaji"
+                                                    value="{{ old('potongan_gaji', $user->potongan_gaji) }}">
+                                                @if ($errors->has('potongan_gaji'))
+                                                    <span class="text-danger">{{ $errors->first('potongan_gaji') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
                                             <button type="button" class="btn btn-sm btn-danger"
                                                 onclick="window.location.href='{{ url('/dashboard') }}'"
                                                 style="background-color: #DC3545; border-color: #DC3545"
