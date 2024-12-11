@@ -69,7 +69,7 @@ class TransaksiAlatController extends Controller
                 ->join('detail_alat', 'transaksi_alat.id_detail_alat', '=', 'detail_alat.id_detail_alat')
                 ->join('alat', 'detail_alat.id_alat', '=', 'alat.id_alat')
                 ->join('gudang', 'detail_alat.id_gudang', '=', 'gudang.id_gudang')
-                ->whereIn('detail_alat.id_gudang', $gudangIds);;
+                ->whereIn('detail_alat.id_gudang', $gudangIds);
 
             return DataTables::of($transaksiAlats)
                 ->addColumn('alat_gudang', function ($transaksi) {

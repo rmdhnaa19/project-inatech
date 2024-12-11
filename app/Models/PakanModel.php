@@ -18,4 +18,7 @@ class PakanModel extends Model
         return $this->hasMany(PakanHarianModel::class,'id_detail_pakan');
     }
 
+    public function detailPakan(){
+        return $this->hasMany(DetailPakanModel::class, 'id_pakan', 'id_pakan');
+    }
 }

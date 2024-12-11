@@ -7,10 +7,10 @@
             <div class="image-container text-center" style="position: sticky; top: 20px;">
                 @if ($transaksiAlat->detailAlat->alat->foto != '')
                     <img src="{{ asset('storage/' . $transaksiAlat->detailAlat->alat->foto) }}" alt="Foto Alat"
-                        class="img-fluid" style="width: auto; height: 30vh;">
+                        class="img-fluid" style="width: auto; height: 30vh; object-fit: cover;">
                 @else
                     <img src="{{ asset('storage/asset_web/No Image Available.png') }}" alt="Foto Alat" class="img-fluid"
-                        style="width: auto; height: 30vh;">
+                        style="width: auto; height: 30vh; object-fit: cover;">
                 @endif
             </div>
         </div>

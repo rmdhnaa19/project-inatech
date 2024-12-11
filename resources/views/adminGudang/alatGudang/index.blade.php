@@ -7,6 +7,9 @@
             <div class="container">
                 <div class="row">
                     @foreach ($alatGudang as $detailAlat)
+                        @php
+                            $totalHarga = $detailAlat->stok_alat * $detailAlat->alat->harga_satuan;
+                        @endphp
                         <div class="col-md-6 mb-4">
                             <div class="card border border-primary" style="max-width: 540px;">
                                 <div class="row g-0">
@@ -17,13 +20,16 @@
                                     <div class="col-md-8 d-flex flex-column">
                                         <div class="card-body flex-grow-1">
                                             <h5 class="card-title">{{ $detailAlat->alat->nama }}</h5>
-                                            <p class="card-text m-0">Deskripsi : {{ $detailAlat->alat->deskripsi }}</p>
+                                            <p class="card-text m-0">Gudang : {{ $detailAlat->gudang->nama }}</p>
                                             <p class="card-text m-0">Harga : Rp
                                                 {{ number_format($detailAlat->alat->harga_satuan, 0, ',', '.') }} per
                                                 {{ $detailAlat->alat->satuan }}
                                             </p>
-                                            <p class="card-text">Sisa stok :
+                                            <p class="card-text m-0">Sisa stok :
                                                 {{ number_format($detailAlat->stok_alat, 0, ',', '.') }}
+                                            </p>
+                                            <p class="card-text">Total Harga :
+                                                Rp {{ number_format($totalHarga, 0, ',', '.') }}
                                             </p>
                                             <p class="card-text">
                                                 <small class="text-body-secondary">
