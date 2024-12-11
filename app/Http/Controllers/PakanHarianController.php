@@ -76,7 +76,7 @@ public function store(Request $request)
 {
     // Validasi input
     $request->validate([
-        'kd_pakan_harian' => 'required|string|max:255|unique:pakan_harian,kd_pakan_harian',
+        'kd_pakan_harian' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'DOC' => 'required|integer',
@@ -140,7 +140,7 @@ public function edit(string $id){
 
 public function update(Request $request, string $id){
     $request->validate([
-        'kd_pakan_harian' => 'required|string|max:255|unique:pakan_harian,kd_pakan_harian',
+        'kd_pakan_harian' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'DOC' => 'required|integer',
@@ -186,6 +186,86 @@ public function destroy($id) {
             'message' => 'Gagal menghapus pakan harian: ' . $th->getMessage()
         ], 500);
     }
+}
+
+// Role adminTambak
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Pakan Harian',
+        'paragraph' => 'Berikut ini merupakan data pakan harian yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'pakanHarian', 'url' => route('user.pakanharian.index')],
+            ['label' => 'pakanHarian'],
+        ]
+    ];
+    $activeMenu = 'pakanHarian';
+    $pakan_harians = PakanHarianModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.pakanharian.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'pakan_harians' => $pakan_harians]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Pakan Harian',
+        'paragraph' => 'Berikut ini merupakan form tambah data pakan harian yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'pakanHarian', 'url' => route('user.pakanharian.create')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'pakanHarian';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.pakanharian.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_pakan_harian' => 'required|string|max:255',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'DOC' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        PakanHarianModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data pakan harian berhasil ditambahkan', 'success');
+        return redirect()->route('user.pakanharian.index')->with('success', 'Data pakan harian berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.ppakanharian.create')->with('gagal', 'Data pakan harian gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $pakan_harians = PakanHarianModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$pakan_harians) {
+        return response()->json(['error' => 'Pakan Harian tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Pakan Harian',
+        'paragraph' => 'Berikut ini merupakan form tambah data pakan harian yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'pakanHarian', 'url' => route('user.pakanharian.index')],
+            ['label' => 'pakanHarian', 'url' => route('user.pakanharian.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'pakanHarian';
+    // Render view dengan data tambak
+    return view('adminTambak.pakanharian.show', compact('pakan_harians', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
 }
 
 }

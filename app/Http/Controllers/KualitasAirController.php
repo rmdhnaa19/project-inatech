@@ -72,7 +72,7 @@ public function store(Request $request)
 {
     // Validasi input
     $request->validate([
-        'kd_kualitas_air' => 'required|string|max:255|unique:kualitas_air,kd_kualitas_air',
+        'kd_kualitas_air' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pH' => 'required|integer',
@@ -139,7 +139,7 @@ public function edit(string $id){
 
 public function update(Request $request, string $id){
     $request->validate([
-        'kd_kualitas_air' => 'required|string|max:255|unique:kualitas_air,kd_kualitas_air',
+        'kd_kualitas_air' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pH' => 'required|integer',
@@ -189,6 +189,88 @@ public function destroy($id) {
             'message' => 'Gagal menghapus kualitas: ' . $th->getMessage()
         ], 500);
     }
+}
+
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Kualitas Air',
+        'paragraph' => 'Berikut ini merupakan data kualitas air yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kualitas Air', 'url' => route('user.kualitasair.index')],
+            ['label' => 'Kualitas Air'],
+        ]
+    ];
+    $activeMenu = 'kualitasAir';
+    $kualitasairs = KualitasAirModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.kualitasair.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'kualitasairs' => $kualitasairs]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Kualitas Air',
+        'paragraph' => 'Berikut ini merupakan form tambah data kualitas air yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Anco', 'url' => route('user.kualitasair.create')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'kualitasAir';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.kualitasair.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_kualitas_air' => 'required|string|max:255',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pH' => 'required|integer',
+        'salinitas' => 'required|integer',
+        'DO' => 'required|integer',
+        'suhu' => 'required|integer',
+        'kejernihan_air' => 'required|string',
+        'warna_air' => 'required|string',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        KualitasAirModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data kualitas air berhasil ditambahkan', 'success');
+        return redirect()->route('user.kualitasair.index')->with('success', 'Data kualitas air berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.kualitasair.create')->with('gagal', 'Data kualitas air gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $kualitasairs = KualitasAirModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$kualitasairs) {
+        return response()->json(['error' => 'Kualitas air tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Kualitas Air',
+        'paragraph' => 'Berikut ini merupakan form tambah data kualitas air yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kualitas Air', 'url' => route('user.kualitasair.index')],
+            ['label' => 'Kualitas Air', 'url' => route('user.kualitasair.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'kualitasair';
+    // Render view dengan data tambak
+    return view('adminTambak.kualitasair.show', compact('kualitasairs', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
 }
 
 }

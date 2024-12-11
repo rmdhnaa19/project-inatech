@@ -72,7 +72,7 @@ public function store(Request $request)
 {
     // Validasi input
     $request->validate([
-        'kd_penanganan' => 'required|string|max:255|unique:penanganan,kd_penanganan',
+        'kd_penanganan' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pemberian_mineral' => 'required|integer',
@@ -137,7 +137,7 @@ public function edit(string $id){
 
 public function update(Request $request, string $id){
     $request->validate([
-        'kd_penanganan' => 'required|string|max:255|unique:penanganan,kd_penanganan',
+        'kd_penanganan' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pemberian_mineral' => 'required|integer',
@@ -185,6 +185,88 @@ public function destroy($id) {
             'message' => 'Gagal menghapus penanganan: ' . $th->getMessage()
         ], 500);
     }
+}
+
+// Role adminTambak
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Penanganan',
+        'paragraph' => 'Berikut ini merupakan data penanganan yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Penanganan', 'url' => route('user.penanganan.index')],
+            ['label' => 'Penanganan'],
+        ]
+    ];
+    $activeMenu = 'penanganan';
+    $penanganans = PenangananModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.penanganan.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'penanganans' => $penanganans]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Penanganan',
+        'paragraph' => 'Berikut ini merupakan form tambah data penanganan yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Penanganan', 'url' => route('user.penanganan.create')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'penanganan';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.penanganan.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_penanganan' => 'required|string|max:255',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pemberian_mineral' => 'required|integer',
+        'pemberian_vitamin' => 'required|integer',
+        'pemberian_obat' => 'required|integer',
+        'penambahan_air' => 'required|integer',
+        'pengurangan_air' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        PenangananModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data penanganan berhasil ditambahkan', 'success');
+        return redirect()->route('user.penanganan.index')->with('success', 'Data penanganan berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.penanganan.create')->with('gagal', 'Data penanganan gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $penanganans = PenangananModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$penanganans) {
+        return response()->json(['error' => 'Penanganan tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Penanganan',
+        'paragraph' => 'Berikut ini merupakan form tambah data penanganan yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Penanganan', 'url' => route('user.penanganan.index')],
+            ['label' => 'Penanganan', 'url' => route('user.penanganan.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'penanganan';
+    // Render view dengan data tambak
+    return view('adminTambak.penanganan.show', compact('penanganans', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
 }
 
 }

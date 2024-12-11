@@ -212,4 +212,84 @@ public function destroy($id) {
             ], 500); 
         }
 }
+
+// Role adminTambak
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Kematian Udang',
+        'paragraph' => 'Berikut ini merupakan data kematian udang yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'kematianUdang', 'url' => route('user.kematianudang.index')],
+            ['label' => 'kematianUdang'],
+        ]
+    ];
+    $activeMenu = 'kematianUdang';
+    $kematianudangs = KematianUdangModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    
+    return view('adminTambak.kematianudang.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'kematianudangs' => $kematianudangs]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Kematian Udang',
+        'paragraph' => 'Berikut ini merupakan data kematian udang yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'kematianUdang', 'url' => route('user.kematianudang.create')],
+            ['label' => 'kematianUdang'],
+        ]
+    ];
+    $activeMenu = 'kematianUdang';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.kematianudang.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_kematian_udang' => 'required|string|max:255|unique:kematian_udang,kd_kematian_udang',
+        'size_udang' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'catatan' => 'required|string',
+        'gambar' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        KematianUdangModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data kematian udang berhasil ditambahkan', 'success');
+        return redirect()->route('user.kematianudang.index')->with('success', 'Data kematian udang berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.kematianudang.create')->with('gagal', 'Data kematian udang gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $kematianudangs = KematianUdangModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$kematianudangs) {
+        return response()->json(['error' => 'Kematian Udang tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Kematian Udang',
+        'paragraph' => 'Berikut ini merupakan form tambah data kematian udang yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'kematianUdang', 'url' => route('user.kematianudang.index')],
+            ['label' => 'kematianUdang', 'url' => route('user.kematianudang.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'kematianUdang';
+    // Render view dengan data tambak
+    return view('adminTambak.kematianudang.show', compact('kematianudangs', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
+}
+
 }
