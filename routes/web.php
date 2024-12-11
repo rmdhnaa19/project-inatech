@@ -11,6 +11,7 @@ use App\Http\Controllers\KolamController;
 use App\Http\Controllers\FaseKolamController;
 use App\Http\Controllers\PjTambakController;
 use App\Http\Controllers\AncoController;
+use App\Http\Controllers\EditProfileController;
 use App\Http\Controllers\KualitasAirController;
 use App\Http\Controllers\PenangananController;
 use App\Http\Controllers\SamplingController;
@@ -40,7 +41,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('login.index')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate')->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(['auth', 'no-back']);
+Route::group(['prefix' => 'profile'], function(){
+    Route::get('/{id}/edit', [EditProfileController::class, 'edit'])->name('profile.edit')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [UserController::class, 'update'])->name('profile.update')->middleware(['auth', 'no-back']);
+});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
 
 // ROUTE SUPER ADMIN
 Route::middleware(['auth', 'no-back', 'role:1'])->group(function () {
