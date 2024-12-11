@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TransaksiAlatModel;
+use App\Models\TransaksiObatModel;
 use App\Models\TransaksiPakanModel;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use Illuminate\Http\Request;
@@ -9,94 +11,79 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller {
     public function index(Request $request) {
+        $breadcrumb = (object) [
+            'title' => 'Dashboard',
+            'paragraph' => 'Berikut ini merupakan visualisasi data yang terinput ke dalam sistem',
+            'list' => [
+                ['label' => 'Home'],
+            ]
+        ];
+        $activeMenu = 'dashboard';
         if (auth()->user()->id_role == 1) {
-            $breadcrumb = (object) [
-                'title' => 'Dashboard',
-                'paragraph' => 'Berikut ini merupakan visualisasi data yang terinput ke dalam sistem',
-                'list' => [
-                    ['label' => 'Home'],
-                ]
-            ];
-            $activeMenu = 'dashboardAdmin';
-            $totalTransaksiPerBulan = TransaksiPakanModel::select(
+            $allMonths = collect(range(1, 12))->mapWithKeys(function ($bulan) {
+                return [$bulan => date("F", mktime(0, 0, 0, $bulan, 10))];
+            });
+            
+            // Total Transaksi Pakan Per Bulan
+            $tahunPakan = $request->input('tahunPakan', date('Y'));
+            $totalTransaksiPakanPerBulan = TransaksiPakanModel::select(
                 DB::raw('MONTH(created_at) as bulan'),
                 DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('bulan')
-            ->orderBy('bulan')
-            ->get();
-
-            $labels = $totalTransaksiPerBulan->pluck('bulan')->map(function ($bulan) {
-                return date("F", mktime(0, 0, 0, $bulan, 10)); // Mengubah angka bulan menjadi nama bulan
+            )->whereYear('created_at', $tahunPakan)->groupBy('bulan')->orderBy('bulan')->get()->pluck('total', 'bulan');
+            $labelTransaksiPakan = $allMonths->values();
+            $dataTransaksiPakan = $allMonths->keys()->map(function ($bulan) use ($totalTransaksiPakanPerBulan) {
+                return $totalTransaksiPakanPerBulan->get($bulan, 0); // Default 0 jika tidak ada transaksi di bulan tersebut
             });
-            $data = $totalTransaksiPerBulan->pluck('total');
- 
             $totalTransaksiPakanChart = (new LarapexChart)
                 ->lineChart()
-                ->addData('Total Transaksi', $data->toArray())
-                ->setXAxis($labels->toArray());
-            return view('admin.dashboard.index', compact('breadcrumb', 'activeMenu', 'totalTransaksiPakanChart', 'totalTransaksiPerBulan'));
+                ->addData('Total Transaksi', $dataTransaksiPakan->toArray())
+                ->setHeight(300)
+                ->setXAxis($labelTransaksiPakan->toArray());
+            $yearsPakan = TransaksiPakanModel::selectRaw('YEAR(created_at) as tahunPakan')->distinct()->pluck('tahunPakan');
+
+            // Total Transaksi Alat Per Bulan
+            $tahunAlat = $request->input('tahunAlat', date('Y'));
+            $totalTransaksiAlatPerBulan = TransaksiAlatModel::select(
+                DB::raw('MONTH(created_at) as bulan'),
+                DB::raw('COUNT(*) as total')
+            )->whereYear('created_at', $tahunAlat)->groupBy('bulan')->orderBy('bulan')->get()->pluck('total', 'bulan');
+            $labelTransaksiAlat = $allMonths->values();
+            $dataTransaksiAlat = $allMonths->keys()->map(function ($bulan) use ($totalTransaksiAlatPerBulan) {
+                return $totalTransaksiAlatPerBulan->get($bulan, 0); // Default 0 jika tidak ada transaksi di bulan tersebut
+            });
+            $totalTransaksiAlatChart = (new LarapexChart)
+                ->barChart()
+                ->addData('Total Transaksi', $dataTransaksiAlat->toArray())
+                ->setHeight(300)
+                ->setXAxis($labelTransaksiAlat->toArray());
+            $yearsAlat = TransaksiAlatModel::selectRaw('YEAR(created_at) as tahunAlat')->distinct()->pluck('tahunAlat');
+
+            // Total Transaksi Alat Per Bulan
+            $tahunObat = $request->input('tahunObat', date('Y'));
+            $totalTransaksiObatPerBulan = TransaksiObatModel::select(
+                DB::raw('MONTH(created_at) as bulan'),
+                DB::raw('COUNT(*) as total')
+            )->whereYear('created_at', $tahunObat)->groupBy('bulan')->orderBy('bulan')->get()->pluck('total', 'bulan');
+            $labelTransaksiObat = $allMonths->values();
+            $dataTransaksiObat = $allMonths->keys()->map(function ($bulan) use ($totalTransaksiObatPerBulan) {
+                return $totalTransaksiObatPerBulan->get($bulan, 0); // Default 0 jika tidak ada transaksi di bulan tersebut
+            });
+            $totalTransaksiObatChart = (new LarapexChart)
+                ->lineChart()
+                ->addData('Total Transaksi', $dataTransaksiObat->toArray())
+                ->setHeight(300)
+                ->setXAxis($labelTransaksiObat->toArray());
+            $yearsObat = TransaksiObatModel::selectRaw('YEAR(created_at) as tahunObat')->distinct()->pluck('tahunObat');
+
+            return view('dashboard.index', compact(
+                'breadcrumb', 
+                'activeMenu', 
+                'totalTransaksiPakanChart', 'totalTransaksiPakanPerBulan', 'yearsPakan', 'tahunPakan', 
+                'totalTransaksiAlatChart', 'totalTransaksiAlatPerBulan', 'yearsAlat', 'tahunAlat',
+                'totalTransaksiObatChart', 'totalTransaksiObatPerBulan', 'yearsObat', 'tahunObat'
+            ));
         }elseif (auth()->user()->id_role == 2) {
-            $breadcrumb = (object) [
-                'title' => 'Dashboard',
-                'paragraph' => 'Berikut ini merupakan visualisasi data yang terinput ke dalam sistem',
-                'list' => [
-                    ['label' => 'Home'],
-                ]
-            ];
-            $activeMenu = 'dashboardUserGudang';
-            $balanceChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Balance', [10, 20, 30, 40, 50])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $revenueChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Revenue', [50, 100, 150, 200, 250])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $ordersChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Orders', [300, 400, 500, 600, 700])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $salesTodayChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Sales Today', [10, 15, 20, 25, 30])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-
-            return view('adminGudang.dashboard.index', compact('breadcrumb', 'activeMenu', 'balanceChart', 'revenueChart', 'ordersChart', 'salesTodayChart'));
-        }elseif (auth()->user()->id_role == 3) {
-            $breadcrumb = (object) [
-                'title' => 'Dashboard',
-                'paragraph' => 'Berikut ini merupakan visualisasi data yang terinput ke dalam sistem',
-                'list' => [
-                    ['label' => 'Home'],
-                ]
-            ];
-            $activeMenu = 'dashboardUserTambak';
-
-            $balanceChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Balance', [10, 20, 30, 40, 50])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $revenueChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Revenue', [50, 100, 150, 200, 250])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $ordersChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Orders', [300, 400, 500, 600, 700])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-    
-            $salesTodayChart = (new LarapexChart)
-                ->lineChart()
-                ->addData('Sales Today', [10, 15, 20, 25, 30])
-                ->setXAxis(['Jan', 'Feb', 'Mar', 'Apr', 'May']);
-                
-            return view('adminTambak.dashboard.index', compact('breadcrumb', 'activeMenu', 'balanceChart', 'revenueChart', 'ordersChart', 'salesTodayChart'));
+            
         }
     }
 }

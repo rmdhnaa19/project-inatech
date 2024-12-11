@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RoleModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +23,8 @@ class EditProfileController extends Controller
         $activeMenu = '';
 
         $user = Auth::user();
-        return view('profile.edit', compact('breadcrumb', 'user', 'activeMenu'));
+        $role = RoleModel::all();
+        return view('profile.edit', compact('breadcrumb', 'user', 'activeMenu', 'role'));
     }
 
     public function update(){

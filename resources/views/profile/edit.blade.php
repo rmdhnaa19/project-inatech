@@ -89,6 +89,51 @@
                                                 @endif
                                             </div>
                                         </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="role" class="form-label">Role</label>
+                                                <div class="form-group">
+                                                    <select class="choices form-select @error('id_role') is-invalid @enderror"
+                                                        name="id_role" id="id_role" required disabled>
+                                                        <option value="">- Pilih Role -</option>
+                                                        @foreach ($role as $item)
+                                                            <option value="{{ $item->id_role }}"
+                                                                @if ($item->id_role == $user->id_role) selected @endif>
+                                                                {{ $item->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <p><small class="text-muted">Wajib Diisi!</small></p>
+                                                </div>
+                                                <input type="hidden" name="id_role" id="id_role"
+                                                    value="{{ old('id_role', $user->id_role) }}">
+                                                @if ($errors->has('id_role'))
+                                                    <span class="text-danger">{{ $errors->first('id_role') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group">
+                                                <label for="no_hp" class="form-label">Update Foto</label>
+                                                <input type="file"
+                                                    class="form-file-input @error('foto') is-invalid @enderror" id="foto"
+                                                    name="foto" value="{{ old('no_hp', $user->no_hp) }}"
+                                                    placeholder="Masukkan Nomor Hp Pengguna">
+                                                <p><small class="text-muted">Boleh Dikosongi.</small></p>
+                                                @if ($errors->has('no_hp'))
+                                                    <span class="text-danger">{{ $errors->first('no_hp') }}</span>
+                                                @endif
+                                            </div>
+                                            <p>Upload Foto</p>
+                                            <div class="form-file">
+                                                <input type="file" class="form-file-input" id="customFile">
+                                                <label class="form-file-label" for="customFile">
+                                                    <span class="form-file-text">Choose file...</span>
+                                                    <span class="form-file-button btn-primary "><i
+                                                            data-feather="upload"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-between">
                                             <button type="button" class="btn btn-sm btn-danger"
                                                 onclick="window.location.href='{{ url('/dashboard') }}'"
