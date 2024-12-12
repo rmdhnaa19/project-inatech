@@ -1,21 +1,21 @@
 @extends('layouts.template')
-@section('title', 'Kelola Anco') 
+@section('title', 'Kelola Kualitas Air')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="{{ url('anco') }}" class="form-horizontal" enctype="multipart/form-data"
-            id="tambahanco">
+        <form method="POST" action="{{ route ('user.kualitasair.store') }}" class="form-horizontal" enctype="multipart/form-data"
+            id="tambahkualitasair">
             @csrf
             <div class="form-group row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="kd_anco" class="form-label">Kode Anco</label>
-                        <input type="text" class="form-control" id="kd_anco" name="kd_anco"
-                            placeholder="Masukkan kode anco " value="{{ old('kd_anco') }}" required autofocus>
-                        @error('kd_anco')
+                        <label for="kd_kulitas_air" class="form-label">Kode Kualitas Air</label>
+                        <input type="text" class="form-control" id="kd_kualitas_air" name="kd_kualitas_air"
+                            placeholder="Masukkan kode kualitas air" value="{{ old('kd_kualitas_air') }}" required autofocus>
+                        @error('kd_kualitas_air')
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
-                            Kode anco yang anda masukkan tidak valid
+                            Kode kualitas air yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
@@ -46,7 +46,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="waktu_cek" class="form-label">Waktu Cek</label>
+                        <label for="tanggal_cek" class="form-label">Waktu Cek</label>
                         <input type="time" class="form-control" id="waktu_cek" name="waktu_cek"
                             placeholder="Masukkan waktu cek" value="{{ old('waktu_cek') }}" required>
                         @error('waktu_cek')
@@ -57,57 +57,78 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="pemberian_pakan" class="form-label">Pemberian Pakan (kg)</label>
-                        <input type="string" class="form-control" id="pemberian_pakan" name="pemberian_pakan"
-                            placeholder="Masukkan pemberian pakan" value="{{ old('pemberian_pakan') }}" required>
-                        @error('waktu_cek')
+                        <label for="pH" class="form-label">pH Air</label>
+                        <input type="text" class="form-control" id="pH" name="pH"
+                            placeholder="Masukkan pH air" value="{{ old('pH') }}" required>
+                        @error('pH')
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
-                            Pemberian pakan yang anda masukkan tidak valid
+                            pH air yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="jamPemberian_pakan" class="form-label">Jam Pemberian Pakan</label>
-                        <input type="time" class="form-control" id="jamPemberian_pakan" name="jamPemberian_pakan"
-                            placeholder="Masukkan jam pPemberian pakan" value="{{ old('jamPemberian_pakan') }}" required>
-                        @error('jamPemberian_pakan')
+                        <label for="salinitas" class="form-label">Salinitas (ppt)</label>
+                        <input type="text" class="form-control" id="salinitas" name="salinitas"
+                            placeholder="Masukkan salinitas" value="{{ old('salinitas') }}" required>
+                        @error('salinitas')
                         <div class="invalid-feedback">
                             <i class="bx bx-radio-circle"></i>
-                            Jam pemberian pakan yang anda masukkan tidak valid
+                            Salinitas yang anda masukkan tidak valid
                         </div>
                         @enderror
                     </div>
-
                     <div class="form-group">
-                        <label for="kondisi_pakan" class="form-label">Kondisi Pakan</label>
+                        <label for="salinitas" class="form-label">DO (ppm)</label>
+                        <input type="text" class="form-control" id="DO" name="DO"
+                            placeholder="Masukkan DO" value="{{ old('DO') }}" required>
+                        @error('DO')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            DO yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="salinitas" class="form-label">Suhu (°C)</label>
+                        <input type="text" class="form-control" id="suhu" name="suhu"
+                            placeholder="Masukkan suhu" value="{{ old('suhu') }}" required>
+                        @error('suhu')
+                        <div class="invalid-feedback">
+                            <i class="bx bx-radio-circle"></i>
+                            Suhu yang anda masukkan tidak valid
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="kejernihan_air" class="form-label">Kejernihan Air</label>
                         <div class="form-group">
-                            <select class="choices form-select @error('kondisi_pakan') is-invalid @enderror" name="kondisi_pakan"
-                                id="kondisi_pakan">
-                                <option value="{{ old('kondisi_pakan') }}">- Pilih Kondisi Pakan -</option>
-                                <option value="Sisa sedikit">Sisa sedikit</option>
-                                <option value="Sisa setengah">Sisa setengah</option>
-                                <option value="Sisa banyak">Sisa banyak</option>
+                            <select class="choices form-select @error('kejernihan_air') is-invalid @enderror" name="kejernihan_air"
+                                id="kejernihan_air">
+                                <option value="{{ old('warna_air') }}">- Pilih Kejernihan Air-</option>
+                                <option value="Jernih">Jernih</option>
+                                <option value="Keruh">Keruh</option>
                             </select>
                         </div>
-                        @if ($errors->has('kondisi_pakan'))
-                            <span class="text-danger">{{ $errors->first('kondisi_pakan') }}</span>
+                        @if ($errors->has('kejernihan_air'))
+                            <span class="text-danger">{{ $errors->first('kejernihan_air') }}</span>
                         @endif
                     </div>
 
                     <div class="form-group">
-                        <label for="kondisi_udang" class="form-label">Kondisi Udang</label>
+                        <label for="warna_air" class="form-label">Warna Air</label>
                         <div class="form-group">
-                            <select class="choices form-select @error('kondisi_udang') is-invalid @enderror" name="kondisi_udang"
-                                id="kondisi_udang">
-                                <option value="{{ old('kondisi_udang') }}">- Pilih Kondisi Udang -</option>
-                                <option value="Udang sakit">Udang sakit</option>
-                                <option value="Udang sehat">Udang sehat</option>
-                                <option value="Udang mati">Udang mati</option>
+                            <select class="choices form-select @error('warna_air') is-invalid @enderror" name="warna_air"
+                                id="warna_air">
+                                <option value="{{ old('warna_air') }}">- Pilih Warna Air -</option>
+                                <option value="Coklat Muda">Coklat Muda</option>
+                                <option value="Coklat Tua">Coklat Tua</option>
+                                <option value="Hijau Muda">Hijau Muda</option>
+                                <option value="Hijau Kecoklatan">Hijau Kecoklatan</option>
                             </select>
                         </div>
-                        @if ($errors->has('kondisi_udang'))
-                            <span class="text-danger">{{ $errors->first('kondisi_udang') }}</span>
+                        @if ($errors->has('warna_air'))
+                            <span class="text-danger">{{ $errors->first('warna_air') }}</span>
                         @endif
                     </div>
                     <div class="form-group">
@@ -118,45 +139,16 @@
                             <span class="text-danger">{{ $errors->first('catatan') }}</span>
                         @endif
                     </div>
-
                     {{-- Tombol kembali dan simpan --}}
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-sm btn-danger"
-                            onclick="window.location.href='{{ url('anco') }}'"
-                            style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
-                        <button type="submit" class="btn btn-primary btn-sm"
-                            style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
-                    </div>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{ route ('user.kualitasair.index') }}'"
+                        style="background-color: #DC3545; border-color: #DC3545" id="btn-kembali">Kembali</button>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        style="background-color: #007BFF; border-color: #007BFF" id="btn-simpan">Simpan</button>
+                </div>
                 </div>
 
-                {{-- Tambahkan foto di sini --}}
-                <!-- <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <div class="form-group">
-                        <div class="col">
-                            <div class="row mb-3">
-                                <div class="drop-zone">
-                                    <div class="text-center">
-                                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 50px"></i>
-                                        <div class="drop-zone__prompt">Seret dan jatuhkan file di sini</div>
-                                    </div>
-                                    <input type="file" name="image" class="drop-zone__input" required>
-                                </div>
-                            </div>
-                            <div class="row text-center">
-                                <span>Atau</span>
-                            </div>
-                            <div class="row">
-                                <div class="form-file">
-                                    <input type="file" class="form-file-input" id="customFile">
-                                    <label class="form-file-label" for="customFile">
-                                        <span class="form-file-text">Pilih file...</span>
-                                        <span class="form-file-button">Browse</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </form>
     </div>

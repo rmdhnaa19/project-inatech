@@ -72,7 +72,7 @@ public function store(Request $request)
 {
     // Validasi input
     $request->validate([
-        'kd_sampling' => 'required|string|max:255|unique:sampling,kd_sampling',
+        'kd_sampling' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'DOC' => 'required|integer',
@@ -148,7 +148,7 @@ public function edit(string $id){
 
 public function update(Request $request, string $id){
     $request->validate([
-        'kd_sampling' => 'required|string|max:255|unique:sampling,kd_sampling',
+        'kd_sampling' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'DOC' => 'required|integer',
@@ -206,6 +206,93 @@ public function destroy($id) {
             'message' => 'Gagal menghapus sampling: ' . $th->getMessage()
         ], 500);
     }
+}
+
+// Role adminTambak
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Sampling',
+        'paragraph' => 'Berikut ini merupakan data sampling yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Sampling', 'url' => route('user.sampling.index')],
+            ['label' => 'Sampling'],
+        ]
+    ];
+    $activeMenu = 'sampling';
+    $samplings = SamplingModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.sampling.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'samplings' => $samplings]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Sampling',
+        'paragraph' => 'Berikut ini merupakan form tambah data sampling yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Sampling', 'url' => route('user.sampling.create')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'sampling';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.sampling.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_sampling' => 'required|string|max:255',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'DOC' => 'required|integer',
+        'berat_udang' => 'required|integer',
+        'size_udang' => 'required|integer',
+        'interval_hari' => 'required|integer',
+        'harga_udang' => 'required|integer',
+        'input_fr' => 'required|integer',
+        'total_pakan' => 'required|integer',
+        'ADG_udang' => 'required|integer',
+        'biomassa' => 'required|integer',
+        'populasi_ekor' => 'required|integer',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        SamplingModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data sampling berhasil ditambahkan', 'success');
+        return redirect()->route('user.sampling.index')->with('success', 'Data sampling berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.sampling.create')->with('gagal', 'Data sampling gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $samplings = SamplingModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$samplings) {
+        return response()->json(['error' => 'Sampling tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Sampling',
+        'paragraph' => 'Berikut ini merupakan form tambah data sampling yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Sampling', 'url' => route('user.sampling.index')],
+            ['label' => 'Sampling', 'url' => route('user.sampling.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'sampling';
+    // Render view dengan data tambak
+    return view('adminTambak.sampling.show', compact('samplings', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
 }
 
 }

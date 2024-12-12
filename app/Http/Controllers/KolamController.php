@@ -72,8 +72,7 @@ class KolamController extends Controller
 
 
     public function store(Request $request)
-    {
-        
+    { 
         $validatedData = $request->validate([
             'foto' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
             'tipe_kolam' => 'required|in:kotak,bundar',
@@ -85,7 +84,7 @@ class KolamController extends Controller
             'id_tambak' => 'required|integer',
         ]);
 
-        // Upload foto jika ada
+        // Upload foto jika ad
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('foto_kolam', 'public'); // Menyimpan ke storage
             $validatedData['foto'] = $path; // Menambahkan path foto ke validated data
