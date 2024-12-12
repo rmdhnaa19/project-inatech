@@ -15,7 +15,7 @@
                         <th style="display: none">ID</th>
                         <th class="text-center">NAMA</th>
                         <th class="text-center">HARGA SATUAN</th>
-                        <th class="text-center">SATUAN BERAT</th>
+                        <th class="text-center">SATUAN</th>
                     </tr>
                 </thead>
             </table>
