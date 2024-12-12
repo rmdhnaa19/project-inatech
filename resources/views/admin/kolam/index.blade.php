@@ -138,36 +138,67 @@
             }
         });
 
-        // Tombol Hapus
-        $(document).on('click', '#btn-delete-kolam', function() {
-    if (currentKolamId) {
-        if (confirm('Apakah Anda yakin ingin menghapus data kolam ini?')) {
-            const deleteUrl = '{{ route('admin.kolam.destroy', ':id') }}'.replace(':id', currentKolamId);
-
-            $.ajax({
-                url: deleteUrl,
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "_method": "DELETE"
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        window.location.href = "{{ route('admin.kolam.index') }}"; // Redirect ke halaman index
-                    } else {
-                        alert('Gagal menghapus kolam: ' + response.message);
-                    }
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat menghapus kolam');
+        // Delete button
+    $(document).on('click', '#btn-delete-kolam', function() {
+        if (currentKolamId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data Kolam ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var deleteUrl = '{{ route('admin.kolam.destroy', ':id') }}'
+                        .replace(':id', currentKolamId);
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "_method": "DELETE"
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: true
+                                }).then(() => {
+                                    window.location.href = "{{ route('admin.kolam.index') }}";
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menghapus data.',
+                                icon: 'error'
+                            });
+                        }
+                    });
                 }
             });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: 'ID Kolam tidak ditemukan',
+                icon: 'error'
+            });
         }
-    } else {
-        alert('ID kolam tidak ditemukan');
-    }
-});
+    });
+
 
 
         // Tambahkan tombol "Tambah" setelah kolom pencarian

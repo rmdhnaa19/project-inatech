@@ -80,6 +80,8 @@
 @push('js')
 <script>
 $(document).ready(function() {
+    let currentpjtambakId = null;
+
     // Initialize DataTable
     var table = $('#table_pjTambak').DataTable({
         serverSide: true,
@@ -117,7 +119,7 @@ $(document).ready(function() {
     // Show detail modal
     $(document).on('click', '.view-user-details', function() {
         var url = $(this).data('url');
-        var idPjTambak = $(this).data('id');
+        currentpjtambakId = $(this).data('id'); // Set current ID
 
         $.ajax({
             url: url,
@@ -125,8 +127,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.html) {
                     $('#user-detail-content').html(response.html);
-                    $('#btn-edit-pjtambak').data('id', idPjTambak);
-                    $('#btn-delete-pjtambak').data('id', idPjTambak);
                 } else {
                     alert('Gagal memuat detail');
                 }
@@ -140,9 +140,8 @@ $(document).ready(function() {
 
     // Edit button
     $(document).on('click', '#btn-edit-pjtambak', function() {
-        var id = $(this).data('id');
-        if (id) {
-            var url = '{{ route("admin.pjTambak.edit", ":id") }}'.replace(':id', id);
+        if (currentpjtambakId) {
+            var url = '{{ route("admin.pjTambak.edit", ":id") }}'.replace(':id', currentpjtambakId);
             window.location.href = url;
         } else {
             alert('ID tidak ditemukan.');
@@ -151,28 +150,64 @@ $(document).ready(function() {
 
     // Delete button
     $(document).on('click', '#btn-delete-pjtambak', function() {
-    var id = $(this).data('id');
-    if (id && confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-        $.ajax({
-            url: '{{ route('admin.pjTambak.destroy', ":id") }}'.replace(':id', id),
-            type: 'DELETE',
-            data: { "_token": "{{ csrf_token() }}" },
-            success: function(response) {
-                if (response.success) {
-                    alert(response.message);
-                    window.location.href = "{{ url('pjTambak') }}"; // Redirect ke halaman index
-                } else {
-                    alert('Gagal menghapus data.');
+        if (currentpjtambakId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data Pj Tambak ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var deleteUrl = '{{ route('admin.pjTambak.destroy', ':id') }}'
+                        .replace(':id', currentpjtambakId);
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "_method": "DELETE"
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: true
+                                }).then(() => {
+                                    window.location.href = "{{ route('admin.pjTambak.index') }}";
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menghapus data.',
+                                icon: 'error'
+                            });
+                        }
+                    });
                 }
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-                alert('Terjadi kesalahan saat menghapus data.');
-            }
-        });
-    }
-});
-
+            });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: 'ID Pj Tambak tidak ditemukan',
+                icon: 'error'
+            });
+        }
+    });
 
     // Tambah button
     $("#table_pjTambak_filter").append('<button id="btn-tambah" class="btn btn-primary">Tambah</button>');

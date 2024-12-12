@@ -170,39 +170,66 @@
             }
         });
 
-        // Event listener untuk tombol Hapus di dalam modal
-        $(document).on('click', '#btn-delete-tambak', function() {
-    if (currentTambakId) {
-        if (confirm('Apakah Anda yakin ingin menghapus data tambak ini?')) {
-            var deleteUrl = '{{ route('admin.tambak.destroy', ':id') }}'.replace(':id', currentTambakId);
-            $.ajax({
-                url: deleteUrl,
-                type: 'POST', // Masih POST karena perlu override
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "_method": "DELETE" // Override metode menjadi DELETE
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        window.location.href = "{{ route('admin.tambak.index') }}"; // Redirect ke index
-                    } else {
-                        alert('Gagal menghapus tambak: ' + response.message);
-                    }
-                },
-                error: function(xhr) {
-                    let errorMsg = 'Gagal menghapus tambak.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMsg += ' ' + xhr.responseJSON.message;
-                    }
-                    alert(errorMsg);
+        // Delete button
+    $(document).on('click', '#btn-delete-tambak', function() {
+        if (currentTambakId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data Tambak ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var deleteUrl = '{{ route('admin.tambak.destroy', ':id') }}'
+                        .replace(':id', currentTambakId);
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "_method": "DELETE"
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: true
+                                }).then(() => {
+                                    window.location.href = "{{ route('admin.tambak.index') }}";
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menghapus data.',
+                                icon: 'error'
+                            });
+                        }
+                    });
                 }
             });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: 'ID Tambak tidak ditemukan',
+                icon: 'error'
+            });
         }
-    } else {
-        alert('ID tambak tidak ditemukan');
-    }
-});
+    });
 
 
         // Tambahkan tombol "Tambah" setelah kolom pencarian
