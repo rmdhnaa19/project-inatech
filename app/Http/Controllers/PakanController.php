@@ -45,7 +45,7 @@ class PakanController extends Controller
 
     public function create(){
         $breadcrumb = (object) [
-            'title' => 'Tambah Data Pakan',
+            'title' => 'Tambah Data Pakan', 
             'paragraph' => 'Berikut ini merupakan form tambah data pakan yang terinput ke dalam sistem',
             'list' => [
                 ['label' => 'Home', 'url' => route('dashboard.index')],

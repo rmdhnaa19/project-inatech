@@ -25,6 +25,7 @@ use App\Http\Controllers\PJGudangController;
 use App\Http\Controllers\TransaksiAlatController;
 use App\Http\Controllers\TransaksiObatController;
 use App\Http\Controllers\TransaksiPakanController;
+use App\Models\PakanHarianModel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,7 +44,9 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout')->middleware(['auth', 'no-back']);
 Route::group(['prefix' => 'profile'], function(){
     Route::get('/{id}/edit', [EditProfileController::class, 'edit'])->name('profile.edit')->middleware(['auth', 'no-back']);
-    Route::put('/{id}', [UserController::class, 'update'])->name('profile.update')->middleware(['auth', 'no-back']);
+    Route::put('/{id}', [EditProfileController::class, 'update'])->name('profile.update')->middleware(['auth', 'no-back']);
+    Route::get('/logout-notice', [EditProfileController::class, 'logoutNotice'])->name('profile.logout-notice')->middleware(['auth', 'no-back']);
+
 });
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -349,11 +352,45 @@ Route::middleware(['auth', 'no-back', 'role:3'])->group(function (){
         Route::get('/{id}', [FaseKolamController::class, 'show'])->name('user.fasekolam.show');
     });
 
-    Route::group(['prefix' => 'anco'], function(){
-        Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
+    Route::group(['prefix' => 'adminTambak/anco'], function(){
+        Route::get('/', [AncoController::class, 'indexAdminTambak'])->name('user.anco.index');
+        Route::get('/create', [AncoController::class, 'createAdminTambak'])->name('user.anco.create');
+        Route::post('/', [AncoController::class, 'storeAdminTambak'])->name('user.anco.store');
+        Route::get('/{id}', [AncoController::class, 'showAdminTambak'])->name('user.anco.show');
     });
 
-    Route::group(['prefix' => 'adminTambak/anco'], function(){
-        Route::get('/', [AncoController::class, 'index'])->name('user.anco.index');
+    Route::group(['prefix' => 'adminTambak/kualitasair'], function(){
+        Route::get('/', [KualitasAirController::class, 'indexAdminTambak'])->name('user.kualitasair.index');
+        Route::get('/create', [KualitasAirController::class, 'createAdminTambak'])->name('user.kualitasair.create');
+        Route::post('/', [KualitasAirController::class, 'storeAdminTambak'])->name('user.kualitasair.store');
+        Route::get('/{id}', [KualitasAirController::class, 'showAdminTambak'])->name('user.kualitasair.show');
+    });
+
+    Route::group(['prefix' => 'adminTambak/penanganan'], function(){
+        Route::get('/', [PenangananController::class, 'indexAdminTambak'])->name('user.penanganan.index');
+        Route::get('/create', [PenangananController::class, 'createAdminTambak'])->name('user.penanganan.create');
+        Route::post('/', [PenangananController::class, 'storeAdminTambak'])->name('user.penanganan.store');
+        Route::get('/{id}', [PenangananController::class, 'showAdminTambak'])->name('user.penanganan.show');
+    });
+
+    Route::group(['prefix' => 'adminTambak/sampling'], function(){
+        Route::get('/', [SamplingController::class, 'indexAdminTambak'])->name('user.sampling.index');
+        Route::get('/create', [SamplingController::class, 'createAdminTambak'])->name('user.sampling.create');
+        Route::post('/', [SamplingController::class, 'storeAdminTambak'])->name('user.sampling.store');
+        Route::get('/{id}', [SamplingController::class, 'showAdminTambak'])->name('user.sampling.show');
+    });
+
+    Route::group(['prefix' => 'adminTambak/pakanHarian'], function(){
+        Route::get('/', [PakanHarianController::class, 'indexAdminTambak'])->name('user.pakanharian.index');
+        Route::get('/create', [PakanHarianController::class, 'createAdminTambak'])->name('user.pakanharian.create');
+        Route::post('/', [PakanHarianController::class, 'storeAdminTambak'])->name('user.pakanharian.store');
+        Route::get('/{id}', [PakanHarianController::class, 'showAdminTambak'])->name('user.pakanharian.show');
+    });
+
+    Route::group(['prefix' => 'adminTambak/kematianUdang'], function(){
+        Route::get('/', [KematianUdangController::class, 'indexAdminTambak'])->name('user.kematianudang.index');
+        Route::get('/create', [KematianUdangController::class, 'createAdminTambak'])->name('user.kematianudang.create');
+        Route::post('/', [KematianUdangController::class, 'storeAdminTambak'])->name('user.kematianudang.store');
+        Route::get('/{id}', [KematianUdangController::class, 'showAdminTambak'])->name('user.kematianudang.show');
     });
 });

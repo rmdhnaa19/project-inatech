@@ -224,7 +224,7 @@
                     <span>Anco</span>
                 </a>
             </li>
-            <li class="sidebar-item {{ $activeMenu == 'kualitasAir' ? 'active' : '' }}">
+            <li class="sidebar-item {{ $activeMenu == 'kualitasair' ? 'active' : '' }}">
                 <a href="{{ url('/adminTambak/kualitasair') }}" class='sidebar-link'>
                     <x-svg-icon icon="kualitasAir" />
                     <span>Kualitas Air</span>

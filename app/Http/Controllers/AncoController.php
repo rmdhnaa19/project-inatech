@@ -56,26 +56,27 @@ class AncoController extends Controller
     }
 
 
-    public function create(){
-        $breadcrumb = (object) [
-            'title' => 'Tambah Data Anco',
-            'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Anco', 'url' => route('admin.anco.index')],
-                ['label' => 'Tambah'],
-            ]
-    ];
-    $activeMenu = 'anco';
-    $fase_kolam = FaseKolamModel::all();
-    return view('admin.anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
-}
+    public function create()
+    {
+            $breadcrumb = (object) [
+                'title' => 'Tambah Data Anco',
+                'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
+                'list' => [
+                    ['label' => 'Home', 'url' => route('dashboard.index')],
+                    ['label' => 'Anco', 'url' => route('admin.anco.index')],
+                    ['label' => 'Tambah'],
+                ]
+            ];
+            $activeMenu = 'anco';
+            $fase_kolam = FaseKolamModel::all();
+            return view('admin.anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+    }
 
 public function store(Request $request)
 {
     // Validasi input
     $request->validate([
-        'kd_anco' => 'required|string|max:255|unique:anco,kd_anco',
+        'kd_anco' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pemberian_pakan' => 'required|string',
@@ -97,22 +98,14 @@ public function store(Request $request)
     $anco->kondisi_udang = $request->kondisi_udang;
     $anco->catatan = $request->catatan;
     $anco->id_fase_tambak = $request->id_fase_tambak;
-
-    // Simpan file image jika ada
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/anco'), $filename);
-        $anco->image = $filename;
-    }
-
+    
     $anco->save();
 
+    // Untuk role lainnya (opsional)
     Alert::toast('Data anco berhasil ditambahkan', 'success');
-
-    // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('admin.anco.index')->with('success', 'Data anco berhasil ditambahkan');
+    return redirect()->route('admin.anco.index')->with('success', 'Data kolam berhasil ditambahkan');
 }
+
 
 public function show($id)
 {
@@ -146,7 +139,7 @@ public function edit(string $id){
 
 public function update(Request $request, string $id){
     $request->validate([
-        'kd_anco' => 'required|string|max:255|unique:anco,kd_anco',
+        'kd_anco' => 'required|string|max:255',
         'tanggal_cek' => 'required|date',
         'waktu_cek' => 'required',
         'pemberian_pakan' => 'required|string',
@@ -192,6 +185,87 @@ public function destroy($id) {
             'message' => 'Gagal menghapus anco: ' . $th->getMessage()
         ], 500);
     }
+}
+
+// Role adminTambak
+public function indexAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Kelola Data Anco',
+        'paragraph' => 'Berikut ini merupakan data anco yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Anco', 'url' => route('user.anco.index')],
+            ['label' => 'Anco'],
+        ]
+    ];
+    $activeMenu = 'anco';
+    $anco = AncoModel::all();
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.anco.index',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam, 'anco' => $anco]);
+}
+
+public function createAdminTambak() {
+    $breadcrumb = (object) [
+        'title' => 'Tambah Data Anco',
+        'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Anco', 'url' => route('user.anco.create')],
+            ['label' => 'Tambah'],
+        ]
+    ];
+    $activeMenu = 'anco';
+    $fase_kolam = FaseKolamModel::all();
+    return view('adminTambak.anco.create',['breadcrumb' =>$breadcrumb, 'activeMenu' => $activeMenu, 'fase_kolam' => $fase_kolam]);
+}
+
+public function storeAdminTambak(Request $request) {
+    // Validasi input
+    $request->validate([
+        'kd_anco' => 'required|string|max:255',
+        'tanggal_cek' => 'required|date',
+        'waktu_cek' => 'required',
+        'pemberian_pakan' => 'required|string',
+        'jamPemberian_pakan' => 'required',
+        'kondisi_pakan' => 'required|string',
+        'kondisi_udang' => 'required|string',
+        'catatan' => 'required|string',
+        'id_fase_tambak' => 'required',
+    ]);
+    
+
+    try {
+        // Simpan data ke dalam database
+        AncoModel::create($request->all());
+
+        // Untuk role lainnya (opsional)
+        Alert::toast('Data anco berhasil ditambahkan', 'success');
+        return redirect()->route('user.anco.index')->with('success', 'Data anco berhasil ditambahkan');
+    } catch (\Throwable $th) {
+        return back('user.anco.create')->with('gagal', 'Data anco gagal ditambahkan' . $th->getMessage());
+}
+}
+
+public function showAdminTambak($id)
+{
+    $anco = AncoModel::with('faseKolam')->find($id); // Ambil data tambak dengan relasi faseKolam
+    if (!$anco) {
+        return response()->json(['error' => 'Anco tidak ditemukan.'], 404);
+    }
+    $breadcrumb = (object) [
+        'title' => 'Detail Data Anco',
+        'paragraph' => 'Berikut ini merupakan form tambah data anco yang terinput ke dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Anco', 'url' => route('user.anco.index')],
+            ['label' => 'Anco', 'url' => route('user.anco.show', $id)],
+            ['label' => 'Detail'],
+        ]
+    ];
+    $activeMenu = 'anco';
+    // Render view dengan data tambak
+    return view('adminTambak.anco.show', compact('anco', 'activeMenu', 'breadcrumb'));
+    // return response()->json(['html' => $view]);
 }
 
 }
