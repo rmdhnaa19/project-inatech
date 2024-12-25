@@ -232,7 +232,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menghapus data pengguna: ' . $e->getMessage()
+                'message' => 'Gagal menghapus data pengguna dikarenakan data masih tersambung ke data lain.'
             ], 500);
         }
     }
